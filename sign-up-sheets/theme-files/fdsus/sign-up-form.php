@@ -8,7 +8,7 @@
  * @subpackage  Sign_Up_Sheets
  * @see         https://www.fetchdesigns.com/sign-up-sheets-pro-overriding-templates-in-your-theme/
  * @since       2.2 (plugin version)
- * @version     1.1.1 (template file version)
+ * @version     1.2.0 (template file version)
  */
 
 /** @var array $args */
@@ -21,6 +21,7 @@
 /** @var string $signup_link_hash */
 /** @var array $states */
 /** @var string $multi_tag */
+/** @var array $signup_task_ids */
 extract($args);
 
 dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-header', null, true, $args);
@@ -35,7 +36,6 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
         <input type="text" id="signup_firstname" class="signup_firstname" name="signup_firstname"
                maxlength="100" required aria-required="true" autocomplete="given-name"
                value="<?php echo esc_attr($initial['firstname']); ?>"/>
-        <?php echo $multi_tag; ?>
     </p>
 
     <p>
@@ -142,11 +142,19 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
     fdsus_the_signup_form_last_fields($sheet, $args);
     ?>
 
+    <p><span class="dls-sus-required-icon">*</span> = <?php esc_html_e('required', 'fdsus'); ?></p>
+
     <p class="submit">
+        <input type="hidden" name="action" value="signup"/>
+        <?php wp_nonce_field('fdsus_signup_submit', 'signup_nonce') ?>
         <?php if (!fdsus_is_honeypot_disabled()): ?>
             <input type="hidden" name="website" id="dlssus-website" value="" />
         <?php endif; ?>
-        <input type="hidden" name="dlssus_submitted" value="<?php echo esc_attr($task_id); ?>" />
+        <?php if (!empty($signup_task_ids) && is_array($signup_task_ids)): ?>
+            <?php foreach ($signup_task_ids as $signup_task_id): ?>
+                <input type="hidden" id="signup_task_ids" name="signup_task_ids[]" value="<?php echo esc_attr($signup_task_id); ?>"/>
+            <?php endforeach; ?>
+        <?php endif; ?>
         <input type="submit" name="Submit" <?php echo fdsus_signup_form_button_attributes(); ?>
                value="<?php echo esc_html($submit_button_text); ?>"/>
         <?php if (!is_admin() && !empty($go_back_url)): ?>
@@ -156,7 +164,4 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
             </a>
         <?php endif; ?>
     </p>
-
-    <p><span class="dls-sus-required-icon">*</span> = <?php esc_html_e('required', 'fdsus'); ?></p>
-<?php wp_nonce_field('fdsus_signup_submit', 'signup_nonce') ?>
 </form><!-- .dls-sus-signup-form -->

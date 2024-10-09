@@ -99,12 +99,17 @@ class SignUpForm extends Base
 
         $_POST = $this->data->stripslashes_full($_POST);
 
-        $multi_tag = '';
+        /**
+         * @var string $signupTaskIdsTag
+         * @depecated as of 2.2.14 in replacement of $signupTaskIds and outputting the HTML portion within the template directly
+         */
+        $signupTaskIds = array();
+        $signupTaskIdsTag = '';
         $date_display = null;
         $signup_titles = array();
-        if (isset($_POST['signupbox_multi'])) {
-            if (is_array($_POST['signupbox_multi'])) {
-                $tasks = $_POST['signupbox_multi'];
+        if (isset($_POST['signup_task_ids'])) { // If submitted with task IDs
+            if (is_array($_POST['signup_task_ids'])) {
+                $tasks = $_POST['signup_task_ids'];
 
                 $tasks_str = '';
                 foreach ($tasks as $t) {
@@ -121,25 +126,11 @@ class SignUpForm extends Base
                             );
                     }
                     $signup_titles[] = $task->post_title . $date_display;
+                    $signupTaskIdsTag .= '<input type="hidden" id="signup_task_ids"  name="signup_task_ids[]"  value="' . esc_attr($task->ID) . '" />';
+                    $signupTaskIds[] = $task->ID;
                 }
-                $multi_tag = '<input type="hidden" id="signupbox_multi_str"  name="signupbox_multi_str"  value="' . esc_attr($tasks_str) . '" />';
             }
-        } elseif ( isset( $_POST['signupbox_multi_str'] ) ) {
-            $multi_tag = '<input type="hidden" id="signupbox_multi_str"  name="signupbox_multi_str"  value="' . esc_attr($_POST['signupbox_multi_str']) . '" />';
-            $st = explode(",", $_POST['signupbox_multi_str']);
-            foreach ($st as $s) {
-                $task = new TaskModel($s);
-                $date_display = null;
-                if ($date = $task->getDate()) {
-                    $date_display = ' ' . esc_html__('on', 'fdsus')
-                        . sprintf(
-                            ' <em class="dls-sus-task-date">%s</em>',
-                            date(get_option('date_format'), strtotime($date))
-                        );
-                }
-                $signup_titles[] = $task->post_title . $date_display;
-            }
-        } else {
+        } else { // no task checkbox
             if ($date = $task->getDate()) {
                 $date_display = ' ' . esc_html__('on', 'fdsus')
                     . sprintf(
@@ -148,14 +139,16 @@ class SignUpForm extends Base
                     );
             }
             $signup_titles[] = $task->post_title . $date_display;
+            $signupTaskIdsTag .= '<input type="hidden" id="signup_task_ids"  name="signup_task_ids[]"  value="' . esc_attr($task->ID) . '" />';
+            $signupTaskIds[] = $task->ID;
         }
 
         // Build signup title display string
         $last_element = array_pop($signup_titles);
-        $signup_titles_str = $last_element;
+        $signupTitlesStr = $last_element;
         if (count($signup_titles) > 0) {
-            $signup_titles_str = implode(', ', $signup_titles);
-            $signup_titles_str .= ' and ' . $last_element;
+            $signupTitlesStr = implode(', ', $signup_titles);
+            $signupTitlesStr .= __(' and ') . $last_element;
         }
 
         fdsus_the_signup_form_response();
@@ -211,9 +204,10 @@ class SignUpForm extends Base
         $args = array(
             'sheet'               => $sheet,
             'task_id'             => $task_id,
-            'signup_titles_str'   => $signup_titles_str,
+            'signup_titles_str'   => $signupTitlesStr,
             'initial'             => $initial->get(),
-            'multi_tag'           => $multi_tag,
+            'multi_tag'           => $signupTaskIdsTag, // Deprecated as of 2.2.14, no longer specific to task checkbox multi-signups
+            'signup_task_ids'     => $signupTaskIds, // Added in 2.2.14 to replace multi_tag
             'states'              => $states->get(),
             'submit_button_text'  => $submitButtonText,
             'go_back_url'         => $goBackUrl,
@@ -230,87 +224,98 @@ class SignUpForm extends Base
      */
     public function maybeProcessSignupForm()
     {
-        $taskId = isset($_POST['dlssus_submitted']) ? absint($_POST['dlssus_submitted']) : 0;
-        if (empty($taskId) || wp_doing_ajax()) {
+        $taskIds = isset($_POST['signup_task_ids']) ? $_POST['signup_task_ids'] : array();
+        if (empty($taskIds) || wp_doing_ajax()
+            || empty($_POST['action'])
+            || ($_POST['action'] !== 'signup' && $_POST['action'] !== 'signup-confirmed')
+        ) {
             return false;
         }
         if (!isset($_POST['signup_nonce'])
             || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
         ) {
-            Notice::add('error', esc_html__('Sign-up nonce not valid', 'fdsus'), false, Id::PREFIX . '-signup-nonce-invalid');
+            Notice::add('error', esc_html__('Sign-up nonce not valid.', 'fdsus'), false, Id::PREFIX . '-signup-nonce-invalid');
             return false;
         }
 
-        // Set objects/data and validate
-        $objects = array(
-            'signup' => null,
-            'task'   => null,
-            'sheet'  => null,
-        );
-        /**
-         * Filter to set the sheet, task, signup objects prior to signup form processing
-         *
-         * @param array $objects
-         * @param int   $taskId
-         *
-         * @return array|WP_Error
-         *
-         * @api
-         * @since 2.2.11
-         */
-        $objects = apply_filters('fdsus_signup_form_objects', $objects, $taskId);
-        if (is_wp_error($objects)) {
-            return false;
-        }
+        $tasks = array();
 
-        if (empty($objects['task'])) {
-            $objects['task'] = new TaskModel($taskId);
-        }
+        foreach ($taskIds as $taskId) {
+            if ((int)$taskId < 1) {
+                continue;
+            }
+            $task = new TaskModel($taskId);
+            if (!$task->isValid()) {
+                Notice::add(
+                    'error', esc_html__('Hmm... we could not find the task for this sign-up.', 'fdsus'),
+                    true, 'fdsus-task-invalid'
+                );
+                return false;
+            }
+            $tasks[] = $task;
 
-        if (!$objects['task']->isValid()) {
+            if ($task->isExpired()) {
+                Notice::add(
+                    'error', esc_html__('Sign-ups on this sheet can no longer be edited.', 'fdsus'),
+                    true, 'fdsus-sheet-expired'
+                );
+                return false;
+            }
+
+            if (empty($sheet)) {
+                $sheet = $task->getSheet();
+
+                if ($sheet->isExpired()) {
+                    Notice::add(
+                        'error', esc_html__('Sign-ups on this task can no longer be edited.', 'fdsus'),
+                        true, 'fdsus-task-expired'
+                    );
+                    return false;
+                }
+
+                if (!$sheet->dlssus_is_active) {
+                    Notice::add(
+                        'error', esc_html__('Sign-ups are no longer being accepted for this sheet.', 'fdsus'),
+                        true, 'fdsus-signup-sheet-inactive'
+                    );
+                    return false;
+                }
+            } else if ($sheet->ID != $task->post_parent) {
+                Notice::add(
+                    'error', esc_html__('Signing up for more than one sheet is not currently supported.', 'fdsus'),
+                    true, 'fdsus-multiple-sheet-signups-not-support'
+                );
+                return false;
+            }
+
+            if (!$sheet->isValid()) {
+                Notice::add(
+                    'error', esc_html__('Hmm... we could not find the sheet for this sign-up.', 'fdsus'),
+                    true, 'fdsus-sheet-invalid'
+                );
+                return false;
+            }
+
+            if (!$task->dlssus_is_active) {
+                Notice::add(
+                    'error', esc_html__('Sign-ups are no longer being accepted for this task.', 'fdsus'),
+                    true, 'fdsus-signup-task-inactive'
+                );
+                return false;
+            }
+
+            unset($task);
+        }
+        if (empty($tasks)) {
             Notice::add(
-                'error', esc_html__('Hmm... we could not find the task for this sign-up.', 'fdsus'),
-                true, 'fdsus-task-invalid'
-            );
-            return false;
-        }
-
-        $objects['sheet'] = $objects['task']->getSheet();
-
-        if (!$objects['sheet']->isValid()) {
-            Notice::add(
-                'error', esc_html__('Hmm... we could not find the sheet for this sign-up.', 'fdsus'),
-                true, 'fdsus-sheet-invalid'
-            );
-            return false;
-        }
-
-        if ($objects['task']->isExpired() || $objects['sheet']->isExpired()) {
-            Notice::add(
-                'error', esc_html__('This sign-up can no longer be edited.', 'fdsus'),
-                true, 'fdsus-task-sheet-expired'
-            );
-            return false;
-        }
-
-        if (!$objects['sheet']->dlssus_is_active) {
-            Notice::add(
-                'error', esc_html__('Sign-ups are no longer being accepted for this sheet.', 'fdsus'),
-                true, 'fdsus-signup-nonce-invalid'
-            );
-            return false;
-        }
-
-        if (!$objects['task']->dlssus_is_active) {
-            Notice::add(
-                'error', esc_html__('Sign-ups are no longer being accepted for this task.', 'fdsus'),
-                true, 'fdsus-signup-nonce-invalid'
+                'error', esc_html__('No valid task was found for this sign-up.', 'fdsus'),
+                true, 'fdsus-all-tasks-invalid'
             );
             return false;
         }
 
         // Form error handling
-        if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $objects['sheet']))) {
+        if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $sheet))) {
             Notice::add(
                 'warn', sprintf(
                     /* translators: %s is replaced with a comma separated list of all missing required fields */
@@ -352,37 +357,37 @@ class SignUpForm extends Base
         /**
          * Filter to set the sheet, task, signup objects prior to signup form processing
          *
-         * @param bool  $override
-         * @param array $objects
+         * @param bool        $override
+         * @param TaskModel[] $tasks
+         * @param SheetModel  $sheet
          *
          * @return bool
          *
-         * @api
          * @since 2.2.11
          */
-        $override = apply_filters('fdsus_override_process_signup_form', false, $objects);
+        $override = apply_filters('fdsus_override_process_signup_form', false, $tasks, $sheet);
         if ($override) {
             return true;
         }
 
         // Process
-        $this->_processSignupForm($objects['task'], $objects['sheet']);
+        $this->_processSignupForm($tasks, $sheet);
         return true;
     }
 
     /**
      * Process signup form
      *
-     * @param TaskModel  $task
-     * @param SheetModel $sheet
+     * @param TaskModel[] $tasks
+     * @param SheetModel  $sheet
      *
-     * @return bool
+     * @return void
      */
-    protected function _processSignupForm($task, $sheet)
+    protected function _processSignupForm($tasks, $sheet)
     {
         // Pre-process actions
-        do_action('fdsus_signup_form_pre_process', $task);
-        do_action("fdsus_signup_form_pre_process_{$sheet->ID}", $task);
+        do_action('fdsus_signup_form_pre_process', $tasks);
+        do_action("fdsus_signup_form_pre_process_{$sheet->ID}", $tasks);
 
         $err = array();
         $successTaskIds = array();
@@ -393,11 +398,7 @@ class SignUpForm extends Base
         if (!$err) {
             try {
 
-                if (isset($_POST['signupbox_multi_str'])) {
-                    $taskIds = explode(',', $_POST['signupbox_multi_str']);
-                } else {
-                    $taskIds = array($_GET['task_id']);
-                }
+                $taskIds = $_POST['signup_task_ids'];
                 $taskIndex = 0;
                 foreach ($taskIds as $taskId) {
                     $errorMsg = '';
@@ -447,6 +448,8 @@ class SignUpForm extends Base
                     if ($sendSignupConfirmationEmail) {
                         $this->mail->send($_POST['signup_email'], $sheet, $task, $signupId, 'signup');
                     }
+
+                    $taskIndex++;
                 }
             } catch (Exception $e) {
                 $err[] = $e->getMessage();
@@ -461,8 +464,8 @@ class SignUpForm extends Base
         }
 
         // Post-process actions
-        do_action("fdsus_signup_form_post_process", $task, $signupId);
-        do_action("fdsus_signup_form_post_process_{$sheet->ID}", $task, $signupId);
+        do_action("fdsus_signup_form_post_process", $tasks, $signupId);
+        do_action("fdsus_signup_form_post_process_{$sheet->ID}", $tasks, $signupId);
 
         // If successful, redirect to sheet page
         if (empty($err) && !empty($successTaskIds)) {

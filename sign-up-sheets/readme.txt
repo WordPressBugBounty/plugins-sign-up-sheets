@@ -2,7 +2,7 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.6
-Stable tag: 2.2.13
+Stable tag: 2.2.14
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -114,6 +114,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.2.14 | 2024-10-07 =
+* Added setting to clear cache on specific post IDs when a sign-up occurs.
+* Added [sign_up_spot_count] shortcode.
+* Fixed bug with Divi theme's Smooth Scroll feature conflicting with the Auto-Scroll sign-up link hash feature.
+* Fixed error on Manage Sign-ups edit form in admin due to sign-up-link auto-scrolling feature missing variable.
+
 = 2.2.13 | 2024-07-19 =
 * Added Sign-up link auto-scrolling with a hash so that when clicking the sign-up links/buttons the user is taking right to the form no matter how much content you put before the sign-up sheet.  This can be disabled in the admin under Sign-up Sheets > Settings > Sign-up Form > Disable sign-up link auto-scroll to sheet
 * Fixed issue where non-logged-in user could submit a sign-up and assign it to another user's account.
@@ -172,6 +178,12 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.2.14 | 2024-10-07 =
+* Added setting to clear cache on specific post IDs when a sign-up occurs.
+* Added [sign_up_spot_count] shortcode.
+* Fixed bug with Divi theme's Smooth Scroll feature conflicting with the Auto-Scroll sign-up link hash feature.
+* Fixed error on Manage Sign-ups edit form in admin due to sign-up-link auto-scrolling feature missing variable.
 
 = 2.2.13 | 2024-07-19 =
 * Added Sign-up link auto-scrolling with a hash so that when clicking the sign-up links/buttons the user is taking right to the form no matter how much content you put before the sign-up sheet.  This can be disabled in the admin under Sign-up Sheets > Settings > Sign-up Form > Disable sign-up link auto-scroll to sheet

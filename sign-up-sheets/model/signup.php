@@ -205,7 +205,7 @@ class Signup extends SignupParent
 
             $msg .= '
                     <input type="hidden" name="double_signup" value="1" />
-                    <input type="hidden" name="mode" value="submitted" />
+                    <input type="hidden" name="action" value="signup-confirmed" />
                     <input type="submit" name="Submit" class="button-primary wp-block-button__link wp-element-button dls-sus-double-signup-confirm-button" value="' . esc_html__('Yes, sign me up', 'fdsus') . '" />
                     <a href="' . esc_url(fdsus_back_to_sheet_url($task->ID)) . '">' . esc_html__('No, thanks', 'fdsus') . '</a>
                 </form>

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sign-up Sheets 2.2.13\n"
+"Project-Id-Version: Sign-up Sheets 2.2.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sign-up-sheets\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-02T02:30:36+00:00\n"
+"POT-Creation-Date: 2024-10-08T02:01:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: fdsus\n"
@@ -68,8 +68,8 @@ msgid "Copy action failed.  Please try again."
 msgstr ""
 
 #: controller/admin.php:169
-#: controller/admin/edit-signup-page.php:196
-#: controller/admin/edit-signup-page.php:263
+#: controller/admin/edit-signup-page.php:197
+#: controller/admin/edit-signup-page.php:264
 #: controller/admin/manage-signups.php:53
 #: controller/admin/settings.php:66
 #: controller/admin/settings.php:157
@@ -116,12 +116,12 @@ msgid "Copy Row"
 msgstr ""
 
 #: controller/admin/edit-sheet.php:142
-#: controller/admin/edit-signup-page.php:120
+#: controller/admin/edit-signup-page.php:121
 msgid "Sheet Quick Info"
 msgstr ""
 
 #: controller/admin/edit-sheet.php:143
-#: controller/admin/edit-signup-page.php:121
+#: controller/admin/edit-signup-page.php:122
 #: controller/admin/export.php:268
 msgid "Sheet ID"
 msgstr ""
@@ -129,6 +129,18 @@ msgstr ""
 #: controller/admin/edit-signup-page.php:48
 #: controller/admin/edit-signup-page.php:90
 msgid "Edit Sign-up"
+msgstr ""
+
+#: controller/admin/edit-signup-page.php:71
+msgid "Sign-up invalid"
+msgstr ""
+
+#: controller/admin/edit-signup-page.php:77
+msgid "Task invalid"
+msgstr ""
+
+#: controller/admin/edit-signup-page.php:82
+msgid "Sheet invalid"
 msgstr ""
 
 #: controller/admin/edit-signup-page.php:89
@@ -140,11 +152,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:131
+#: controller/admin/edit-signup-page.php:132
 msgid "Sheet"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:134
+#: controller/admin/edit-signup-page.php:135
 #: controller/admin/manage-signups.php:78
 #: controller/mail.php:174
 #: controller/sheet.php:341
@@ -153,48 +165,52 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:137
+#: controller/admin/edit-signup-page.php:138
 #: controller/admin/manage-signups.php:80
 #: theme-files/fdsus/sheet-list.php:47
 #: theme-files/fdsus/user_sign_ups.php:40
 msgid "N/A"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:142
+#: controller/admin/edit-signup-page.php:143
 #: model/task-base.php:94
 msgid "Task"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:172
+#: controller/admin/edit-signup-page.php:173
 msgid "Sign-up updated."
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:175
+#: controller/admin/edit-signup-page.php:176
 msgid "Sign-up added."
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:200
+#: controller/admin/edit-signup-page.php:201
 msgid "Sign-up ID missing"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:208
-#: controller/admin/edit-signup-page.php:277
-#: controller/scode/sign-up-form.php:240
-msgid "Sign-up nonce not valid"
+#: controller/admin/edit-signup-page.php:209
+#: controller/admin/edit-signup-page.php:278
+#: controller/scode/sign-up-form.php:237
+msgid "Sign-up nonce not valid."
+msgstr ""
+
+#: controller/admin/edit-signup-page.php:218
+msgid "Sign-up not found."
 msgstr ""
 
 #. translators: %s is replaced with a comma separated list of all missing required fields
-#: controller/admin/edit-signup-page.php:232
-#: controller/admin/edit-signup-page.php:294
-#: controller/scode/sign-up-form.php:317
+#: controller/admin/edit-signup-page.php:233
+#: controller/admin/edit-signup-page.php:295
+#: controller/scode/sign-up-form.php:322
 msgid "Please complete the following required fields: %s"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:269
+#: controller/admin/edit-signup-page.php:270
 msgid "Task-up ID missing"
 msgstr ""
 
-#: controller/admin/edit-signup-page.php:329
+#: controller/admin/edit-signup-page.php:330
 msgid "Linked User"
 msgstr ""
 
@@ -615,7 +631,7 @@ msgstr ""
 
 #: controller/privacy.php:20
 #: model/signup.php:513
-#: theme-files/fdsus/sign-up-form.php:32
+#: theme-files/fdsus/sign-up-form.php:33
 msgid "First Name"
 msgstr ""
 
@@ -650,45 +666,56 @@ msgstr ""
 msgid "No Sign-up Sheet Found."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:118
-#: controller/scode/sign-up-form.php:134
-#: controller/scode/sign-up-form.php:144
+#: controller/scode/sign-up-form.php:123
+#: controller/scode/sign-up-form.php:135
 msgid "on"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:187
+#: controller/scode/sign-up-form.php:180
 msgid "Sign me up!"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:272
+#: controller/scode/sign-up-form.php:250
 msgid "Hmm... we could not find the task for this sign-up."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:282
-msgid "Hmm... we could not find the sheet for this sign-up."
+#: controller/scode/sign-up-form.php:259
+msgid "Sign-ups on this sheet can no longer be edited."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:290
-msgid "This sign-up can no longer be edited."
+#: controller/scode/sign-up-form.php:270
+msgid "Sign-ups on this task can no longer be edited."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:298
+#: controller/scode/sign-up-form.php:278
 msgid "Sign-ups are no longer being accepted for this sheet."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:306
+#: controller/scode/sign-up-form.php:285
+msgid "Signing up for more than one sheet is not currently supported."
+msgstr ""
+
+#: controller/scode/sign-up-form.php:293
+msgid "Hmm... we could not find the sheet for this sign-up."
+msgstr ""
+
+#: controller/scode/sign-up-form.php:301
 msgid "Sign-ups are no longer being accepted for this task."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:326
+#: controller/scode/sign-up-form.php:311
+msgid "No valid task was found for this sign-up."
+msgstr ""
+
+#: controller/scode/sign-up-form.php:331
 msgid "Please check that your email address is properly formatted"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:338
+#: controller/scode/sign-up-form.php:343
 msgid "Whoops, it looks like your email domain may not be valid."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:346
+#: controller/scode/sign-up-form.php:351
 msgid "Sorry, your submission has been blocked."
 msgstr ""
 
@@ -813,7 +840,7 @@ msgid "Delete Row"
 msgstr ""
 
 #. translators: %1$s is replaced with the pro plugin version number, %2$s is replaced with the free plugin version number
-#: main.php:271
+#: main.php:272
 msgid "The <strong>Sign-up Sheets Pro</strong> plugin version (%1$s) does not match the version number of the main <strong>Sign-up Sheets</strong> plugin (%2$s).  Please update so both version numbers match to prevent possible conflicts."
 msgstr ""
 
@@ -1293,20 +1320,20 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: model/settings-meta-boxes.php:587
+#: model/settings-meta-boxes.php:588
 msgid "Reset All Settings"
 msgstr ""
 
-#: model/settings-meta-boxes.php:590
-#: model/settings-meta-boxes.php:596
+#: model/settings-meta-boxes.php:591
+#: model/settings-meta-boxes.php:597
 msgid "This will erase any custom configurations you have made on this page and reset them back to the defaults. This action cannot be undone."
 msgstr ""
 
-#: model/settings-meta-boxes.php:595
+#: model/settings-meta-boxes.php:596
 msgid "Are you sure?"
 msgstr ""
 
-#: model/settings-meta-boxes.php:605
+#: model/settings-meta-boxes.php:606
 msgid "Text Overrides"
 msgstr ""
 
@@ -1460,16 +1487,16 @@ msgstr ""
 msgid "You are signing up for..."
 msgstr ""
 
-#: theme-files/fdsus/sign-up-form.php:153
+#: theme-files/fdsus/sign-up-form.php:145
+msgid "required"
+msgstr ""
+
+#: theme-files/fdsus/sign-up-form.php:161
 msgid "or"
 msgstr ""
 
-#: theme-files/fdsus/sign-up-form.php:155
+#: theme-files/fdsus/sign-up-form.php:163
 msgid "&laquo; go back to the Sign-Up Sheet"
-msgstr ""
-
-#: theme-files/fdsus/sign-up-form.php:160
-msgid "required"
 msgstr ""
 
 #: theme-files/fdsus/user_sign_ups.php:27

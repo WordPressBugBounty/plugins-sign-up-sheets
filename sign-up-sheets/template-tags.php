@@ -480,6 +480,36 @@ if (!function_exists('fdsus_scode_user_sign_ups_actions')) {
     }
 }
 
+if (!function_exists('fdsus_template_classes_sign_up_sheet')) {
+    /**
+     * Get string of CSS classes for the sign-up sheet wrapper element
+     *
+     * @return string
+     * @since 2.2.14
+     */
+    function fdsus_template_classes_sign_up_sheet()
+    {
+        $classes = array('dls-sus-sheet');
+
+        // Workaround for Divi Smooth Scroll bug
+        if (Settings::isSignUpLinkHashEnabled() && wp_script_is('divi-custom-script')) {
+            $classes[] = 'et_smooth_scroll_disabled';
+        }
+
+        /**
+         * Array of CSS classes to output on the sign-up sheet wrapper element
+         *
+         * @param array $classes
+         *
+         * @return array
+         * @since 2.2.14
+         */
+        $classes = apply_filters('fdsus_template_classes_sign_up_sheet', $classes);
+
+        return implode(' ', $classes);
+    }
+}
+
 if (!function_exists('fdsus_is_pro')) {
     /**
      * Is the pro version of the plugin being used?

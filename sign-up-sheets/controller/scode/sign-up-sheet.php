@@ -69,7 +69,7 @@ class SignUpSheet extends Base
                     'id'                     => false,
                     'list_title'             => esc_html__('Current Sign-up Sheets', 'fdsus'),
                     'category_id'            => false, // Pro only - deprecated as of v2.1
-                    'category_slug'          => false, // Pro only
+                    'category_slug'          => false, // Pro only - allows comma-separated string
                     'list_title_is_category' => false, // Pro only
                 ), $atts
             )
@@ -131,29 +131,22 @@ class SignUpSheet extends Base
             return ob_get_clean();
         }
 
-        /** @var SheetModel[]|false $sheets */
-        $sheets = false;
+        // Get all active
+        $collectionArgs = array();
 
         /**
-         * Filter for sheet collection
+         * Filter for sheet collection arguments
          *
-         * @param SheetCollection $sheetCollection
-         * @param array           $atts shortcode attributes
+         * @param array $collectionArgs arguments for sheet collection query
+         * @param array $atts           shortcode attributes
          *
-         * @return SheetModel[]
-         * @since 2.2
+         * @return array
+         * @since 2.2.14
          */
-        $sheets = apply_filters('fdsus_scode_sign_up_sheet_collection', $sheets, $atts);
+        $collectionArgs = apply_filters('fdsus_scode_sign_up_sheet_collection_args', $collectionArgs, $atts);
 
-        // Display all active if not already set
-        if ($sheets === false) {
-            $sheetCollection = new SheetCollection();
-            $sheets = $sheetCollection->get();
-        }
-
-        if (isset($sheetCollection) && !is_a($sheetCollection, 'SheetCollection')) {
-            $sheets = $sheetCollection->posts;
-        }
+        $sheetCollection = new SheetCollection();
+        $sheets = $sheetCollection->get($collectionArgs);
 
         if (!empty($sheets)) {
             $args['sheets'] = $sheets;
@@ -167,9 +160,9 @@ class SignUpSheet extends Base
         /**
          * Filter template arguments for sheet listing
          *
-         * @param array           $args template arguments
-         * @param SheetModel[]    $sheets
-         * @param array           $atts shortcode attributes
+         * @param array        $args template arguments
+         * @param SheetModel[] $sheets
+         * @param array        $atts shortcode attributes
          *
          * @return array
          * @since 2.2

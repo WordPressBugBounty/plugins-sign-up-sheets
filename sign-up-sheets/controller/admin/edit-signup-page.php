@@ -68,18 +68,18 @@ class EditSignupPage extends PageBase
         if (!empty($_GET['signup'])) {
             $signup = new SignupModel($_GET['signup']);
             if (!$signup->isValid()) {
-                wp_die(__('Sign-up invalid', 'fdssus'));
+                wp_die(__('Sign-up invalid', 'fdsus'));
             }
         }
 
         $task = new TaskModel(!empty($_GET['task']) ? $_GET['task'] : $signup->post_parent);
         if (!$task->isValid()) {
-            wp_die(__('Task invalid', 'fdssus'));
+            wp_die(__('Task invalid', 'fdsus'));
         }
 
         $sheet = new SheetModel($task->post_parent);
         if (!$sheet->isValid()) {
-            wp_die(__('Sheet invalid', 'fdssus'));
+            wp_die(__('Sheet invalid', 'fdsus'));
         }
         ?>
 
@@ -109,6 +109,7 @@ class EditSignupPage extends PageBase
                 'states'             => $states->get(),
                 'submit_button_text' => __('Submit', 'fdsus'),
                 'go_back_url'        => '',
+                'signup_link_hash'   => ''
             );
 
             $located = Id::getPluginPath() . 'theme-files' . DIRECTORY_SEPARATOR . 'fdsus' . DIRECTORY_SEPARATOR . 'sign-up-form.php';
@@ -205,7 +206,7 @@ class EditSignupPage extends PageBase
                 !isset($_POST['signup_nonce'])
                 || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
             ) {
-                wp_die(esc_html__('Sign-up nonce not valid', 'fdsus'));
+                wp_die(esc_html__('Sign-up nonce not valid.', 'fdsus'));
             }
 
             Notice::instance();
@@ -214,7 +215,7 @@ class EditSignupPage extends PageBase
             $signup = new SignupModel($_GET['signup']);
 
             if (!$signup->isValid()) {
-                Notice::add('error', esc_html__('Sign-up not found.', 'fdss'));
+                Notice::add('error', esc_html__('Sign-up not found.', 'fdsus'));
                 return;
             }
 
@@ -274,7 +275,7 @@ class EditSignupPage extends PageBase
                 !isset($_POST['signup_nonce'])
                 || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
             ) {
-                wp_die(esc_html__('Sign-up nonce not valid', 'fdsus'));
+                wp_die(esc_html__('Sign-up nonce not valid.', 'fdsus'));
             }
 
             // Add signup

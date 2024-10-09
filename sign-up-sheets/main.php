@@ -91,6 +91,7 @@ if (!class_exists('\FDSUS\Main')):
                 new \FDSUS\Controller\Scode\SignUpForm();
                 new \FDSUS\Controller\Scode\SignUpSheet();
                 new \FDSUS\Controller\Scode\UserSignUps();
+                new \FDSUS\Controller\Scode\SignUpSpotCount();
             }
             $this->prefix = Id::PREFIX;
 

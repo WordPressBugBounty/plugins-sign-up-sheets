@@ -8,7 +8,7 @@
  * @subpackage  Sign_Up_Sheets
  * @see         https://www.fetchdesigns.com/sign-up-sheets-pro-overriding-templates-in-your-theme/
  * @since       2.2 (plugin version)
- * @version     1.0.0 (template file version)
+ * @version     1.0.1 (template file version)
  */
 
 /** @var array $args */
@@ -24,7 +24,7 @@
     </p>
 <?php endif; ?>
 
-<div class="dls-sus-sheet" id="<?php echo get_the_ID() ? 'dls-sus-sheet-' . get_the_ID() : '' ?>">
+<div class="<?php echo esc_attr(fdsus_template_classes_sign_up_sheet()) ?>" id="<?php echo get_the_ID() ? 'dls-sus-sheet-' . get_the_ID() : '' ?>">
 
     <?php fdsus_the_signup_form_response(); ?>
 

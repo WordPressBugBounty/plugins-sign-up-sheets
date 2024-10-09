@@ -581,6 +581,7 @@ class SettingsMetaBoxes
             'options' => array(
                 array('Sheet URL Slug', 'dls_sus_sheet_slug', 'text', 'Will be used in permalinks for your frontend archive page as well as single sheets pages. Default is <code>sheet</code>  Ex: https://example.com/<code>sheet</code>/my-signup-sheet/'),
                 array('User roles that can manage sheets', 'dls_sus_roles', 'checkboxes', '(Note: Administrators and Sign-up Sheet Managers can always manage sheets)', $roles),
+                array('Clear Cache for these Post IDs when a sign-up is added or removed', 'fdsus_cache_clear_on_signup', 'text', 'If using a <a href="https://www.fetchdesigns.com/doc/caching/">supported caching plugin</a>, you can specify individual post IDs to flush after a sign-up occurs. This should be a comma-separated list such as <code>123,5000</code>.  ID entered can be for a post, page or a custom post type.'),
                 array('Re-run Data Migration', 'dls_sus_rerun_migrate', 'button', '<span id="' . Id::PREFIX . '-rerun-migrate"></span>', array('href' => add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()))),
                 array('Display Detailed Errors', 'dls_sus_detailed_errors', 'checkbox', '(Not recommended for production sites)'),
                 array(

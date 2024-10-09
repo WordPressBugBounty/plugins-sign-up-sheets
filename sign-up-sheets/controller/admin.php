@@ -364,7 +364,7 @@ class Admin
         }
 
         $supportUrl = Id::isPro()
-            ? 'https://www.fetchdesigns.com/forums/forum/sign-up-sheets-support/'
+            ? 'https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/support/'
             : 'https://wordpress.org/support/plugin/sign-up-sheets/';
         ?>
         <footer class="fdsus-footer" aria-label="Sign-up Sheet">

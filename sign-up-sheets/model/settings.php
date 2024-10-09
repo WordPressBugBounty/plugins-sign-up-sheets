@@ -335,4 +335,15 @@ class Settings extends SettingsParent
 
         return $wpdb->query($sql);
     }
+
+    /**
+     * Get IDs for the cache clear on sign-up setting
+     *
+     * @return array
+     */
+    public static function getCacheClearOnSignupIds()
+    {
+        $ids = get_option('fdsus_cache_clear_on_signup');
+        return empty($ids) ? array() : explode(',', $ids);
+    }
 }

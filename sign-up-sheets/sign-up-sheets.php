@@ -3,7 +3,7 @@
 Plugin Name: Sign-up Sheets
 Plugin URI: https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/
 Description: An online sign-up sheet manager where your users/volunteers can sign up for tasks
-Version: 2.2.13
+Version: 2.2.14
 Requires PHP: 5.5
 Requires at least: 5.5
 Author: Fetch Designs
