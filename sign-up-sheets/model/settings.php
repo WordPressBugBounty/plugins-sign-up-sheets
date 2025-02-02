@@ -12,7 +12,7 @@ use DateTimeZone;
 use Exception;
 
 if (Id::isPro()) {
-    class SettingsParent extends Pro\Settings {}
+    class SettingsParent extends \FDSUSPRO\Model\Pro\Settings {}
 } else {
     class SettingsParent {}
 }
@@ -40,10 +40,10 @@ class Settings extends SettingsParent
     private function __construct()
     {
         self::$defaultMailSubjects = array(
-            'signup'   => esc_html__('Thank you for signing up!', 'fdsus'),
-            'remove'   => esc_html__('Sign-up has been removed', 'fdsus'),
-            'reminder' => esc_html__('Sign-up Reminder', 'fdsus'),
-            'status'   => esc_html__('Sign-up Status Report', 'fdsus'),
+            'signup'   => esc_html__('Thank you for signing up!', 'sign-up-sheets'),
+            'remove'   => esc_html__('Sign-up has been removed', 'sign-up-sheets'),
+            'reminder' => esc_html__('Sign-up Reminder', 'sign-up-sheets'),
+            'status'   => esc_html__('Sign-up Status Report', 'sign-up-sheets'),
         );
 
         self::$defaultMailMessages['signup'] = 'This message was sent to confirm that you signed up for...'
@@ -79,8 +79,8 @@ class Settings extends SettingsParent
     {
         self::$text = array(
             'task_title_label' => array(
-                'label'   => esc_html__('Task Title Label', 'fdsus'),
-                'default' => esc_html__('What', 'fdsus'),
+                'label'   => esc_html__('Task Title Label', 'sign-up-sheets'),
+                'default' => esc_html__('What', 'sign-up-sheets'),
             ),
         );
 
@@ -210,7 +210,7 @@ class Settings extends SettingsParent
     }
 
     /**
-     * Get current plugin basename depending on if we are in the pro or free version
+     * Get current plugin basename depending on if we are running the pro or free version
      *
      * @return string
      */
@@ -299,7 +299,7 @@ class Settings extends SettingsParent
         $timezoneString = get_option('timezone_string');
         $checkUtcTimestamp = wp_next_scheduled($cronHook);
         if (is_null($defaultText)) {
-            $defaultText = esc_html__('Not Scheduled', 'fdsus');
+            $defaultText = esc_html__('Not Scheduled', 'sign-up-sheets');
         }
         $displayCheckTime = $defaultText;
         if (!empty($checkUtcTimestamp)) {

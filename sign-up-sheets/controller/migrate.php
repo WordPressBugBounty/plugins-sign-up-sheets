@@ -20,7 +20,7 @@ if (!FDSUS_DISABLE_MIGRATE_2_0_to_2_1) {
 }
 
 if (Id::isPro()) {
-    class MigrateParent extends Pro\Migrate {}
+    class MigrateParent extends \FDSUSPRO\Controller\Pro\Migrate {}
 } else {
     class MigrateParent extends Base {}
 }
@@ -78,7 +78,7 @@ class Migrate extends MigrateParent
         if ($status['state'] == 'complete' && (empty($_GET['retry']) || $_GET['retry'] != 'true')) {
             $output = sprintf(
                 /* translators: %1$s is replaced with the URL to retry */
-                esc_html__('Migration has already been completed. <a href="%1$s" class="button">Run Migration Again</a>', 'fdsus'),
+                esc_html__('Migration has already been completed. <a href="%1$s" class="button">Run Migration Again</a>', 'sign-up-sheets'),
                 esc_url(add_query_arg('retry', 'true', $this->data->getCurrentUrl()))
             );
             wp_die($output);
@@ -602,7 +602,7 @@ class Migrate extends MigrateParent
                 'type' => 'text',
                 'group' => 'settings',
                 'options' => null,
-                'note' => esc_html__('(comma-separated list of emails to be copied on sign-up confirmations/removals for this sheet)', 'fdsus'),
+                'note' => esc_html__('(comma-separated list of emails to be copied on sign-up confirmations/removals for this sheet)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Set Phone as Optional',
@@ -610,7 +610,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Set Address as Optional',
@@ -618,7 +618,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Hide Phone Field',
@@ -626,7 +626,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Hide Address Fields',
@@ -634,7 +634,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Compact Sign-up Mode',
@@ -642,12 +642,12 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => array(
-                    ''      => esc_html__('Global', 'fdsus'),
-                    'false' => esc_html__('Disabled', 'fdsus'),
-                    'true'  => esc_html__('Enabled', 'fdsus'),
-                    'semi'  => esc_html__('Semi-Compact', 'fdsus'),
+                    ''      => esc_html__('Global', 'sign-up-sheets'),
+                    'false' => esc_html__('Disabled', 'sign-up-sheets'),
+                    'true'  => esc_html__('Enabled', 'sign-up-sheets'),
+                    'semi'  => esc_html__('Semi-Compact', 'sign-up-sheets'),
                 ),
-                'note' => esc_html__('Show sign-up spots on one line with just # of open spots and a link to sign-up if open. Semi-Compact will also include the names of those who already signed up (assuming "Front-end Display Names" is not set to "anonymous"', 'fdsus'),
+                'note' => esc_html__('Show sign-up spots on one line with just # of open spots and a link to sign-up if open. Semi-Compact will also include the names of those who already signed up (assuming "Front-end Display Names" is not set to "anonymous"', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Use task dates instead',
@@ -663,7 +663,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Enable task sign-up limit',
@@ -671,7 +671,7 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Enable contiguous task sign-up limit',
@@ -679,14 +679,14 @@ class Migrate extends MigrateParent
                 'type' => 'dropdown',
                 'group' => 'settings',
                 'options' => $true_false,
-                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'fdsus'),
+                'note' => esc_html__('(Global setting in Settings > Sign-up Sheets)', 'sign-up-sheets'),
             ),
             array(
                 'name' => 'Reminder Schedule',
                 'slug' => 'sheet_reminder_days',
                 'type' => 'text',
                 'group' => 'settings',
-                'note' => '<br><em>' . esc_html__('Number of days before the date on the sign-up sheet that the email should be sent.  Use whole numbers, for example, to remind one day before use...', 'fdsus') . ' <code>1</code> ' . esc_html__('(If this is blank Global setting is used. Global setting in Settings > Sign-up Sheets.)', 'fdsus') . '</em>',
+                'note' => '<br><em>' . esc_html__('Number of days before the date on the sign-up sheet that the email should be sent.  Use whole numbers, for example, to remind one day before use...', 'sign-up-sheets') . ' <code>1</code> ' . esc_html__('(If this is blank Global setting is used. Global setting in Settings > Sign-up Sheets.)', 'sign-up-sheets') . '</em>',
                 'options' => null,
             ),
             array(
@@ -694,7 +694,7 @@ class Migrate extends MigrateParent
                 'slug' => 'sheet_email_message',
                 'type' => 'textarea',
                 'group' => 'settings',
-                'note' => '<br><em>' . esc_html__('Global setting in Settings > Sign-up Sheets', 'fdsus') . '</em>',
+                'note' => '<br><em>' . esc_html__('Global setting in Settings > Sign-up Sheets', 'sign-up-sheets') . '</em>',
                 'options' => null,
             ),
             array(
@@ -702,7 +702,7 @@ class Migrate extends MigrateParent
                 'slug' => 'sheet_email_conf_message',
                 'type' => 'textarea',
                 'group' => 'settings',
-                'note' => '<br><em>' . esc_html__('Global setting in Settings > Sign-up Sheets', 'fdsus') . '</em>',
+                'note' => '<br><em>' . esc_html__('Global setting in Settings > Sign-up Sheets', 'sign-up-sheets') . '</em>',
                 'options' => null,
             ),
         );
@@ -808,7 +808,7 @@ class Migrate extends MigrateParent
             $update->scheduleAsyncUpdate();
         }
 
-        return new WP_Error(Id::PREFIX . '_migrate_timeout', esc_html__('Sign-up Sheets migration timed out.', 'fdsus'));
+        return new WP_Error(Id::PREFIX . '_migrate_timeout', esc_html__('Sign-up Sheets migration timed out.', 'sign-up-sheets'));
     }
 
     /**

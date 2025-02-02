@@ -27,8 +27,8 @@ class DbUpdate
         $this->wpdb = $wpdb;
         $this->data = new Data();
 
-        add_action('init', array(&$this, 'check'));
-        add_action(Id::PREFIX . '_dbupdate_action', array(&$this, 'asyncUpdate'));
+        add_action('wp_loaded', array(&$this, 'check'));
+        add_action('fdsus_dbupdate_action', array(&$this, 'asyncUpdate'));
     }
 
     /**
@@ -48,7 +48,7 @@ class DbUpdate
      */
     public function scheduleAsyncUpdate()
     {
-        wp_schedule_single_event(time(), Id::PREFIX . '_dbupdate_action');
+        wp_schedule_single_event(time(), 'fdsus_dbupdate_action');
     }
 
     /**

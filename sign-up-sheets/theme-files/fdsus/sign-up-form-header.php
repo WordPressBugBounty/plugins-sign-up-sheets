@@ -17,9 +17,9 @@
 extract($args);
 
 if (!is_admin()): ?>
-    <h3><?php esc_html_e('Sign-up below', 'fdsus'); ?></h3>
+    <h3><?php esc_html_e('Sign-up below', 'sign-up-sheets'); ?></h3>
     <p>
-        <?php esc_html_e('You are signing up for...', 'fdsus'); ?>
+        <?php esc_html_e('You are signing up for...', 'sign-up-sheets'); ?>
         <em class="dls-sus-task-title"><?php echo wp_kses_post($signup_titles_str); ?></em>
     </p>
 <?php endif; ?>

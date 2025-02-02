@@ -55,7 +55,7 @@ class Export
                     ), 'edit.php'
                 )
             )),
-            esc_html__('Export All as CSV', 'fdsus')
+            esc_html__('Export All as CSV', 'sign-up-sheets')
         );
         return $views;
     }
@@ -80,7 +80,7 @@ class Export
         echo sprintf(
             '<a href="%s" id="dls-sus-export-sheet" class="quick-info-item">%s</a>',
             esc_url($this->getExportUrl($post)),
-            esc_html__('Export as CSV', 'fdsus')
+            esc_html__('Export as CSV', 'sign-up-sheets')
         );
     }
 
@@ -94,7 +94,7 @@ class Export
         echo sprintf(
             '<a href="%s" class="add-new-h2 page-title-action"><span class="dashicons dashicons-download"></span> %s</a>',
             esc_url($this->getExportUrl($sheet)),
-            esc_html__('Export as CSV', 'fdsus')
+            esc_html__('Export as CSV', 'sign-up-sheets')
         );
     }
 
@@ -118,11 +118,11 @@ class Export
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to export.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to export.', 'sign-up-sheets'));
         }
 
         if (isset($_GET['sheet_id']) && !is_numeric($_GET['sheet_id'])) {
-            wp_die(esc_html__('Invalid sheet ID.', 'fdsus'));
+            wp_die(esc_html__('Invalid sheet ID.', 'sign-up-sheets'));
         }
 
         // Process Export
@@ -265,9 +265,9 @@ class Export
         header("Expires: 0");
 
         $headersArray = array();
-        $headersArray[] = esc_html__('Sheet ID', 'fdsus');
-        $headersArray[] = esc_html__('Sheet Title', 'fdsus');
-        $headersArray[] = esc_html__('Sheet Date', 'fdsus');
+        $headersArray[] = esc_html__('Sheet ID', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sheet Title', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sheet Date', 'sign-up-sheets');
 
         /**
          * Filter for headers after sheet headers
@@ -280,8 +280,8 @@ class Export
          */
         $headersArray = apply_filters('fdsus_export_headers_after_sheet', $headersArray, $sheets);
 
-        $headersArray[] = esc_html__('Task ID', 'fdsus');
-        $headersArray[] = esc_html__('Task Title', 'fdsus');
+        $headersArray[] = esc_html__('Task ID', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Task Title', 'sign-up-sheets');
 
         /**
          * Filter for headers after task title
@@ -294,16 +294,16 @@ class Export
          */
         $headersArray = apply_filters('fdsus_export_headers_after_task', $headersArray, $sheets);
 
-        $headersArray[] = esc_html__('Sign-up ID', 'fdsus');
-        $headersArray[] = esc_html__('Sign-up First Name', 'fdsus');
-        $headersArray[] = esc_html__('Sign-up Last Name', 'fdsus');
-        $headersArray[] = esc_html__('Sign-up Phone', 'fdsus');
-        $headersArray[] = esc_html__('Sign-up Email', 'fdsus');
-        $headersArray[] = esc_html__('Address', 'fdsus');
-        $headersArray[] = esc_html__('City', 'fdsus');
-        $headersArray[] = esc_html__('State', 'fdsus');
-        $headersArray[] = esc_html__('Zip', 'fdsus');
-        $headersArray[] = esc_html__('User ID', 'fdsus');
+        $headersArray[] = esc_html__('Sign-up ID', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sign-up First Name', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sign-up Last Name', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sign-up Phone', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Sign-up Email', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Address', 'sign-up-sheets');
+        $headersArray[] = esc_html__('City', 'sign-up-sheets');
+        $headersArray[] = esc_html__('State', 'sign-up-sheets');
+        $headersArray[] = esc_html__('Zip', 'sign-up-sheets');
+        $headersArray[] = esc_html__('User ID', 'sign-up-sheets');
 
         /**
          * Filter for headers after core signup info

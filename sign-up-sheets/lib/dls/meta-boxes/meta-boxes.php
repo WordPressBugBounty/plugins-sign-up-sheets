@@ -258,7 +258,7 @@ class MetaBoxes
                     <a href="#<?php echo esc_url($taxonomy); ?>-all" tabindex="3"><?php echo $tax->labels->all_items; ?></a>
                 </li>
                 <li class="hide-if-no-js">
-                    <a href="#<?php echo esc_url($taxonomy); ?>-pop" tabindex="3"><?php esc_html_e('Most Used', 'fdsus'); ?></a>
+                    <a href="#<?php echo esc_url($taxonomy); ?>-pop" tabindex="3"><?php esc_html_e('Most Used', 'sign-up-sheets'); ?></a>
                 </li>
             </ul>
 
@@ -721,7 +721,7 @@ class MetaBoxes
 
             case 'checkbox':
                 $checked = ($value === 'true') ? ' checked="checked"' : null;
-                $boxLabel = empty($field['box_label_override']) ? esc_html__('True', 'fdsus') : $field['box_label_override'];
+                $boxLabel = empty($field['box_label_override']) ? esc_html__('True', 'sign-up-sheets') : $field['box_label_override'];
                 echo '<input type="checkbox" name="' . $field_name . '" value="true" class="dlsmb-field-element" id="' . $id . '"' . $checked . '> <label for="' . $id . '" class="dlsmb-checkbox">' . $boxLabel . '</label><br />';
                 break;
 
@@ -772,8 +772,8 @@ class MetaBoxes
                         <div class="dlsmb-preview-image">
                             <div class="dlsmb-image-hover">
                                 <ul>
-                                    <li class="dlsmb-image-hover-icon dlsmb-image-hover-edit"><a href="#" title="' . esc_html__('Edit', 'fdsus') . '"></a></li>
-                                    <li class="dlsmb-image-hover-icon dlsmb-image-hover-remove"><a href="#" title="' . esc_html__('Remove', 'fdsus') . '"></a></li>
+                                    <li class="dlsmb-image-hover-icon dlsmb-image-hover-edit"><a href="#" title="' . esc_html__('Edit', 'sign-up-sheets') . '"></a></li>
+                                    <li class="dlsmb-image-hover-icon dlsmb-image-hover-remove"><a href="#" title="' . esc_html__('Remove', 'sign-up-sheets') . '"></a></li>
                                 </ul>
                             </div>
                             ' . $image_output . '
@@ -923,7 +923,7 @@ class MetaBoxes
                 $value['long'] = isset($value['long']) ? $value['long'] : '';
                 if (empty($field['map_api_key'])) {
                     $error_class = 'map-not-loaded';
-                    $msg = '<p>' .esc_html__('Map not loaded. Check your api key.', 'fdsus') . '</p>';
+                    $msg = '<p>' .esc_html__('Map not loaded. Check your api key.', 'sign-up-sheets') . '</p>';
                 } else {
                     $error_class = '';
                     $msg = '';
@@ -960,11 +960,11 @@ class MetaBoxes
     {
         $actions = array(
             'add' => array(
-                'title' => esc_html__('Add Row', 'fdsus'),
+                'title' => esc_html__('Add Row', 'sign-up-sheets'),
                 'icon' => 'dashicons dashicons-plus-alt',
             ),
             'remove' => array(
-                'title' => esc_html__('Delete Row', 'fdsus'),
+                'title' => esc_html__('Delete Row', 'sign-up-sheets'),
                 'icon' => 'dashicons dashicons-trash',
             ),
         );

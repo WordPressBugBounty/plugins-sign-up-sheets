@@ -13,7 +13,7 @@
 ?>
 <p>
     <label for="spam_check" class="spam_check">
-        <?php esc_html_e('Answer the following: 7 + 1 = __', 'fdsus'); ?>
+        <?php esc_html_e('Answer the following: 7 + 1 = __', 'sign-up-sheets'); ?>
         <span class="dls-sus-required-icon">*</span>
     </label>
     <input type="text" id="spam_check" class="spam_check" name="spam_check" size="4"

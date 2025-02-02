@@ -31,7 +31,7 @@ fdsus_output_wrapper('start');
             <?php if (have_posts()) : ?>
                 <?php echo do_shortcode('[sign_up_sheet]'); ?>
             <?php else: ?>
-                <p><?php esc_attr_e('No sign-up sheets found.', 'fdsus'); ?></p>
+                <p><?php esc_attr_e('No sign-up sheets found.', 'sign-up-sheets'); ?></p>
             <?php endif; ?>
 
         </div><!-- .entry-content -->

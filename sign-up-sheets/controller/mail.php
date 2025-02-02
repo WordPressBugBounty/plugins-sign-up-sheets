@@ -127,7 +127,7 @@ class Mail
             if (isset($phpmailer)) $ts_mail_errors[] = $phpmailer->ErrorInfo;
             return new WP_Error(
                 'fdsus_mail_send',
-                esc_html__('Error sending email.', 'fdsus')
+                esc_html__('Error sending email.', 'sign-up-sheets')
                 . (Settings::isDetailedErrors() ? '.. ' . implode(' --- ', $ts_mail_errors) : '')
             );
         }
@@ -171,8 +171,8 @@ class Mail
         $signupDate = apply_filters('fdsus_mail_dynamic_content_signup_date', $signupDate, $args);
 
         // Build initial signup details
-        $signupDetails = (!empty($signupDate) ? esc_html__('Date', 'fdsus') . ': ' . date(get_option('date_format'), strtotime($signupDate)) . PHP_EOL : null)
-            . esc_html__('Event', 'fdsus') . ': ' . wp_kses_post($args['sheet']->post_title) . PHP_EOL
+        $signupDetails = (!empty($signupDate) ? esc_html__('Date', 'sign-up-sheets') . ': ' . date(get_option('date_format'), strtotime($signupDate)) . PHP_EOL : null)
+            . esc_html__('Event', 'sign-up-sheets') . ': ' . wp_kses_post($args['sheet']->post_title) . PHP_EOL
             . esc_html(Settings::$text['task_title_label']['value'])
             . ': ' . wp_kses_post($args['task']->post_title);
 

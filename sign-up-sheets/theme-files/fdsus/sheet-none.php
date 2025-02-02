@@ -12,4 +12,4 @@
  */
 ?>
 
-<p><?php esc_attr_e('Sign-up sheet not found.', 'fdsus'); ?></p>
+<p><?php esc_attr_e('Sign-up sheet not found.', 'sign-up-sheets'); ?></p>

@@ -2,11 +2,16 @@
 
 namespace FDSUS;
 
+use function is_plugin_active;
+
+if (!function_exists('is_plugin_active')) {
+    require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+}
+
 if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
 
     class Id
     {
-
         const PREFIX = 'dlssus';
         const NAME = 'Sign-up Sheets - WordPress Plugin';
         const AUTHOR = 'Fetch Designs';
@@ -25,17 +30,32 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
         /**
          * Get version from main PHP file `Version:` comment header
          *
+         * @param string $type 'pro', 'free' (not fallback) or '' for the current type
+         *
          * @return string version number
          */
-        public static function version()
+        public static function version($type = '')
         {
             if (!function_exists('get_plugin_data')) {
-                require_once(ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR
-                    . 'plugin.php');
+                require_once(ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php');
             }
 
-            $baseName = self::isPro() ? self::PRO_PLUGIN_BASENAME : self::FREE_PLUGIN_BASENAME;
-            $pluginData = get_plugin_data(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $baseName, false);
+            switch ($type) {
+                case 'pro':
+                    $pluginBasename = self::PRO_PLUGIN_BASENAME;
+                    break;
+                case 'free':
+                    $pluginBasename = self::FREE_PLUGIN_BASENAME;
+                    break;
+                default:
+                    $pluginBasename = self::isPro() ? self::PRO_PLUGIN_BASENAME : self::FREE_PLUGIN_BASENAME;
+            }
+
+            if (!file_exists(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $pluginBasename)) {
+                return '';
+            }
+
+            $pluginData = get_plugin_data(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $pluginBasename, false, false);
 
             return $pluginData && $pluginData['Version'] ? $pluginData['Version'] : '';
         }
@@ -43,9 +63,9 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
         /**
          * Log
          *
-         * @param string $msg
+         * @param string      $msg
          * @param string|null $filename
-         * @param string $emailSubject Leave blank to prevent email from sending
+         * @param string      $emailSubject Leave blank to prevent email from sending
          */
         public static function log($msg, $filename = null, $emailSubject = '')
         {
@@ -146,7 +166,7 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
          */
         public static function getPluginPath()
         {
-            return dirname(__FILE__) . '/';
+            return dirname(__FILE__) . DIRECTORY_SEPARATOR;
         }
 
         /**
@@ -154,9 +174,29 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
          */
         public static function isPro()
         {
-            return is_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pro.php');
+            if (self::isProActivating()) {
+                return true;
+            }
+
+            return is_plugin_active(self::PRO_PLUGIN_BASENAME);
         }
 
+        /**
+         * Is the pro version currently activating?
+         *
+         * @return bool
+         */
+        public static function isProActivating()
+        {
+            if (!empty($_GET['action']) && $_GET['action'] === 'activate'
+                && !empty($_GET['plugin'])
+                && $_GET['plugin'] === Id::PRO_PLUGIN_BASENAME
+            ) {
+                return true;
+            }
+
+            return false;
+        }
     }
 
 endif;

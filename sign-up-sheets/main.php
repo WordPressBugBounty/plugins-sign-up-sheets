@@ -21,10 +21,25 @@ use FDSUS\Model\DbUpdate;
 if (!function_exists('\FDSUS\fdsusAutoloader')):
     function fdsusAutoloader($className)
     {
-        if (false !== strpos($className, __NAMESPACE__) && !in_array($className, array(__NAMESPACE__ . '\Main'))) {
+        $classesDir = '';
+        $classFile = '';
+
+        if (0 === strpos($className, __NAMESPACE__ . '\\') && !in_array($className, array(__NAMESPACE__ . '\Main'))) {
             $classesDir = realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR;
             $classFile = str_replace(__NAMESPACE__ . '/', '', str_replace('\\', '/', $className)) . '.php';
             $classFile = strtolower(preg_replace('/\B([A-Z])/', '-$1', $classFile)); // add hyphen before uppercase classes then convert to all lowercase
+        } elseif (0 === strpos($className,  'FDSUSPRO\\') && Id::isProActivating()) {
+            // Autoload Pro if it's in the process of activating
+            $classesDir = dirname(realpath(plugin_dir_path(__FILE__))) . DIRECTORY_SEPARATOR . dirname(Id::PRO_PLUGIN_BASENAME) . DIRECTORY_SEPARATOR;
+            $classFile = str_replace('FDSUSPRO/', '', str_replace('\\', '/', $className)) . '.php';
+            $classFile = strtolower(preg_replace('/\B([A-Z])/', '-$1', $classFile)); // add hyphen before uppercase classes then convert to all lowercase
+        }
+
+        if ($classesDir && $classFile) {
+            if (!file_exists($classesDir . $classFile)) {
+                error_log('Autoloader tried to load a file that did not exist... ' . $classesDir . $classFile);
+                return;
+            }
             require_once $classesDir . $classFile;
         }
     }
@@ -32,7 +47,26 @@ if (!function_exists('\FDSUS\fdsusAutoloader')):
     spl_autoload_register('\FDSUS\fdsusAutoloader');
 endif;
 
-if (!class_exists('\FDSUS\Main')):
+if (!function_exists('\FDSUS\fdsusIsFallbackPlugin')):
+    function fdsusIsFallbackPlugin()
+    {
+        return dirname(__FILE__) !== dirname(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . Id::FREE_PLUGIN_BASENAME);
+    }
+endif;
+
+Notice::instance(array('frontendFilter' => Id::PREFIX . '_notices'));
+Settings::instance();
+
+if (
+    (
+        fdsusIsFallbackPlugin()
+        || (!empty(Id::version('free')) && !empty(Id::version('pro'))
+            && version_compare(Id::version('free'), Id::version('pro'), '==')
+            && !class_exists('\FDSUS\Main')
+        )
+    )
+    && !class_exists('\FDSUS\Main')
+):
 
     class Main {
 
@@ -63,8 +97,6 @@ if (!class_exists('\FDSUS\Main')):
             }
 
             global $wpdb;
-            Notice::instance(array('frontendFilter' => Id::PREFIX . '_notices'));
-            Settings::instance();
             $this->wpdb = $wpdb;
             $this->data = new Data();
             $this->dbUpdate = new DbUpdate();
@@ -100,13 +132,12 @@ if (!class_exists('\FDSUS\Main')):
                 $this->data->detailed_errors = true;
             }
 
-            register_activation_hook(Settings::getCurrentPluginBasename(), array(&$this, 'activate'));
-            register_deactivation_hook(Settings::getCurrentPluginBasename(), array(&$this, 'deactivate'));
+            register_activation_hook(FDSUS_FREE_PLUGIN_BASENAME, array(&$this, 'activate'));
+            register_deactivation_hook(FDSUS_FREE_PLUGIN_BASENAME, array(&$this, 'deactivate'));
 
             add_action('wp_enqueue_scripts', array(&$this, 'add_css_and_js_to_frontend'));
             add_action('init', array(&$this, 'setDefaultOptions'), 0);
             add_action('init', array(&$this, 'flushIfNeeded'), 0);
-            add_action('admin_init', array(&$this, 'dupPluginVersionCheck'));
 
             add_filter('rewrite_rules_array', array(&$this, 'add_rewrite_rules'));
             add_filter('get_the_archive_title', array(&$this, 'modify_archive_title'));
@@ -145,12 +176,16 @@ if (!class_exists('\FDSUS\Main')):
          */
         function add_css_and_js_to_frontend()
         {
+            // Pull pro or free
+            $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::isPro() ? Id::PRO_PLUGIN_BASENAME
+                    : Id::FREE_PLUGIN_BASENAME);
+
             wp_enqueue_script('jquery');
 
             if (Settings::isEmailValidationEnabled()) {
                 wp_register_script(
                     Id::PREFIX . '-mailcheck',
-                    esc_url(plugins_url('js/mailcheck.min.js', __FILE__)),
+                    plugins_url('js/mailcheck.min.js', __FILE__),
                     array(),
                     '1.1.2'
                 );
@@ -158,7 +193,7 @@ if (!class_exists('\FDSUS\Main')):
 
             wp_register_style(
                 Id::PREFIX . '-style',
-                plugins_url('css/style.css', __FILE__),
+                plugins_url('css/style.css', $pluginPath),
                 array(),
                 Id::version()
             );
@@ -171,7 +206,7 @@ if (!class_exists('\FDSUS\Main')):
 
             wp_register_script(
                 'dlssus-js',
-                plugins_url('js/dist/main.min.js', __FILE__),
+                plugins_url('js/dist/main.min.js', $pluginPath),
                 $mainSusDeps,
                 Id::version()
             );
@@ -237,52 +272,6 @@ if (!class_exists('\FDSUS\Main')):
         }
 
         /**
-         * Duplicate plugin version check
-         */
-        public function dupPluginVersionCheck()
-        {
-            if ((Id::isPro() && is_plugin_active(Id::FREE_PLUGIN_BASENAME))
-                || (!Id::isPro() && is_plugin_active(Id::PRO_PLUGIN_BASENAME))
-            ) {
-                $pluginFileRequire = ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR
-                    . 'plugin.php';
-                if (!function_exists('get_plugins')) {
-                    require_once($pluginFileRequire);
-                }
-
-                $plugins = get_plugins();
-
-                if ($plugins[Id::FREE_PLUGIN_BASENAME]['Version']
-                    <> $plugins[Id::PRO_PLUGIN_BASENAME]['Version']
-                ) {
-                    if (!function_exists('get_plugins')) {
-                        require_once($pluginFileRequire);
-                    }
-                    $plugins = get_plugins();
-                    $versionFree = $plugins[Id::FREE_PLUGIN_BASENAME]['Version'];
-                    $versionPro = $plugins[Id::PRO_PLUGIN_BASENAME]['Version'];
-                    $allowedHtml = array(
-                        'strong' => array(),
-                    );
-
-                    Notice::add(
-                        'error', sprintf(
-                            wp_kses(
-                            /* translators: %1$s is replaced with the pro plugin version number, %2$s is replaced with the free plugin version number */
-                                __(
-                                    'The <strong>Sign-up Sheets Pro</strong> plugin version (%1$s) does not match the version number of the main <strong>Sign-up Sheets</strong> plugin (%2$s).  Please update so both version numbers match to prevent possible conflicts.',
-                                    'fdsus'
-                                ),
-                                $allowedHtml
-                            ),
-                            esc_html($versionPro), esc_html($versionFree)
-                        )
-                    );
-                }
-            }
-        }
-
-        /**
          * Check if we need to flush rewrites (like if slug was changed in Settings)
          */
         public function flushIfNeeded()
@@ -328,7 +317,7 @@ if (!class_exists('\FDSUS\Main')):
             $this->data->remove_capabilities();
 
             // Crons
-            wp_clear_scheduled_hook(Id::PREFIX . '_dbupdate_action');
+            wp_clear_scheduled_hook('fdsus_dbupdate_action');
 
             /**
              * Action that runs on plugin activation
@@ -340,6 +329,5 @@ if (!class_exists('\FDSUS\Main')):
 
     $fdsus = new Main();
     require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'template-tags.php';
-    is_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pro.php') and include 'pro.php';
 
 endif;

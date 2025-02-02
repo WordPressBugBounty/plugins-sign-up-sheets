@@ -48,8 +48,8 @@ class Settings extends PageBase
     {
         add_submenu_page(
             'edit.php?post_type=' . SheetModel::POST_TYPE,
-            esc_html__('Sign-up Sheets Settings', 'fdsus'),
-            esc_html__('Settings', 'fdsus'),
+            esc_html__('Sign-up Sheets Settings', 'sign-up-sheets'),
+            esc_html__('Settings', 'sign-up-sheets'),
             'manage_options',
             SettingsModel::$menuSlug,
             array(&$this, 'page')
@@ -63,16 +63,16 @@ class Settings extends PageBase
     {
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
         ?>
         <div class="wrap dls_sus metabox-holder">
             <h1 class="wp-heading-inline">
-                <?php esc_html_e('Sign-up Sheets', 'fdsus'); ?>
+                <?php esc_html_e('Sign-up Sheets', 'sign-up-sheets'); ?>
                 <?php if (Id::isPro()): ?><sup class="dls-sus-pro">Pro</sup><?php endif; ?>
-                <?php esc_html_e('Settings', 'fdsus'); ?>
+                <?php esc_html_e('Settings', 'sign-up-sheets'); ?>
             </h1>
-            <p style="text-align: right;"><a href="#" class="dls-sus-expand-all-postbox"><?php esc_html_e('+ Expand All', 'fdsus'); ?></a></p>
+            <p style="text-align: right;"><a href="#" class="dls-sus-expand-all-postbox"><?php esc_html_e('+ Expand All', 'sign-up-sheets'); ?></a></p>
             <form name="dls-sus-form" class="dls-sus-settings" method="post" action="<?php echo esc_url($this->data->getSettingsUrl()) ?>">
 
                 <?php
@@ -92,7 +92,7 @@ class Settings extends PageBase
                     wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
                     ?>
                     <input type="hidden" name="<?php echo esc_attr($this->hiddenFieldName); ?>" value="<?php echo esc_attr($this->hiddenFieldValue) ?>">
-                    <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes', 'fdsus'); ?>" />
+                    <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes', 'sign-up-sheets'); ?>" />
                 </p>
 
             </form>
@@ -116,7 +116,7 @@ class Settings extends PageBase
         if (!empty($_GET['migrate']) && $_GET['migrate'] == 'rerun-2.1') {
             if (FDSUS_DISABLE_MIGRATE_2_0_to_2_1) {
                 Notice::add(
-                    'warning', esc_html__('Sorry, I cannot rerun migration.  The migration logic is currently disabled with the FDSUS_DISABLE_MIGRATE_2_0_to_2_1 configuration.', 'fdsus'), false,
+                    'warning', esc_html__('Sorry, I cannot rerun migration.  The migration logic is currently disabled with the FDSUS_DISABLE_MIGRATE_2_0_to_2_1 configuration.', 'sign-up-sheets'), false,
                     'dlssus-migrate-disabled'
                 );
                 return;
@@ -131,7 +131,7 @@ class Settings extends PageBase
             $update->scheduleAsyncUpdate();
 
             Notice::add(
-                'info', esc_html__('Sign-up Sheets database upgrade has been triggered.', 'fdsus'), false,
+                'info', esc_html__('Sign-up Sheets database upgrade has been triggered.', 'sign-up-sheets'), false,
                 'dlssus-migrate-status'
             );
         }
@@ -149,12 +149,12 @@ class Settings extends PageBase
         }
 
         if (!isset($_GET['_fdsus-nonce']) || !wp_verify_nonce($_GET['_fdsus-nonce'], 'fdsus-settings-reset')) {
-            wp_die(esc_html__('Invalid request.', 'fdsus'));
+            wp_die(esc_html__('Invalid request.', 'sign-up-sheets'));
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         $numberSaved = 0;
@@ -205,7 +205,7 @@ class Settings extends PageBase
                 if ($numberSaved === 1) {
                     Notice::add(
                         'success',
-                        esc_html__('Sign-up Sheet settings have been successfully reset to default values.', 'fdsus')
+                        esc_html__('Sign-up Sheet settings have been successfully reset to default values.', 'sign-up-sheets')
                     );
                 }
             }
@@ -226,12 +226,12 @@ class Settings extends PageBase
         }
 
         if (!isset($_POST['_fdsus-nonce']) || !wp_verify_nonce($_POST['_fdsus-nonce'], 'fdsus-settings-update')) {
-            wp_die(esc_html__('Invalid request.', 'fdsus'));
+            wp_die(esc_html__('Invalid request.', 'sign-up-sheets'));
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         $numberSaved = 0;
@@ -282,7 +282,7 @@ class Settings extends PageBase
                 do_action('fdsus_settings_page_after_save', $optionName, $optionValue, $numberSaved);
 
                 if ($numberSaved === 1) {
-                    Notice::add('success', esc_html__('Settings saved.', 'fdsus'));
+                    Notice::add('success', esc_html__('Settings saved.', 'sign-up-sheets'));
                 }
             }
         }

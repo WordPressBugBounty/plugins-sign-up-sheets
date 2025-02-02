@@ -13,7 +13,7 @@
  * // Add the metabox to the system for later output (use add() multiple times for more than one)
  * $metabox->add(array(
  *      'id' => 'sheet',
- *      'title' => esc_html__('Sign-up Sheet', 'fdsus'),
+ *      'title' => esc_html__('Sign-up Sheet', 'sign-up-sheets'),
  *      'order' => 10,
  *      'options' => array(
  *          'label'    => 'Display Label',
@@ -28,7 +28,7 @@
  *      ),
  *      'aria-labelledby' => 'my-label-id', // Default is '<name>-label' so only need to set this to change it or set to `false` to unset the aria-labelledby
  *      'aria-describedby' => 'my-description-id', // Default is not set
- *      'note'    => '<span id="my-description-id">' . esc_html__('Some description', 'fdsus') . '</span>',
+ *      'note'    => '<span id="my-description-id">' . esc_html__('Some description', 'sign-up-sheets') . '</span>',
  *      'pro'     => true
  * ));
  *

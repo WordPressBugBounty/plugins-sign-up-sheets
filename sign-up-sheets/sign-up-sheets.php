@@ -3,13 +3,13 @@
 Plugin Name: Sign-up Sheets
 Plugin URI: https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/
 Description: An online sign-up sheet manager where your users/volunteers can sign up for tasks
-Version: 2.2.14
+Version: 2.3.0
 Requires PHP: 5.5
 Requires at least: 5.5
 Author: Fetch Designs
 Author URI: https://www.fetchdesigns.com/
-Text Domain: fdsus
-Domain Path: /languages/
+Text Domain: sign-up-sheets
+Domain Path: /languages
 License: GPL2
 */
 
@@ -28,5 +28,13 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+if (!defined('FDSUS_FREE_PLUGIN_DIR_PATH')) {
+    define('FDSUS_FREE_PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
+}
+
+if (!defined('FDSUS_FREE_PLUGIN_BASENAME')) {
+    define('FDSUS_FREE_PLUGIN_BASENAME', plugin_basename(__FILE__));
+}
 
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'main.php';

@@ -14,7 +14,7 @@ use WP_Post;
 use WP_Error;
 
 if (Id::isPro()) {
-    class SignupParent extends Pro\Signup {}
+    class SignupParent extends \FDSUSPRO\Model\Pro\Signup {}
 } else {
     class SignupParent extends SignupBase {}
 }
@@ -37,8 +37,6 @@ if (Id::isPro()) {
  * @property int    dlssus_user_id
  * @property string dlssus_removal_token
  * @property string dlssus_reminded
- *
- * @package FDSUS\Model
  */
 class Signup extends SignupParent
 {
@@ -102,7 +100,7 @@ class Signup extends SignupParent
      */
     public static function getName($singular = false)
     {
-        return $singular ? __('Sign-up', 'fdsus') : __('Sign-ups', 'fdsus');
+        return $singular ? __('Sign-up', 'sign-up-sheets') : __('Sign-ups', 'sign-up-sheets');
     }
 
     /**
@@ -147,7 +145,7 @@ class Signup extends SignupParent
             throw new Exception(
                 sprintf(
                     /* translators: %1$s is replaced with task title and %2$s is replaced with optional detailed errors if enabled */
-                    esc_html__('Error adding signup for %1$s.  All spots are filled. %2$s', 'fdsus'),
+                    esc_html__('Error adding signup for %1$s.  All spots are filled. %2$s', 'sign-up-sheets'),
                     '<em>' . wp_kses_post($task->post_title) . '</em>',
                     Settings::isDetailedErrors()
                         ? ' Current Signups: ' . count($signups) . ', Total Spots:' . $task->dlssus_qty : null
@@ -179,9 +177,10 @@ class Signup extends SignupParent
         if (!$bypassChecks
             && empty($fields['double_signup'])
             && $sheet->showEmail()
+            && !empty($fields['signup_email'])
             && $task->isEmailOnTask($fields['signup_email'])
         ) {
-            $msg = esc_html__('You have already signed up for this task.  Do you want to sign up again?', 'fdsus') . '
+            $msg = esc_html__('You have already signed up for this task.  Do you want to sign up again?', 'sign-up-sheets') . '
                 <form method="post" action="' . esc_url($this->getCurrentUrl(true) . Settings::maybeGetSignUpLinkHash($sheet->ID)) . '">';
 
             foreach ($fields as $key => $value) {
@@ -206,8 +205,8 @@ class Signup extends SignupParent
             $msg .= '
                     <input type="hidden" name="double_signup" value="1" />
                     <input type="hidden" name="action" value="signup-confirmed" />
-                    <input type="submit" name="Submit" class="button-primary wp-block-button__link wp-element-button dls-sus-double-signup-confirm-button" value="' . esc_html__('Yes, sign me up', 'fdsus') . '" />
-                    <a href="' . esc_url(fdsus_back_to_sheet_url($task->ID)) . '">' . esc_html__('No, thanks', 'fdsus') . '</a>
+                    <input type="submit" name="Submit" class="button-primary wp-block-button__link wp-element-button dls-sus-double-signup-confirm-button" value="' . esc_html__('Yes, sign me up', 'sign-up-sheets') . '" />
+                    <a href="' . esc_url(fdsus_back_to_sheet_url($task->ID)) . '">' . esc_html__('No, thanks', 'sign-up-sheets') . '</a>
                 </form>
             ';
 
@@ -234,7 +233,7 @@ class Signup extends SignupParent
             throw new Exception(
                 sprintf(
                     /* translators: %s is replaced with the sign-up email */
-                    esc_html__('Error adding the sign-up for "%s"', 'fdsus'), esc_attr($cleanFields['email']))
+                    esc_html__('Error adding the sign-up for "%s"', 'sign-up-sheets'), esc_attr($cleanFields['email']))
                 . (($this->detailed_errors === true) ? '.. ' . print_r($signupId->get_error_message(), true) : '')
             );
         }
@@ -341,7 +340,7 @@ class Signup extends SignupParent
             throw new Exception(
                 sprintf(
                 /* translators: %s is replaced with the sign-up email */
-                    esc_html__('Error adding the sign-up for "%s"', 'fdsus'), esc_attr($cleanFields['email'])
+                    esc_html__('Error adding the sign-up for "%s"', 'sign-up-sheets'), esc_attr($cleanFields['email'])
                 )
                 . (($this->detailed_errors === true && is_wp_error($signupId)) ? '.. ' . print_r($signupId->get_error_message(), true) : '')
             );
@@ -510,24 +509,24 @@ class Signup extends SignupParent
     {
         $missingFieldNames = array();
         if (empty($fields['signup_firstname'])) {
-            $missingFieldNames[] = esc_html__('First Name', 'fdsus');
+            $missingFieldNames['firstname'] = esc_html__('First Name', 'sign-up-sheets');
         }
         if (empty($fields['signup_lastname'])) {
-            $missingFieldNames[] = esc_html__('Last Name', 'fdsus');
+            $missingFieldNames['lastname'] = esc_html__('Last Name', 'sign-up-sheets');
         }
-        if ($sheet->showEmail() && empty($fields['signup_email'])) {
-            $missingFieldNames[] = esc_html__('E-mail', 'fdsus');
+        if ($sheet->isEmailRequired() && empty($fields['signup_email'])) {
+            $missingFieldNames['email'] = esc_html__('E-mail', 'sign-up-sheets');
         }
-        if ($sheet->isPhoneRequired() && $sheet->showPhone() && empty($fields['signup_phone'])) {
-            $missingFieldNames[] = esc_html__('Phone', 'fdsus');
+        if ($sheet->isPhoneRequired() && empty($fields['signup_phone'])) {
+            $missingFieldNames['phone'] = esc_html__('Phone', 'sign-up-sheets');
         }
-        if ($sheet->isAddressRequired() && $sheet->showAddress()
+        if ($sheet->isAddressRequired()
             && (empty($fields['signup_address'])
                 || empty($fields['signup_city'])
                 || empty($fields['signup_state'])
                 || empty($fields['signup_zip']))
         ) {
-            $missingFieldNames[] = esc_html__('Address', 'fdsus');
+            $missingFieldNames[] = esc_html__('Address', 'sign-up-sheets');
         }
 
         /**
@@ -535,16 +534,12 @@ class Signup extends SignupParent
          *
          * @param array      $missingFieldNames
          * @param SheetModel $sheet
+         * @param array      $fields
          *
          * @return array
          * @since 2.2
          */
-        $missingFieldNames = apply_filters('fdsus_sign_up_form_errors_required_fields', $missingFieldNames, $sheet);
-
-        // TODO CAPTCHA - move to Captcha class
-        if (!is_admin() && !Settings::isAllCaptchaDisabled() && !Settings::isRecaptchaEnabled() && empty($fields['spam_check'])) {
-            $missingFieldNames[] = esc_html__('Math Question', 'fdsus');
-        }
+        $missingFieldNames = apply_filters('fdsus_sign_up_form_errors_required_fields', $missingFieldNames, $sheet, $fields);
 
         return $missingFieldNames ? $missingFieldNames : true;
     }

@@ -45,7 +45,7 @@ class EditSignupPage extends PageBase
 
         add_submenu_page(
             '',
-            esc_html__('Edit Sign-up', 'fdsus'),
+            esc_html__('Edit Sign-up', 'sign-up-sheets'),
             '',
             $sheetCaps->get('edit_posts'),
             $this->menuSlug,
@@ -68,26 +68,26 @@ class EditSignupPage extends PageBase
         if (!empty($_GET['signup'])) {
             $signup = new SignupModel($_GET['signup']);
             if (!$signup->isValid()) {
-                wp_die(__('Sign-up invalid', 'fdsus'));
+                wp_die(__('Sign-up invalid', 'sign-up-sheets'));
             }
         }
 
         $task = new TaskModel(!empty($_GET['task']) ? $_GET['task'] : $signup->post_parent);
         if (!$task->isValid()) {
-            wp_die(__('Task invalid', 'fdsus'));
+            wp_die(__('Task invalid', 'sign-up-sheets'));
         }
 
         $sheet = new SheetModel($task->post_parent);
         if (!$sheet->isValid()) {
-            wp_die(__('Sheet invalid', 'fdsus'));
+            wp_die(__('Sheet invalid', 'sign-up-sheets'));
         }
         ?>
 
         <div class="wrap dls_sus">
             <h1 class="wp-heading-inline">
                 <?php echo $_GET['action'] === 'add'
-                    ? esc_html__('Add Sign-up', 'fdsus')
-                    : esc_html__('Edit Sign-up', 'fdsus');
+                    ? esc_html__('Add Sign-up', 'sign-up-sheets')
+                    : esc_html__('Edit Sign-up', 'sign-up-sheets');
                 ?>
             </h1>
 
@@ -107,7 +107,7 @@ class EditSignupPage extends PageBase
                 'initial'            => $initialArray,
                 'multi_tag'          => '',
                 'states'             => $states->get(),
-                'submit_button_text' => __('Submit', 'fdsus'),
+                'submit_button_text' => __('Submit', 'sign-up-sheets'),
                 'go_back_url'        => '',
                 'signup_link_hash'   => ''
             );
@@ -118,9 +118,9 @@ class EditSignupPage extends PageBase
         </div>
             <div id="postbox-container-1" class="postbox-container">
                 <div class="fdsus-edit-quick-info" role="group"
-                     aria-label="<?php esc_attr_e('Sheet Quick Info', 'fdsus') ?>">
+                     aria-label="<?php esc_attr_e('Sheet Quick Info', 'sign-up-sheets') ?>">
                     <span class="quick-info-item quick-info-id"><strong><?php esc_html_e(
-                                'Sheet ID', 'fdsus'
+                                'Sheet ID', 'sign-up-sheets'
                             ) ?>: </strong> <code><?php echo $sheet->ID ?></code></span>
                     <?php do_action('fdsus_edit_sheet_quick_info', $sheet->getData()); ?>
                 </div>
@@ -129,18 +129,18 @@ class EditSignupPage extends PageBase
                     <div class="postbox-header"><h2>Sheet and Task Info</h2></div>
                     <div class="inside">
                         <dl>
-                            <dt><?php _e('Sheet', 'fdsus'); ?>:</dt>
+                            <dt><?php _e('Sheet', 'sign-up-sheets'); ?>:</dt>
                             <dd><?php echo wp_kses_post($sheet->post_title); ?></dd>
 
-                            <dt><?php esc_html_e('Date', 'fdsus'); ?>:</dt>
+                            <dt><?php esc_html_e('Date', 'sign-up-sheets'); ?>:</dt>
                             <dd>
                                 <?php echo(empty($sheet->dlssus_date)
-                                    ? esc_html__('N/A', 'fdsus')
+                                    ? esc_html__('N/A', 'sign-up-sheets')
                                     : date(get_option('date_format'), strtotime($sheet->dlssus_date))
                                 ); ?>
                             </dd>
 
-                            <dt><?php _e('Task', 'fdsus'); ?>:</dt>
+                            <dt><?php _e('Task', 'sign-up-sheets'); ?>:</dt>
                             <dd><?php esc_html_e($task->post_title); ?></dd>
                         </dl>
                     </div>
@@ -170,10 +170,10 @@ class EditSignupPage extends PageBase
 
         switch($_GET['notice']) {
             case 'edited':
-                Notice::add('success', esc_html__('Sign-up updated.', 'fdsus'));
+                Notice::add('success', esc_html__('Sign-up updated.', 'sign-up-sheets'));
                 break;
             case 'added':
-                Notice::add('success', esc_html__('Sign-up added.', 'fdsus'));
+                Notice::add('success', esc_html__('Sign-up added.', 'sign-up-sheets'));
                 break;
         }
 
@@ -194,11 +194,11 @@ class EditSignupPage extends PageBase
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can($sheetCaps->get('edit_posts'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         if (empty($_GET['signup'])) {
-            wp_die(esc_html__('Sign-up ID missing', 'fdsus'));
+            wp_die(esc_html__('Sign-up ID missing', 'sign-up-sheets'));
         }
 
         if (!empty($_POST)) {
@@ -206,7 +206,7 @@ class EditSignupPage extends PageBase
                 !isset($_POST['signup_nonce'])
                 || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
             ) {
-                wp_die(esc_html__('Sign-up nonce not valid.', 'fdsus'));
+                wp_die(esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'));
             }
 
             Notice::instance();
@@ -215,7 +215,7 @@ class EditSignupPage extends PageBase
             $signup = new SignupModel($_GET['signup']);
 
             if (!$signup->isValid()) {
-                Notice::add('error', esc_html__('Sign-up not found.', 'fdsus'));
+                Notice::add('error', esc_html__('Sign-up not found.', 'sign-up-sheets'));
                 return;
             }
 
@@ -230,7 +230,7 @@ class EditSignupPage extends PageBase
                     throw new Exception(
                         sprintf(
                         /* translators: %s is replaced with a comma separated list of all missing required fields */
-                            esc_html__('Please complete the following required fields: %s', 'fdsus'),
+                            esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
                             implode(', ', $missingFieldNames)
                         )
                     );
@@ -261,13 +261,13 @@ class EditSignupPage extends PageBase
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can($sheetCaps->get('edit_posts'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         Notice::instance();
 
         if (empty($_GET['task'])) {
-            wp_die(esc_html__('Task-up ID missing', 'fdsus'));
+            wp_die(esc_html__('Task-up ID missing', 'sign-up-sheets'));
         }
 
         if (!empty($_POST)) {
@@ -275,7 +275,7 @@ class EditSignupPage extends PageBase
                 !isset($_POST['signup_nonce'])
                 || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
             ) {
-                wp_die(esc_html__('Sign-up nonce not valid.', 'fdsus'));
+                wp_die(esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'));
             }
 
             // Add signup
@@ -292,7 +292,7 @@ class EditSignupPage extends PageBase
                     throw new Exception(
                         sprintf(
                         /* translators: %s is replaced with a comma separated list of all missing required fields */
-                            esc_html__('Please complete the following required fields: %s', 'fdsus'),
+                            esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
                             implode(', ', $missingFieldNames)
                         )
                     );
@@ -327,7 +327,7 @@ class EditSignupPage extends PageBase
         ?>
         <p class="fdsus-user">
             <label for="signup_user_id" class="signup_user_id">
-                <?php esc_html_e('Linked User', 'fdsus'); ?>
+                <?php esc_html_e('Linked User', 'sign-up-sheets'); ?>
             </label>
             <select id="signup_user_id" class="signup_user_id" name="signup_user_id">
                 <option value=""></option>

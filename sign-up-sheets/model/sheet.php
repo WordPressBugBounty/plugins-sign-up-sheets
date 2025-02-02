@@ -9,7 +9,7 @@ use FDSUS\Id;
 use WP_Post;
 
 if (Id::isPro()) {
-    class SheetParent extends Pro\Sheet {}
+    class SheetParent extends \FDSUSPRO\Model\Pro\Sheet {}
 } else {
     class SheetParent extends SheetBase {}
 }

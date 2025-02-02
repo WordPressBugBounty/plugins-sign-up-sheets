@@ -86,7 +86,7 @@ class Admin
         $migrate = new Migrate();
         $status = $migrate->getStatus();
         if (!in_array($status['state'], array('running', 'rerun'))) return;
-        Notice::add('info', esc_html__('Sign-up sheets database upgrade is processing.', 'fdsus'), false, Id::PREFIX . '-migrate-status');
+        Notice::add('info', esc_html__('Sign-up sheets database upgrade is processing.', 'sign-up-sheets'), false, Id::PREFIX . '-migrate-status');
     }
 
     /**
@@ -99,10 +99,10 @@ class Admin
     {
         unset($columns['date']);
         return array_merge($columns, array(
-            'task_date' => esc_html__('Sheet Date', 'fdsus'),
-            'total_tasks' => esc_html__('# of Tasks', 'fdsus'),
-            'total_spots' => esc_html__('Total Spots', 'fdsus'),
-            'filled_spots' => esc_html__('Filled Spots', 'fdsus'))
+            'task_date' => esc_html__('Sheet Date', 'sign-up-sheets'),
+            'total_tasks' => esc_html__('# of Tasks', 'sign-up-sheets'),
+            'total_spots' => esc_html__('Total Spots', 'sign-up-sheets'),
+            'filled_spots' => esc_html__('Filled Spots', 'sign-up-sheets'))
         );
     }
 
@@ -157,16 +157,16 @@ class Admin
         }
 
         if (empty($_GET['sheet_id'])) {
-            wp_die(esc_html__('No sheet ID found.', 'fdsus'));
+            wp_die(esc_html__('No sheet ID found.', 'sign-up-sheets'));
         }
 
         if (!wp_verify_nonce($_GET['_fdsus-nonce'], 'fdsus-copysheet-' . $_GET['sheet_id'])) {
-            wp_die(esc_html__('Copy action failed.  Please try again.', 'fdsus'));
+            wp_die(esc_html__('Copy action failed.  Please try again.', 'sign-up-sheets'));
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can($sheetCaps->get('edit_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         $sheetId = (int)$_GET['sheet_id'];
@@ -184,6 +184,10 @@ class Admin
      */
     public function head()
     {
+        // Pull pro or free
+        $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::isPro() ? Id::PRO_PLUGIN_BASENAME
+                : Id::FREE_PLUGIN_BASENAME);
+
         // Dequeue meta library scripts for now
         if (wp_script_is('dlsmb-main', $list = 'enqueued')) {
             wp_dequeue_script('dlsmb-main');
@@ -202,7 +206,7 @@ class Admin
         if ($isSusPage || $currentScreen->id === 'dashboard') {
             wp_enqueue_style(
                 Id::PREFIX . '-admin',
-                plugins_url('css/admin.css', dirname(__FILE__)),
+                plugins_url('css/admin.css', $pluginPath),
                 array(),
                 Id::version()
             );
@@ -291,7 +295,7 @@ class Admin
         if ($post->post_type == SheetModel::POST_TYPE) {
 
             $id = array('fdsus-id' => sprintf(
-                '<span class="fdsus-id-value">' . esc_html__('ID', 'fdsus') . ': %s</span>',
+                '<span class="fdsus-id-value">' . esc_html__('ID', 'sign-up-sheets') . ': %s</span>',
                 $post->ID
             ));
             $actions = $id + $actions;
@@ -300,7 +304,7 @@ class Admin
                 $actions['fdsus-manage'] = sprintf(
                     '<a href="%s" title="" rel="permalink">%s</a>',
                     esc_url(Settings::getManageSignupsPageUrl($post->ID)),
-                    esc_html__('Manage Sign-ups', 'fdsus')
+                    esc_html__('Manage Sign-ups', 'sign-up-sheets')
                 );
 
                 $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
@@ -319,7 +323,7 @@ class Admin
                             'fdsus-copysheet-' . $post->ID,
                             '_fdsus-nonce'
                         )),
-                        esc_html__('Copy', 'fdsus')
+                        esc_html__('Copy', 'sign-up-sheets')
                     );
                 }
             }
@@ -369,14 +373,14 @@ class Admin
         ?>
         <footer class="fdsus-footer" aria-label="Sign-up Sheet">
             <p>
-                <?php esc_html_e('Made by', 'fdsus'); ?> Fetch Designs
+                <?php esc_html_e('Made by', 'sign-up-sheets'); ?> Fetch Designs
                 <span class="fdsus-footer-getpro"></span>
                 <?php if (!Id::isPro()): ?>
-                    <a href="https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/"><?php esc_html_e('Get Pro', 'fdsus'); ?></a>
+                    <a href="https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/"><?php esc_html_e('Get Pro', 'sign-up-sheets'); ?></a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                 <?php endif; ?>
                 <a href="<?php echo esc_url($supportUrl); ?>">
-                    <span><?php esc_html_e('Need help? Get Support &raquo;', 'fdsus'); ?></span>
+                    <span><?php esc_html_e('Need help? Get Support &raquo;', 'sign-up-sheets'); ?></span>
                 </a>
             </p>
             <hr>
@@ -395,7 +399,7 @@ class Admin
     {
         $settingsLink = sprintf( '<a href="%s">%s</a>',
             esc_url($this->data->getSettingsUrl()),
-            esc_html__('Settings', 'fdsus')
+            esc_html__('Settings', 'sign-up-sheets')
         );
         array_unshift($links, $settingsLink);
 

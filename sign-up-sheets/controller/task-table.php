@@ -49,14 +49,19 @@ class TaskTable extends Base
 
         /**
          * @var bool $showSignupLink
+         * @var bool $emailSimplified
          */
         extract(shortcode_atts(array(
             'showSignupLink' => false,
+            'emailSimplified' => false,
         ), $atts));
         $this->config['showSignupLink'] = $showSignupLink;
+        $this->config['emailSimplified'] = $emailSimplified;
 
         $this->tasks = $this->sheet->getTasks();
-        $this->table = new TaskTableModel($sheet);
+        $this->table = new TaskTableModel($sheet, $this->config);
+
+        $this->setVariables($atts);
 
         parent::__construct();
     }
@@ -64,10 +69,10 @@ class TaskTable extends Base
     /**
      * Set variables
      */
-    private function setVariables()
+    private function setVariables($excludedAtts = array())
     {
-        $this->config['isFullCompact'] = $this->sheet->isFullCompact() && !is_admin();
-        $this->config['displayAll'] = Settings::isDisplayAllSignupDataEnabled() || is_admin();
+        $this->config['isFullCompact'] = $this->sheet->isFullCompact() && !is_admin() && !$this->config['emailSimplified'];
+        $this->config['displayAll'] = Settings::isDisplayAllSignupDataEnabled() || is_admin() || $this->config['emailSimplified'];
 
         /**
          * Filters task table configs at the beginning of the process
@@ -109,7 +114,11 @@ class TaskTable extends Base
     {
         $out = '';
         foreach ($this->table->rows as $row) {
-            $out .= sprintf('<tr class="%s">', $row->class ? $row->class : '');
+            $out .= sprintf(
+                '<tr class="%s" %s>',
+                $row->class ? $row->class : '',
+                $this->config['emailSimplified'] ? 'valign="top" align="left"' : ''
+            );
             foreach ($row->cells as $cell) {
                 $scope = '';
                 if ($cell['element'] === 'th') {
@@ -140,7 +149,10 @@ class TaskTable extends Base
     {
         // Remaining empty spots
         if ($this->config['displayAll'] && !$this->config['isFullCompact']) {
-            $this->config['emptySignupColspan'] += 7;
+            $this->config['emptySignupColspan'] += 6;
+            if ($this->sheet->showEmail()) {
+                $this->config['emptySignupColspan']++;
+            }
             if ($this->sheet->showPhone()) {
                 $this->config['emptySignupColspan']++;
             }
@@ -179,18 +191,20 @@ class TaskTable extends Base
          */
         $this->table = apply_filters('fdsus_tasktable-table-header_data_after_task_title', $this->table, $this->sheet, $this->config);
 
-        $this->table->addHeaderCell('name', esc_html__('Name', 'fdsus'));
+        $this->table->addHeaderCell('name', esc_html__('Name', 'sign-up-sheets'));
 
         if ($this->config['displayAll']) {
-            $this->table->addHeaderCell('email', esc_html__('E-mail', 'fdsus'));
+            if ($this->sheet->showEmail()) {
+                $this->table->addHeaderCell('email', esc_html__('E-mail', 'sign-up-sheets'));
+            }
             if ($this->sheet->showPhone()) {
-                $this->table->addHeaderCell('phone', esc_html__('Phone', 'fdsus'));
+                $this->table->addHeaderCell('phone', esc_html__('Phone', 'sign-up-sheets'));
             }
             if ($this->sheet->showAddress()) {
-                $this->table->addHeaderCell('address', esc_html__('Address', 'fdsus'));
-                $this->table->addHeaderCell('city', esc_html__('City', 'fdsus'));
-                $this->table->addHeaderCell('state', esc_html__('State', 'fdsus'));
-                $this->table->addHeaderCell('zip', esc_html__('Zip', 'fdsus'));
+                $this->table->addHeaderCell('address', esc_html__('Address', 'sign-up-sheets'));
+                $this->table->addHeaderCell('city', esc_html__('City', 'sign-up-sheets'));
+                $this->table->addHeaderCell('state', esc_html__('State', 'sign-up-sheets'));
+                $this->table->addHeaderCell('zip', esc_html__('Zip', 'sign-up-sheets'));
             }
         }
 
@@ -211,10 +225,10 @@ class TaskTable extends Base
                 $this->table->addHeaderCell(
                     'clear-checkbox',
                     '<label>
-                        <span class="sr-only">' . __('Select all spots to Clear', 'fdsus') . '</span>
+                        <span class="screen-reader-text">' . esc_html__('Select all spots to Clear', 'sign-up-sheets') . '</span>
                         <input type="checkbox" value="" id="select-all-clear">
                     </label>
-                    <input name="multi_submit" type="submit" class="button" value="' . esc_html__('Clear Selected', 'fdsus') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'fdsus') . '\');">',
+                    <input name="multi_submit" type="submit" class="button" value="' . esc_html__('Clear Selected', 'sign-up-sheets') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'sign-up-sheets') . '\');">',
                     'fdsus-col-clear'
                 );
             }
@@ -283,7 +297,7 @@ class TaskTable extends Base
             $this->config['openSpots'] = $task->getOpenSpotCount();
 
             $signupIndex = 0;
-            if (!$this->config['isFullCompact']) {
+            if (!$this->config['isFullCompact'] || $this->config['emailSimplified']) {
                 if (!empty($signups) && is_array($signups)) {
                     foreach ($signups AS $signup) {
                         $signupIndex++;
@@ -360,13 +374,15 @@ class TaskTable extends Base
                         $cellValue = sprintf(
                             '<span class="dls-sus-spot-num">%s</span> <span>%s</span>',
                             /* translators: %d is replaced with the spot number */
-                            sprintf(esc_html__('#%d:', 'fdsus'), (int)$this->config['spotIndex']),
+                            sprintf(esc_html__('#%d:', 'sign-up-sheets'), (int)$this->config['spotIndex']),
                             $name
                         );
                         $this->table->addRowCell('auto', 'name', $cellValue);
 
                         if ($this->config['displayAll']) {
-                            $this->table->addRowCell('auto', 'email', esc_html($signup->dlssus_email));
+                            if ($this->sheet->showEmail()) {
+                                $this->table->addRowCell('auto', 'email', esc_html($signup->dlssus_email));
+                            }
                             if ($this->sheet->showPhone()) {
                                 $this->table->addRowCell('auto', 'phone', esc_html($signup->dlssus_phone));
                             }
@@ -407,9 +423,9 @@ class TaskTable extends Base
                                 '
                                 <span class="delete">
                                     <label>
-                                        <span class="sr-only">'
+                                        <span class="screen-reader-text">'
                                             .  /* translators: %s is replaced with the index of the spot within the current task */
-                                            sprintf(__('Select spot #%s to clear', 'fdsus'), (int)$this->config['spotIndex']) . '</span>
+                                            sprintf(__('Select spot #%s to clear', 'sign-up-sheets'), (int)$this->config['spotIndex']) . '</span>
                                         <input type="checkbox" name="clear[]" value="' . (int)$signup->ID . '" class="clear-checkbox">
                                     </label>
                                     <a href="' . esc_attr($clear_url) . '" aria-label="%1$s" title="%1$s" %2$s>
@@ -417,29 +433,29 @@ class TaskTable extends Base
                                     </a>
                                 </span>
                                 <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($signup->ID, $_GET['sheet_id'])) . '">
-                                    <span class="sr-only">' . __('Edit', 'fdsus') . '</span>
+                                    <span class="screen-reader-text">' . esc_html__('Edit', 'sign-up-sheets') . '</span>
                                     <i class="dashicons dashicons-edit" aria-hidden="true"></i>
                                 </a>
                                 <div class="fdsus-toggletip">
                                     <a href="#/" aria-expanded="false"
                                         id="fdsus-signup-metadata-control-' . (int)$signup->ID . '"
                                         aria-controls="fdsus-signup-metadata-detail-' . (int)$signup->ID . '">
-                                        <span class="sr-only">' . __('Additional Details', 'fdsus') . '</span>
+                                        <span class="screen-reader-text">' . esc_html__('Additional Details', 'sign-up-sheets') . '</span>
                                         <i class="dashicons dashicons-info" aria-hidden="true"></i>
                                     </a>
                                     <div role="region" hidden=""
                                         id="fdsus-signup-metadata-detail-' . (int)$signup->ID . '"
                                         aria-labelledby="fdsus-signup-metadata-control-' . (int)$signup->ID . '">
                                         <ul class="fdsus-signup-metadata">
-                                            <li>' . __('Added', 'fdsus') . ': %3$s</li>
-                                            <li>' . __('Updated', 'fdsus') . ': %4$s</li>
-                                            <li>' . __('Linked user', 'fdsus') . ':  %5$s</li>
+                                            <li>' . esc_html__('Added', 'sign-up-sheets') . ': %3$s</li>
+                                            <li>' . esc_html__('Updated', 'sign-up-sheets') . ': %4$s</li>
+                                            <li>' . esc_html__('Linked user', 'sign-up-sheets') . ':  %5$s</li>
                                         </ul>
                                     </div>
                                 </div>
                                 ',
-                                esc_html__('Clear Spot Now', 'fdsus'),
-                                'onclick="return confirm(\'' . esc_html__('This will permanently remove this sign-up.', 'fdsus') . '\');"',
+                                esc_html__('Clear Spot Now', 'sign-up-sheets'),
+                                'onclick="return confirm(\'' . esc_html__('This will permanently remove this sign-up.', 'sign-up-sheets') . '\');"',
                                 date('Y-m-d ' . get_option('time_format'), strtotime($signup->post_date)),
                                 date('Y-m-d ' . get_option('time_format'), strtotime($signup->post_modified)),
                                 $userDisplay
@@ -509,17 +525,17 @@ class TaskTable extends Base
                     if ($this->config['showSignupLink'] && !$this->sheet->isExpired() && !$task->isExpired()) {
                         $signupLink = $task->getSignupLink();
                     } else {
-                        $signupLink = esc_html__('(empty)', 'fdsus');
+                        $signupLink = esc_html__('(empty)', 'sign-up-sheets');
                         if (is_admin()) {
                             $signupLink .= '
                                 <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($task->ID, $_GET['sheet_id'], 'add')) . '">
-                                    <span class="sr-only">' . __('Add Sign-up', 'fdsus') . '</span>
+                                    <span class="screen-reader-text">' . esc_html__('Add Sign-up', 'sign-up-sheets') . '</span>
                                     <i class="dashicons dashicons-plus" aria-hidden="true"></i>
                                 </a>';
                         }
                     }
                     if ($this->sheet->isExpired() || $task->isExpired()) {
-                        $signupLink .= esc_html__(' - sign-ups closed', 'fdsus');
+                        $signupLink .= esc_html__(' - sign-ups closed', 'sign-up-sheets');
                     }
 
                     /**
@@ -547,16 +563,25 @@ class TaskTable extends Base
 
     /**
      * Get display code for tasks table (back and front-end)
+     *
+     * @param bool $echo
+     * @param bool $emailSimplified
+     *
+     * @return string|void
      */
-    public function output()
+    public function output($echo = true, $emailSimplified = false)
     {
-        if (empty($this->tasks)) : ?>
-            <p><?php esc_html_e('No tasks were found.', 'fdsus'); ?></p>
-            <?php
-            return;
-        endif;
+        ob_start();
 
-        $this->setVariables();
+        if (empty($this->tasks)) : ?>
+            <p><?php esc_html_e('No tasks were found.', 'sign-up-sheets'); ?></p>
+            <?php
+            if ($echo) {
+                echo ob_get_clean();
+                return;
+            }
+            return ob_get_clean();
+        endif;
 
         // Header
         $this->buildHeaderData();
@@ -574,10 +599,10 @@ class TaskTable extends Base
 
         // Build Table
         ?>
-        <form action="<?php echo esc_url($formUrl); ?>" method="post" id="sus_form" class="fdsus-form">
-            <table class="dls-sus-tasks <?php echo is_admin() ? 'wp-list-table widefat' : null; ?>">
+        <?php if (!$emailSimplified) : ?><form action="<?php echo esc_url($formUrl); ?>" method="post" id="sus_form" class="fdsus-form"><?php endif; ?>
+            <table class="dls-sus-tasks <?php echo is_admin() ? 'wp-list-table widefat' : null; ?>" <?php if ($emailSimplified) : ?>cellspacing="0" cellpadding="5" border="1"<?php endif; ?>>
                 <thead><?php echo $header; ?></thead>
-                <tfoot><?php echo $header; ?></tfoot>
+                <?php if (!$emailSimplified) : ?><tfoot><?php echo $header; ?></tfoot><?php endif; ?>
                 <tbody><?php echo $body; ?></tbody>
             </table>
             <?php
@@ -585,15 +610,22 @@ class TaskTable extends Base
              * Action that runs after the Task Table <table> is output
              *
              * @param SheetModel $sheet
+             * @param array      $config
              *
              * @since 2.2
              */
-            do_action('fdsus_tasktable_after_table', $this->sheet);
+            do_action('fdsus_tasktable_after_table', $this->sheet, $this->config);
 
             wp_nonce_field('clear-multiple-signups', 'manage_signup_nonce', true, false);
             ?>
-        </form>
+        <?php if (!$emailSimplified) : ?></form><?php endif; ?>
         <?php
+
+        if ($echo) {
+            echo ob_get_clean();
+            return;
+        }
+        return ob_get_clean();
     }
 
 }

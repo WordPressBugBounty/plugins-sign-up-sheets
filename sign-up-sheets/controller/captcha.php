@@ -8,6 +8,7 @@ namespace FDSUS\Controller;
 use FDSUS\Id;
 use FDSUS\Model\Settings;
 use FDSUS\Lib\ReCaptcha\ReCaptcha;
+use FDSUS\Model\Sheet as SheetModel;
 use WP_Error;
 
 class Captcha extends Base
@@ -20,6 +21,7 @@ class Captcha extends Base
         if (!is_admin()) {
             add_action('fdsus_enqueue_scripts_styles_on_signup', array(&$this, 'enqueue'), 10, 0);
             add_filter('fdsus_error_before_add_signup', array(&$this, 'signupValidation'), 10, 3);
+            add_filter('fdsus_sign_up_form_errors_required_fields', array(&$this, 'updateRequiredFields'), 10, 3);
         }
 
         parent::__construct();
@@ -42,6 +44,28 @@ class Captcha extends Base
         if (Settings::isRecaptchaEnabled()) {
             wp_enqueue_script('fdsus-recaptcha');
         }
+    }
+
+    /**
+     * Adjust required fields
+     *
+     * @param array      $missingFieldNames
+     * @param SheetModel $sheet
+     * @param array      $fields
+     *
+     * @return array
+     */
+    public function updateRequiredFields($missingFieldNames, $sheet, $fields)
+    {
+        if (!is_admin()
+            && !Settings::isAllCaptchaDisabled()
+            && !Settings::isRecaptchaEnabled()
+            && empty($fields['spam_check'])
+        ) {
+            $missingFieldNames['simple_captcha'] = esc_html__('Math Question', 'sign-up-sheets');
+        }
+
+        return $missingFieldNames;
     }
 
     /**
@@ -70,7 +94,7 @@ class Captcha extends Base
             if (!$resp->isSuccess()) {
                 return new WP_Error(
                     'fdsus-captcha-error',
-                    __('Please check that the reCAPTCHA field is valid.', 'fdsus')
+                    __('Please check that the reCAPTCHA field is valid.', 'sign-up-sheets')
                 );
             }
         } elseif (!Settings::isRecaptchaEnabled()
@@ -80,7 +104,7 @@ class Captcha extends Base
             return new WP_Error(
                 'fdsus-captcha-error', sprintf(
                 /* translators: %s is replaced with the users response to the simple captcha */
-                    esc_html__('Oh dear, 7 + 1 does not equal %s. Please try again.', 'fdsus'),
+                    esc_html__('Oh dear, 7 + 1 does not equal %s. Please try again.', 'sign-up-sheets'),
                     esc_attr($_POST['spam_check'])
                 )
             );

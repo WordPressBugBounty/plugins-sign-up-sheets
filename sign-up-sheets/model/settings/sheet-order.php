@@ -20,25 +20,25 @@ class SheetOrder
     {
         $this->options = array(
             'date_asc'  => array(
-                'label'            => esc_html__('Date (ASC)', 'fdsus'),
+                'label'            => esc_html__('Date (ASC)', 'sign-up-sheets'),
                 'direction'        => 'ASC',
                 'sort_by'          => 'dlssus_end_date',
                 'wp_query_orderby' => 'date', // fallback to publish date if end date is the same between sheets
             ),
             'date_desc' => array(
-                'label'            => esc_html__('Date (DESC)', 'fdsus'),
+                'label'            => esc_html__('Date (DESC)', 'sign-up-sheets'),
                 'direction'        => 'DESC',
                 'sort_by'          => 'dlssus_end_date',
                 'wp_query_orderby' => 'date', // fallback to publish date if end date is the same between sheets
             ),
             'id_asc'    => array(
-                'label'            => esc_html__('Sheet ID (ASC)', 'fdsus'),
+                'label'            => esc_html__('Sheet ID (ASC)', 'sign-up-sheets'),
                 'direction'        => 'ASC',
                 'sort_by'          => false,
                 'wp_query_orderby' => 'ID',
             ),
             'id_desc'   => array(
-                'label'            => esc_html__('Sheet ID (DESC)', 'fdsus'),
+                'label'            => esc_html__('Sheet ID (DESC)', 'sign-up-sheets'),
                 'direction'        => 'DESC',
                 'sort_by'          => false,
                 'wp_query_orderby' => 'ID',

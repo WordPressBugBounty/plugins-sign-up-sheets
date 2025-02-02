@@ -27,27 +27,27 @@ class SiteHealth
     public function addSiteHealthInfo($info)
     {
         $info['wp-core']['fields']['fdsus_date_format'] = array(
-            'label' => esc_html__('Date Format', 'fdsus'),
+            'label' => esc_html__('Date Format', 'sign-up-sheets'),
             'value' => esc_html(get_option('date_format')),
         );
         $info['wp-core']['fields']['fdsus_time_format'] = array(
-            'label' => esc_html__('Time Format', 'fdsus'),
+            'label' => esc_html__('Time Format', 'sign-up-sheets'),
             'value' => esc_html(get_option('time_format')),
         );
         $info['wp-core']['fields']['fdsus_admin_email'] = array(
-            'label' => esc_html__('Admin Email', 'fdsus'),
+            'label' => esc_html__('Admin Email', 'sign-up-sheets'),
             'value' => esc_html(get_option('admin_email')),
         );
         $info['wp-server']['fields']['fdsus_server_max_execution_time'] = array(
-            'label' => esc_html__('Max Execution Time', 'fdsus'),
+            'label' => esc_html__('Max Execution Time', 'sign-up-sheets'),
             'value' => ini_get('max_execution_time') . ' seconds',
         );
         $info['wp-server']['fields']['fdsus_user_agent_string'] = array(
-            'label' => esc_html__('User Agent String', 'fdsus'),
+            'label' => esc_html__('User Agent String', 'sign-up-sheets'),
             'value' => $_SERVER['HTTP_USER_AGENT'],
         );
         $info['sign-up-sheets'] = array(
-            'label'  => esc_html__('Sign-up Sheets', 'fdsus'),
+            'label'  => esc_html__('Sign-up Sheets', 'sign-up-sheets'),
             'fields' => $this->getFields(),
         );
 
@@ -66,15 +66,15 @@ class SiteHealth
 
         $dataPrimary = array(
             'version'            => array(
-                'label' => esc_html__('Version', 'fdsus'),
+                'label' => esc_html__('Version', 'sign-up-sheets'),
                 'value' => Id::version(),
             ),
             'db_version_type'    => array(
-                'label' => esc_html__('Version Type', 'fdsus'),
+                'label' => esc_html__('Version Type', 'sign-up-sheets'),
                 'value' => $allOptions['dls_sus_db_version_type'],
             ),
             'primary_db_version' => array(
-                'label' => esc_html__('DB Version', 'fdsus'),
+                'label' => esc_html__('DB Version', 'sign-up-sheets'),
                 'value' => $allOptions['dls_sus_db_version'],
             ),
         );

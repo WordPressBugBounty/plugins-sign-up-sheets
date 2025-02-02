@@ -2,7 +2,7 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.7
-Stable tag: 2.2.14
+Stable tag: 2.3.0
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -114,6 +114,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.0 | 2025-02-02 =
+* Added ability to mark email field as optional.
+* Updated translation textdomain to better match WordPress standard of 'sign-up-sheets'. [⚠️Breaking Change]
+* Updated .sr-only class to use .screen-reader-text to be more consistent with WP core.
+* Fixed missing escaping around translations on tasks table.
+* Fixed sheets with the hidden email set so that the column doesn't show up in the admin and status email task tables.
+* Fixed password-protected sheets to prevent displaying sheet content prior to password being entered.
+* Fixed WP 6.7 notice being thrown of "Function _load_textdomain_just_in_time was called incorrectly."
+* Fixed bug preventing editing of new tasks on mobile devices.
+
 = 2.2.14 | 2024-10-07 =
 * Added setting to clear cache on specific post IDs when a sign-up occurs.
 * Added [sign_up_spot_count] shortcode.
@@ -178,6 +188,16 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.0 | 2025-02-02 =
+* Added ability to mark email field as optional.
+* Updated translation textdomain to better match WordPress standard of 'sign-up-sheets'. [⚠️Breaking Change]
+* Updated .sr-only class to use .screen-reader-text to be more consistent with WP core.
+* Fixed missing escaping around translations on tasks table.
+* Fixed sheets with the hidden email set so that the column doesn't show up in the admin and status email task tables.
+* Fixed password-protected sheets to prevent displaying sheet content prior to password being entered.
+* Fixed WP 6.7 notice being thrown of "Function _load_textdomain_just_in_time was called incorrectly."
+* Fixed bug preventing editing of new tasks on mobile devices.
 
 = 2.2.14 | 2024-10-07 =
 * Added setting to clear cache on specific post IDs when a sign-up occurs.

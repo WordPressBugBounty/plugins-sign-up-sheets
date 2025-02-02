@@ -14,8 +14,6 @@ use WP_Error;
 
 /**
  * Class SignupFormInitialValues
- *
- * @package FDSUS\Model
  */
 class SignupFormInitialValues
 {
@@ -90,7 +88,7 @@ class SignupFormInitialValues
         $initial = apply_filters('fdsus_initial_signup_form_values', $initial, $this->sheet, $this->task, $this->signup, $this->formPost);
 
         // If not set, but logged in, pull from user
-        if (!is_admin() && !Settings::isUserAutopopulateDisabled()) {
+        if (!$this->signup && !is_admin() && !Settings::isUserAutopopulateDisabled()) {
             $currentUser = wp_get_current_user();
             if (($currentUser instanceof WP_User)) {
                 if (empty($initial['firstname'])) {

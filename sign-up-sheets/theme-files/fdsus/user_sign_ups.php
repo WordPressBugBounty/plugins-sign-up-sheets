@@ -24,11 +24,11 @@ $taskTitleLabel = $args['task_title_label'];
 <table class="fdsus-user-sign-ups-table">
     <thead>
     <tr>
-        <th class="fdssus-column-date"><?php echo __('Date Added', 'fdsus') ?></th>
+        <th class="fdssus-column-date"><?php esc_html_e('Date Added', 'sign-up-sheets') ?></th>
         <th class="fdssus-column-sheet-task">
             <?php echo esc_html($taskTitleLabel) ?>
         </th>
-        <th class="fdssus-column-signup"><?php echo __('Sign-up Details', 'fdsus') ?></th>
+        <th class="fdssus-column-signup"><?php esc_html_e('Sign-up Details', 'sign-up-sheets') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@ $taskTitleLabel = $args['task_title_label'];
             <td class="fdsus-col-date-added">
                 <?php echo $row['date_added']
                     ? date(get_option('date_format'), strtotime($row['date_added']))
-                    : __('N/A', 'fdsus') ?>
+                    : esc_html__('N/A', 'sign-up-sheets') ?>
             </td>
             <td class="fdsus-col-sheet">
                 <a class="fdsus-sheet-title" href="<?php echo esc_url(get_permalink($row['sheet']->getData())) ?>"><?php
@@ -87,7 +87,7 @@ $taskTitleLabel = $args['task_title_label'];
                 <?php endif; ?>
 
                 <?php if ($row['sheet']->isExpired() || $row['task']->isExpired()): ?>
-                    <span class="fdsus-signups-closed"><?php _e('Sign-ups Closed', 'fdsus') ?></span>
+                    <span class="fdsus-signups-closed"><?php _e('Sign-ups Closed', 'sign-up-sheets') ?></span>
                 <?php endif; ?>
             </td>
         </tr>

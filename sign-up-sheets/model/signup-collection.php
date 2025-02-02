@@ -12,7 +12,7 @@ use WP_Query;
 use WP_Post;
 
 if (Id::isPro()) {
-    class SignupCollectionParent extends Pro\SignupCollection {}
+    class SignupCollectionParent extends \FDSUSPRO\Model\Pro\SignupCollection {}
 } else {
     class SignupCollectionParent extends Base {}
 }

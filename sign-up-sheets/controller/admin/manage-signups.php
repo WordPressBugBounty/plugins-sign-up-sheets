@@ -35,8 +35,8 @@ class ManageSignups extends PageBase
 
         add_submenu_page(
             '',
-            esc_html__('Manage Sign-ups', 'fdsus'),
-            esc_html__('Manage Sign-ups', 'fdsus'),
+            esc_html__('Manage Sign-ups', 'sign-up-sheets'),
+            esc_html__('Manage Sign-ups', 'sign-up-sheets'),
             $sheetCaps->get('read_post'),
             $this->menuSlug,
             array(&$this, 'page')
@@ -50,41 +50,41 @@ class ManageSignups extends PageBase
     {
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
         if (!current_user_can($sheetCaps->get('read_post'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'fdsus'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         if (empty($_GET['sheet_id']) || !is_numeric($_GET['sheet_id'])) {
-            wp_die(esc_html__('Missing or invalid sheet ID.', 'fdsus'));
+            wp_die(esc_html__('Missing or invalid sheet ID.', 'sign-up-sheets'));
         }
 
         $sheet = new SheetModel((int)$_GET['sheet_id']);
         if (!is_object($sheet)) {
-            wp_die(esc_html__('No sign-up sheet found.', 'fdsus'));
+            wp_die(esc_html__('No sign-up sheet found.', 'sign-up-sheets'));
         }
         ?>
 
         <div class="wrap dls_sus">
             <h1>
-                <?php esc_html_e('Manage Sign-ups', 'fdsus'); ?>
+                <?php esc_html_e('Manage Sign-ups', 'sign-up-sheets'); ?>
                 <span class="fdsus-manage-h1-suffix">
-                    <a href="<?php echo esc_attr(get_permalink($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('View Sheet', 'fdsus'); ?></a>
-                    <a href="<?php echo esc_attr(get_edit_post_link($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('Edit Sheet', 'fdsus'); ?></a>
+                    <a href="<?php echo esc_attr(get_permalink($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('View Sheet', 'sign-up-sheets'); ?></a>
+                    <a href="<?php echo esc_attr(get_edit_post_link($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('Edit Sheet', 'sign-up-sheets'); ?></a>
                     <?php do_action('fdsus_manage_signup_h1_suffix', $sheet); ?>
                 </span>
             </h1>
 
             <h3><?php echo wp_kses_post($sheet->post_title); ?></h3>
             <p>
-                <?php esc_html_e('Date', 'fdsus'); ?>:
+                <?php esc_html_e('Date', 'sign-up-sheets'); ?>:
                 <?php echo(empty($sheet->dlssus_date)
-                    ? esc_html__('N/A', 'fdsus')
+                    ? esc_html__('N/A', 'sign-up-sheets')
                     : date(get_option('date_format'), strtotime($sheet->dlssus_date))
                 ); ?>
             </p>
 
             <div class="dls-sus-sheet-details"><?php echo nl2br(wp_kses_post($sheet->post_content)); ?></div>
 
-            <h4><?php esc_html_e('Sign-ups', 'fdsus'); ?></h4>
+            <h4><?php esc_html_e('Sign-ups', 'sign-up-sheets'); ?></h4>
 
             <?php
             // Tasks
@@ -132,7 +132,7 @@ class ManageSignups extends PageBase
                 )
             ) {
                 Notice::add(
-                    'error', esc_html__('Manage sign-up sheet nonce not valid', 'fdsus'), false,
+                    'error', esc_html__('Manage sign-up sheet nonce not valid', 'sign-up-sheets'), false,
                     Id::PREFIX . '-manage-signup-nonce-invalid'
                 );
                 return;
@@ -141,16 +141,16 @@ class ManageSignups extends PageBase
 
         $sheet = new SheetModel($sheetId);
         if (!$sheet->isValid()) {
-            Notice::add('error', esc_html__('Invalid Sheet', 'fdsus'), false, Id::PREFIX . '-sheet-invalid');
+            Notice::add('error', esc_html__('Invalid Sheet', 'sign-up-sheets'), false, Id::PREFIX . '-sheet-invalid');
             return;
         }
 
         $result = $sheet->deleteSignups($idsToClear);
         if ($result) {
-            Notice::add('success', esc_html__('Spot(s) cleared.', 'fdsus'), false, Id::PREFIX . '-clear-success');
+            Notice::add('success', esc_html__('Spot(s) cleared.', 'sign-up-sheets'), false, Id::PREFIX . '-clear-success');
         } else {
             /* translators: %d is replaced with the sheet ID */
-            Notice::add('success', sprintf(esc_html__('Error clearing a spot (Sheet ID #%d)', 'fdsus'), $_GET['sheet_id']), false, Id::PREFIX . '-clear-error');
+            Notice::add('success', sprintf(esc_html__('Error clearing a spot (Sheet ID #%d)', 'sign-up-sheets'), $_GET['sheet_id']), false, Id::PREFIX . '-clear-error');
         }
     }
 
@@ -172,7 +172,7 @@ class ManageSignups extends PageBase
                     ), 'edit.php'
                 )
             )),
-            esc_html__('Manage Sign-ups', 'fdsus')
+            esc_html__('Manage Sign-ups', 'sign-up-sheets')
         );
     }
 

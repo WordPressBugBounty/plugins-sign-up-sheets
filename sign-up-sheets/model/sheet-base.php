@@ -24,9 +24,12 @@ use WP_Query;
  * @property string dlssus_date
  * @property string dlssus_start_date
  * @property string dlssus_end_date
- * @property string dlssus_hide_email
+ * @property string dlssus_optional_phone
+ * @property string dlssus_optional_address
+ * @property string fdsus_optional_email
  * @property string dlssus_hide_phone
  * @property string dlssus_hide_address
+ * @property string dlssus_hide_email
  * @property string dlssus_use_task_checkboxes
  * @property bool   dlssus_is_active
  * @property int    dlssus_task_count
@@ -37,8 +40,6 @@ use WP_Query;
  * @property string dlssus_sheet_email_conf_message
  * @property array  fdsus_autoclear
  * @property string fdsus_last_autoclear
- *
- * @package FDSUS\Model
  */
 class SheetBase extends Base
 {
@@ -207,7 +208,7 @@ class SheetBase extends Base
      */
     public static function getName($singular = false)
     {
-        return $singular ? __('Sign-up Sheet', 'fdsus') : __('Sign-up Sheets', 'fdsus');
+        return $singular ? __('Sign-up Sheet', 'sign-up-sheets') : __('Sign-up Sheets', 'sign-up-sheets');
     }
 
     /**
@@ -277,7 +278,7 @@ class SheetBase extends Base
         $postsAdded = array();
         $sheetArray = $this->objectToArray($this->getData());
         $this->cleanBeforeCopy($sheetArray);
-        $sheetArray['post_title'] .= esc_html__(' (Copy)', 'fdsus');
+        $sheetArray['post_title'] .= esc_html__(' (Copy)', 'sign-up-sheets');
 
         // Copy sheet
         $newSheetId = wp_insert_post($sheetArray, true);
@@ -506,25 +507,45 @@ class SheetBase extends Base
     }
 
     /**
-     * Should the phone be displayed on the sheet?
+     * Should the phone be required on the sheet?
      *
      * @return bool
      */
     public function isPhoneRequired()
     {
+        if (!$this->showPhone()) {
+            return false;
+        }
         return (isset($this->dlssus_optional_phone) && $this->dlssus_optional_phone === 'false')
             || (empty($this->dlssus_optional_phone) && get_option('dls_sus_optional_phone') !== 'true');
     }
 
     /**
-     * Should the address be displayed on the sheet?
+     * Should the address be required on the sheet?
      *
      * @return bool
      */
     public function isAddressRequired()
     {
+        if (!$this->showAddress()) {
+            return false;
+        }
         return (isset($this->dlssus_optional_address) && $this->dlssus_optional_address === 'false')
             || (empty($this->dlssus_optional_address) && get_option('dls_sus_optional_address') !== 'true');
+    }
+
+    /**
+     * Should the email be displayed on the sheet?
+     *
+     * @return bool
+     */
+    public function isEmailRequired()
+    {
+        if (!$this->showEmail()) {
+            return false;
+        }
+        return (isset($this->fdsus_optional_email) && $this->fdsus_optional_email === 'false')
+            || (empty($this->fdsus_optional_email) && get_option('fdsus_optional_email') !== 'true');
     }
 
     /**

@@ -67,7 +67,7 @@ class SignUpSheet extends Base
             shortcode_atts(
                 array(
                     'id'                     => false,
-                    'list_title'             => esc_html__('Current Sign-up Sheets', 'fdsus'),
+                    'list_title'             => esc_html__('Current Sign-up Sheets', 'sign-up-sheets'),
                     'category_id'            => false, // Pro only - deprecated as of v2.1
                     'category_slug'          => false, // Pro only - allows comma-separated string
                     'list_title_is_category' => false, // Pro only
@@ -78,7 +78,7 @@ class SignUpSheet extends Base
         // Prevent shortcode from working if migration didn't finish
         $dbVersion = get_option('dls_sus_db_version');
         if (strpos($dbVersion, '1.0') === 0 || strpos($dbVersion, '2.0') === 0) {
-            Notice::add('info', esc_html__('No sheet found, please contact the webmaster.', 'fdsus'), true);
+            Notice::add('info', esc_html__('No sheet found, please contact the webmaster.', 'sign-up-sheets'), true);
         }
 
         $this->addCssAndJsToSignUp();

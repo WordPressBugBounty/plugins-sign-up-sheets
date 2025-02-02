@@ -12,7 +12,7 @@ use WP_Post;
 use WP_Query;
 
 if (Id::isPro()) {
-    class SheetCollectionParent extends Pro\SheetCollection {}
+    class SheetCollectionParent extends \FDSUSPRO\Model\Pro\SheetCollection {}
 } else {
     class SheetCollectionParent extends Base {}
 }

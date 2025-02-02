@@ -22,7 +22,7 @@
 
 <?php if (empty($args['sheets'])) : ?>
 
-    <p><?php esc_html_e('No sheets available at this time.', 'fdsus'); ?></p>
+    <p><?php esc_html_e('No sheets available at this time.', 'sign-up-sheets'); ?></p>
 
 <?php else: ?>
 
@@ -31,9 +31,9 @@
     <table class="dls-sus-sheets">
         <thead>
             <tr>
-                <th class="column-title"><?php esc_html_e('Title', 'fdsus'); ?></th>
-                <th class="column-date"><?php esc_html_e('Date', 'fdsus'); ?></th>
-                <th class="column-open_spots"><?php esc_html_e('Open Spots', 'fdsus'); ?></th>
+                <th class="column-title"><?php esc_html_e('Title', 'sign-up-sheets'); ?></th>
+                <th class="column-date"><?php esc_html_e('Date', 'sign-up-sheets'); ?></th>
+                <th class="column-open_spots"><?php esc_html_e('Open Spots', 'sign-up-sheets'); ?></th>
                 <th class="column-view_link">&nbsp;</th>
             </tr>
         </thead>
@@ -44,7 +44,7 @@
                 $openSpots = $sheet->getOpenSpots();
                 $endDate = null;
                 if (empty($sheet->dlssus_end_date)) {
-                    $displayDate = esc_html__('N/A', 'fdsus');
+                    $displayDate = esc_html__('N/A', 'sign-up-sheets');
                 } else {
                     $displayDate = (($sheet->dlssus_start_date == $sheet->dlssus_end_date) ? null : date(get_option('date_format'), strtotime($sheet->dlssus_start_date)) . ' - ');
                     $displayDate .= date(get_option('date_format'), strtotime($sheet->dlssus_end_date));
@@ -60,11 +60,11 @@
                     <td class="column-open_spots"><?php echo (int)$openSpots; ?></td>
                     <td class="column-view_link">
                         <?php if ($openSpots > 0): ?>
-                            <a href="<?php echo esc_url(get_the_permalink($sheet->ID)); ?>" class="fdsus-signup-cta"><?php esc_html_e('View &amp; sign-up', 'fdsus'); ?><span class="sr-only"> <?php
+                            <a href="<?php echo esc_url(get_the_permalink($sheet->ID)); ?>" class="fdsus-signup-cta"><?php esc_html_e('View &amp; sign-up', 'sign-up-sheets'); ?><span class="screen-reader-text"> <?php
                                 /* translators: %s is replaced with the sheet title */
-                                echo esc_html(sprintf(__('for %s', 'fdsus'), $sheet->post_title)); ?></span></a>
+                                echo esc_html(sprintf(__('for %s', 'sign-up-sheets'), $sheet->post_title)); ?></span></a>
                         <?php else: ?>
-                            <?php esc_html_e('&#10004; Filled', 'fdsus'); ?>
+                            <?php esc_html_e('&#10004; Filled', 'sign-up-sheets'); ?>
                         <?php endif; ?>
                     </td>
                 </tr>

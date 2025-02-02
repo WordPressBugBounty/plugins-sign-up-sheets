@@ -302,13 +302,13 @@ class Base
     public function getDaysOfWeekArray()
     {
         return array(
-            '0' => __('Sunday', 'fdsus'),
-            '1' => __('Monday', 'fdsus'),
-            '2' => __('Tuesday', 'fdsus'),
-            '3' => __('Wednesday', 'fdsus'),
-            '4' => __('Thursday', 'fdsus'),
-            '5' => __('Friday', 'fdsus'),
-            '6' => __('Saturday', 'fdsus'),
+            '0' => __('Sunday', 'sign-up-sheets'),
+            '1' => __('Monday', 'sign-up-sheets'),
+            '2' => __('Tuesday', 'sign-up-sheets'),
+            '3' => __('Wednesday', 'sign-up-sheets'),
+            '4' => __('Thursday', 'sign-up-sheets'),
+            '5' => __('Friday', 'sign-up-sheets'),
+            '6' => __('Saturday', 'sign-up-sheets'),
         );
     }
 

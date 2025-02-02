@@ -154,12 +154,12 @@ jQuery(document).on('keydown', '.dlsmb-field-type-map #searchInput', function( e
             $(this).children('TD').eq(0).before('<td class="dlsmb-sort"></td>');
         });
 
-        $('.dlsmb-field-type-repeater TABLE').sortable({
+        $('.dlsmb-field-type-repeater TBODY').sortable({
             distance: 5,
             opacity: 0.6,
             cursor: 'move',
-            toleranceElement: '.dlsmb-sort',
-            items: 'tbody > tr'
+            handle: '.dlsmb-sort',
+            items: 'tr'
         });
 
         // Datepicker

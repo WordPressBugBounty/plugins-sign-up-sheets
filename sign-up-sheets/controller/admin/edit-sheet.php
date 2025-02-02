@@ -63,7 +63,7 @@ class EditSheet
         }
 
         $actions['copy'] = array(
-            'title' => esc_html__('Copy Row', 'fdsus'),
+            'title' => esc_html__('Copy Row', 'sign-up-sheets'),
             'icon'  => 'dashicons dashicons-admin-page',
         );
 
@@ -139,8 +139,8 @@ class EditSheet
     {
         if ($post->post_type == SheetModel::POST_TYPE && !empty($_GET['action']) && $_GET['action'] === 'edit') {
             ?>
-            <div class="fdsus-edit-quick-info" role="group" aria-label="<?php esc_attr_e('Sheet Quick Info', 'fdsus') ?>">
-                <span class="quick-info-item quick-info-id"><strong><?php esc_html_e('Sheet ID', 'fdsus') ?>: </strong> <code><?php echo $post->ID ?></code></span>
+            <div class="fdsus-edit-quick-info" role="group" aria-label="<?php esc_attr_e('Sheet Quick Info', 'sign-up-sheets') ?>">
+                <span class="quick-info-item quick-info-id"><strong><?php esc_html_e('Sheet ID', 'sign-up-sheets') ?>: </strong> <code><?php echo $post->ID ?></code></span>
                 <?php do_action('fdsus_edit_sheet_quick_info', $post); ?>
             </div>
             <?php

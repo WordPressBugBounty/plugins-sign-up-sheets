@@ -89,19 +89,19 @@ class PostTypeBase extends Base
         return array(
             'name'               => $plural,
             'singular_name'      => $singular,
-            'all_items'          => __('All', 'fdsus') . ' '  . $plural,
-            'add_new'            => __('Add New', 'fdsus'),
-            'add_new_item'       => __('Add New', 'fdsus') . ' ' . $singular,
-            'edit_item'          => __('Edit', 'fdsus') . ' ' . $singular,
-            'new_item'           => __('New', 'fdsus') . ' ' . $singular,
-            'view_item'          => __('View', 'fdsus') . ' ' . $singular,
-            'search_items'       => __('Search', 'fdsus') . ' ' . $plural,
+            'all_items'          => __('All', 'sign-up-sheets') . ' '  . $plural,
+            'add_new'            => __('Add New', 'sign-up-sheets'),
+            'add_new_item'       => __('Add New', 'sign-up-sheets') . ' ' . $singular,
+            'edit_item'          => __('Edit', 'sign-up-sheets') . ' ' . $singular,
+            'new_item'           => __('New', 'sign-up-sheets') . ' ' . $singular,
+            'view_item'          => __('View', 'sign-up-sheets') . ' ' . $singular,
+            'search_items'       => __('Search', 'sign-up-sheets') . ' ' . $plural,
             /* translators: %s is replaced with the plural post type name */
-            'not_found'          => sprintf(__('No %s found', 'fdsus'), $plural),
+            'not_found'          => sprintf(__('No %s found', 'sign-up-sheets'), $plural),
             /* translators: %s is replaced with the plural post type name */
-            'not_found_in_trash' => sprintf(__('No %s found in Trash', 'fdsus'), $plural),
+            'not_found_in_trash' => sprintf(__('No %s found in Trash', 'sign-up-sheets'), $plural),
             /* translators: %s is replaced with the singluar post type name */
-            'parent_item_colon'  => sprintf(__('Parent %s Record:', 'fdsus'), $singular),
+            'parent_item_colon'  => sprintf(__('Parent %s Record:', 'sign-up-sheets'), $singular),
             'menu_name'          => $plural,
         );
     }

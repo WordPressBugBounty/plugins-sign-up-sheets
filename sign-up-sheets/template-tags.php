@@ -521,3 +521,26 @@ if (!function_exists('fdsus_is_pro')) {
         return Id::isPro();
     }
 }
+
+if (!function_exists('fdsus_scode_user_sign_ups_actions')) {
+    /**
+     * Call do_action for customizing the user sign-ups after the additional fields output
+     *
+     * @param array $row
+     *
+     * @return void
+     */
+    function fdsus_scode_user_sign_ups_actions($row)
+    {
+        /**
+         * [user_sign_ups] shortcode - after signup name is output
+         *
+         * @param SheetModel  $sheet
+         * @param TaskModel   $task
+         * @param SignupModel $signup
+         *
+         * @since todo user-signups
+         */
+        do_action('fdsus_scode_user_sign_ups_actions', $row['sheet'], $row['task'], $row['signup']);
+    }
+}

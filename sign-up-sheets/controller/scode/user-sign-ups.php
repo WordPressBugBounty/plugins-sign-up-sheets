@@ -68,7 +68,7 @@ class UserSignUps extends Base
 
         $user = wp_get_current_user();
         if (!$user->exists()) {
-            Notice::add('info', esc_html__('You must be logged in to view your sign-ups.', 'fdsus'), true);
+            Notice::add('info', esc_html__('You must be logged in to view your sign-ups.', 'sign-up-sheets'), true);
             return apply_filters(Id::PREFIX . '_notices', null);
         }
 
@@ -126,21 +126,21 @@ class UserSignUps extends Base
 
             if ($sheet->showEmail()) {
                 $row['signup_additional']['email'] = array(
-                    'label' => __('Email', 'fdsus'),
+                    'label' => __('Email', 'sign-up-sheets'),
                     'value' => $signup->dlssus_email,
                 );
             }
 
             if ($sheet->showPhone()) {
                 $row['signup_additional']['phone'] = array(
-                    'label' => __('Phone', 'fdsus'),
+                    'label' => __('Phone', 'sign-up-sheets'),
                     'value' => $signup->dlssus_phone,
                 );
             }
 
             if ($sheet->showAddress()) {
                 $row['signup_additional']['phone'] = array(
-                    'label' => __('Address', 'fdsus'),
+                    'label' => __('Address', 'sign-up-sheets'),
                     'value' => $signup->dlssus_address . ', ' . $signup->dlssus_city . ', ' . $signup->dlssus_state
                         . ' ' . $signup->dlssus_zip,
                 );

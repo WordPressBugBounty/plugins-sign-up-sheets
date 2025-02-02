@@ -81,19 +81,19 @@ class SignUpForm extends Base
         $task_id = current($task_ids);
 
         if (empty($task_id)) {
-            echo '<p>' . esc_html__('Task not found.', 'fdsus') . '</p>';
+            echo '<p>' . esc_html__('Task not found.', 'sign-up-sheets') . '</p>';
             return ob_get_clean();
         }
 
         $task = new TaskModel($task_id);
         if (empty($task) || empty($task->post_parent)) {
-            echo '<p>' . esc_html__('No Sign-up Form Found.', 'fdsus') . '</p>';
+            echo '<p>' . esc_html__('No Sign-up Form Found.', 'sign-up-sheets') . '</p>';
             return ob_get_clean();
         }
 
         $sheet = $task->getSheet();
         if (empty($sheet)) {
-            echo '<p>' . esc_html__('No Sign-up Sheet Found.', 'fdsus') . '</p>';
+            echo '<p>' . esc_html__('No Sign-up Sheet Found.', 'sign-up-sheets') . '</p>';
             return ob_get_clean();
         }
 
@@ -120,7 +120,7 @@ class SignUpForm extends Base
                     $task = new TaskModel($t);
                     $date_display = null;
                     if ($date = $task->getDate()) {
-                        $date_display = ' ' . esc_html__('on', 'fdsus')
+                        $date_display = ' ' . esc_html__('on', 'sign-up-sheets')
                             . sprintf(' <em class="dls-sus-task-date">%s</em>',
                                 date(get_option('date_format'), strtotime($date))
                             );
@@ -132,7 +132,7 @@ class SignUpForm extends Base
             }
         } else { // no task checkbox
             if ($date = $task->getDate()) {
-                $date_display = ' ' . esc_html__('on', 'fdsus')
+                $date_display = ' ' . esc_html__('on', 'sign-up-sheets')
                     . sprintf(
                         ' <em class="dls-sus-task-date">%s</em>',
                         date(get_option('date_format'), strtotime($date))
@@ -177,7 +177,7 @@ class SignUpForm extends Base
         $initial = new SignupFormInitialValues($sheet, $task, $signup, $_POST);
         $states = new StatesModel;
 
-        $submitButtonText = __('Sign me up!', 'fdsus');
+        $submitButtonText = __('Sign me up!', 'sign-up-sheets');
         /**
          * Filter for submit button text on sign-up form
          *
@@ -234,7 +234,7 @@ class SignUpForm extends Base
         if (!isset($_POST['signup_nonce'])
             || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
         ) {
-            Notice::add('error', esc_html__('Sign-up nonce not valid.', 'fdsus'), false, Id::PREFIX . '-signup-nonce-invalid');
+            Notice::add('error', esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'), false, Id::PREFIX . '-signup-nonce-invalid');
             return false;
         }
 
@@ -247,7 +247,7 @@ class SignUpForm extends Base
             $task = new TaskModel($taskId);
             if (!$task->isValid()) {
                 Notice::add(
-                    'error', esc_html__('Hmm... we could not find the task for this sign-up.', 'fdsus'),
+                    'error', esc_html__('Hmm... we could not find the task for this sign-up.', 'sign-up-sheets'),
                     true, 'fdsus-task-invalid'
                 );
                 return false;
@@ -256,7 +256,7 @@ class SignUpForm extends Base
 
             if ($task->isExpired()) {
                 Notice::add(
-                    'error', esc_html__('Sign-ups on this sheet can no longer be edited.', 'fdsus'),
+                    'error', esc_html__('Sign-ups on this sheet can no longer be edited.', 'sign-up-sheets'),
                     true, 'fdsus-sheet-expired'
                 );
                 return false;
@@ -267,7 +267,7 @@ class SignUpForm extends Base
 
                 if ($sheet->isExpired()) {
                     Notice::add(
-                        'error', esc_html__('Sign-ups on this task can no longer be edited.', 'fdsus'),
+                        'error', esc_html__('Sign-ups on this task can no longer be edited.', 'sign-up-sheets'),
                         true, 'fdsus-task-expired'
                     );
                     return false;
@@ -275,14 +275,14 @@ class SignUpForm extends Base
 
                 if (!$sheet->dlssus_is_active) {
                     Notice::add(
-                        'error', esc_html__('Sign-ups are no longer being accepted for this sheet.', 'fdsus'),
+                        'error', esc_html__('Sign-ups are no longer being accepted for this sheet.', 'sign-up-sheets'),
                         true, 'fdsus-signup-sheet-inactive'
                     );
                     return false;
                 }
             } else if ($sheet->ID != $task->post_parent) {
                 Notice::add(
-                    'error', esc_html__('Signing up for more than one sheet is not currently supported.', 'fdsus'),
+                    'error', esc_html__('Signing up for more than one sheet is not currently supported.', 'sign-up-sheets'),
                     true, 'fdsus-multiple-sheet-signups-not-support'
                 );
                 return false;
@@ -290,7 +290,7 @@ class SignUpForm extends Base
 
             if (!$sheet->isValid()) {
                 Notice::add(
-                    'error', esc_html__('Hmm... we could not find the sheet for this sign-up.', 'fdsus'),
+                    'error', esc_html__('Hmm... we could not find the sheet for this sign-up.', 'sign-up-sheets'),
                     true, 'fdsus-sheet-invalid'
                 );
                 return false;
@@ -298,7 +298,7 @@ class SignUpForm extends Base
 
             if (!$task->dlssus_is_active) {
                 Notice::add(
-                    'error', esc_html__('Sign-ups are no longer being accepted for this task.', 'fdsus'),
+                    'error', esc_html__('Sign-ups are no longer being accepted for this task.', 'sign-up-sheets'),
                     true, 'fdsus-signup-task-inactive'
                 );
                 return false;
@@ -308,7 +308,7 @@ class SignUpForm extends Base
         }
         if (empty($tasks)) {
             Notice::add(
-                'error', esc_html__('No valid task was found for this sign-up.', 'fdsus'),
+                'error', esc_html__('No valid task was found for this sign-up.', 'sign-up-sheets'),
                 true, 'fdsus-all-tasks-invalid'
             );
             return false;
@@ -319,28 +319,28 @@ class SignUpForm extends Base
             Notice::add(
                 'warn', sprintf(
                     /* translators: %s is replaced with a comma separated list of all missing required fields */
-                    esc_html__('Please complete the following required fields: %s', 'fdsus'),
+                    esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
                     implode(', ', $missingFieldNames)
                 ), false, 'fdsus-missing-fields'
             );
             return false;
         }
 
-        if (Settings::isEmailValidationEnabled() && (!filter_var($_POST['signup_email'], FILTER_VALIDATE_EMAIL))) {
+        if ($sheet->showEmail() && !empty($_POST['signup_email']) && Settings::isEmailValidationEnabled() && (!filter_var($_POST['signup_email'], FILTER_VALIDATE_EMAIL))) {
             Notice::add(
-                'warn', esc_html__('Please check that your email address is properly formatted', 'fdsus'),
+                'warn', esc_html__('Please check that your email address is properly formatted', 'sign-up-sheets'),
                 false, 'fdsus-invalid-email'
             );
             return false;
         }
 
-        if (Settings::isEmailValidationEnabled()
+        if ($sheet->showEmail() && !empty($_POST['signup_email']) && Settings::isEmailValidationEnabled()
             && !checkdnsrr(
                 substr($_POST['signup_email'], strpos($_POST['signup_email'], '@') + 1), 'MX'
             )
         ) {
             Notice::add(
-                'warn', esc_html__('Whoops, it looks like your email domain may not be valid.', 'fdsus'),
+                'warn', esc_html__('Whoops, it looks like your email domain may not be valid.', 'sign-up-sheets'),
                 false, 'fdsus-email-checkdnsrr'
             );
             return false;
@@ -348,7 +348,7 @@ class SignUpForm extends Base
 
         if ($this->data->is_honeypot_enabled() && !empty($_POST['website'])) {
             Notice::add(
-                'warn', esc_html__('Sorry, your submission has been blocked.', 'fdsus'),
+                'warn', esc_html__('Sorry, your submission has been blocked.', 'sign-up-sheets'),
                 false, 'fdsus-signup-form-honeypot'
             );
             return false;
@@ -445,7 +445,7 @@ class SignUpForm extends Base
                         $sendSignupConfirmationEmail, $sheet, $task, $signup
                     );
 
-                    if ($sendSignupConfirmationEmail) {
+                    if (!empty($_POST['signup_email']) && $sendSignupConfirmationEmail) {
                         $this->mail->send($_POST['signup_email'], $sheet, $task, $signupId, 'signup');
                     }
 

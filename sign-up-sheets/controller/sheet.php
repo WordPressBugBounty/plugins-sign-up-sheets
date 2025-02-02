@@ -150,7 +150,7 @@ class Sheet extends PostTypeBase
                             $this->addAdminNotice(
                                 sprintf(
                                     /* translators: %1$s is replaced with task name, %2$d is replaced with the current number of signups on that task, %3$s is replaced with "person" or "people" depending on the number of signups  */
-                                    esc_html__('The number of spots for task "%1$s" cannot be set below %2$d because it currently has %2$d %3$s signed up. Please clear some spots first before updating this task.', 'fdsus'),
+                                    esc_html__('The number of spots for task "%1$s" cannot be set below %2$d because it currently has %2$d %3$s signed up. Please clear some spots first before updating this task.', 'sign-up-sheets'),
                                     esc_html($data['title']),
                                     $signupCount,
                                     (($signupCount > 1) ? 'people' : 'person')
@@ -177,7 +177,7 @@ class Sheet extends PostTypeBase
                             $this->addAdminNotice(
                                 sprintf(
                                     /* translators: %1$s is replaced with task name, %2$d is replaced with the current number of signups on that task, %3$s is replaced with "person" or "people" depending on the number of signups  */
-                                    esc_html__('The task "%1$s" cannot be removed because it has %2$d %3$s signed up.  Please clear all spots first before removing this task.', 'fdsus'),
+                                    esc_html__('The task "%1$s" cannot be removed because it has %2$d %3$s signed up.  Please clear all spots first before removing this task.', 'sign-up-sheets'),
                                     $task->post_title,
                                     $signupCount,
                                     ($signupCount > 1) ? 'people' : 'person'
@@ -329,31 +329,35 @@ class Sheet extends PostTypeBase
      */
     function modifyTheContent($content)
     {
-        $before = '';
-        $after = '';
-
-        if (is_singular() && is_main_query() && get_post_type() === SheetModel::POST_TYPE) {
-            // Before
-            ob_start();
-            fdsus_the_signup_form_response();
-            if (dlssus_has_sheet_date() && empty($_GET['task_id'])): ?>
-                <p class="dls-sus-sheet-date">
-                    <?php esc_html_e('Date', 'fdsus'); ?>:
-                    <?php echo dlssus_field('date'); ?>
-                </p>
-            <?php endif;
-            $before = ob_get_clean();
-
-            // After
-            ob_start();
-            dlssus_get_template_part('content');
-            $after = ob_get_clean();
-
-            // Hide normal sheet page content if displaying signup
-            if (!empty($_GET['task_id'])) {
-                $content = '';
-            }
+        if (post_password_required(get_the_ID())
+            || !is_singular()
+            || !is_main_query()
+            || get_post_type() !== SheetModel::POST_TYPE
+        ) {
+            return $content;
         }
+
+        // Before
+        ob_start();
+        fdsus_the_signup_form_response();
+        if (dlssus_has_sheet_date() && empty($_GET['task_id'])): ?>
+            <p class="dls-sus-sheet-date">
+                <?php esc_html_e('Date', 'sign-up-sheets'); ?>:
+                <?php echo dlssus_field('date'); ?>
+            </p>
+        <?php endif;
+        $before = ob_get_clean();
+
+        // After
+        ob_start();
+        dlssus_get_template_part('content');
+        $after = ob_get_clean();
+
+        // Hide normal sheet page content if displaying signup
+        if (!empty($_GET['task_id'])) {
+            $content = '';
+        }
+
         return $before . $content . $after;
     }
 
@@ -417,7 +421,7 @@ class Sheet extends PostTypeBase
 
                 $successMsg = sprintf(
                     /* translators: %s is replaced with the task title */
-                    esc_html__('You have been signed up for %s!', 'fdsus'),
+                    esc_html__('You have been signed up for %s!', 'sign-up-sheets'),
                     '<em>' . wp_kses_post($task->post_title) . '</em>'
                 );
 

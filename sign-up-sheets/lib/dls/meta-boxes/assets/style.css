@@ -182,7 +182,7 @@
     padding-right: .4em;
 }
 
-.dlsmb-field-type-repeater TBODY TR:hover {
+.dlsmb-field-type-repeater TBODY .dlsmb-sort:hover {
     cursor: move;
 }
 

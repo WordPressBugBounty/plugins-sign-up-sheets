@@ -46,9 +46,12 @@ class Base
             // Replace `/` with `DIRECTORY_SEPARATOR` for better server support
             $templateName = str_replace('/', DIRECTORY_SEPARATOR, $templateName);
 
-            $stylesheetPathFile = STYLESHEETPATH . DIRECTORY_SEPARATOR . $templateName; // child
-            $templatePathFile = TEMPLATEPATH . DIRECTORY_SEPARATOR . $templateName; // parent
-            $pluginFile = Id::getPluginPath() . $this->themeFilesDir . DIRECTORY_SEPARATOR . $templateName; // plugin
+            $stylesheetPathFile = get_stylesheet_directory() . DIRECTORY_SEPARATOR . $templateName; // child
+            $templatePathFile = get_template_directory() . DIRECTORY_SEPARATOR . $templateName; // parent
+            $proPluginFile = Id::isPro()
+                ? FDSUS_PRO_PLUGIN_DIR_PATH . $this->themeFilesDir . DIRECTORY_SEPARATOR . $templateName
+                : '';
+            $freePluginFile = FDSUS_FREE_PLUGIN_DIR_PATH . $this->themeFilesDir . DIRECTORY_SEPARATOR . $templateName;
 
             if (file_exists($stylesheetPathFile)) {
                 $located = $stylesheetPathFile;
@@ -56,13 +59,16 @@ class Base
             } elseif (file_exists($templatePathFile)) {
                 $located = $templatePathFile;
                 break;
-            } elseif (file_exists($pluginFile)) {
-                $located = $pluginFile;
+            } elseif (file_exists($proPluginFile)) {
+                $located = $proPluginFile;
+                break;
+            } elseif (file_exists($freePluginFile)) {
+                $located = $freePluginFile;
                 break;
             }
         }
 
-        if ((true == $load) && !empty($located)) {
+        if ((true === $load) && !empty($located)) {
             load_template($located, $requireOnce, $args);
         }
 

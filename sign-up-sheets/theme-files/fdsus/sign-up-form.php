@@ -8,7 +8,7 @@
  * @subpackage  Sign_Up_Sheets
  * @see         https://www.fetchdesigns.com/sign-up-sheets-pro-overriding-templates-in-your-theme/
  * @since       2.2 (plugin version)
- * @version     1.2.0 (template file version)
+ * @version     1.3.0 (template file version)
  */
 
 /** @var array $args */
@@ -30,7 +30,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
 <form id="fdsus-signup-form" name="dls-sus-signup-form" method="post" action="<?php echo esc_url(fdsus_current_url() . $signup_link_hash); ?>" class="dls-sus-signup-form">
     <p>
         <label for="signup_firstname" class="signup_firstname">
-            <?php esc_html_e('First Name', 'fdsus'); ?>
+            <?php esc_html_e('First Name', 'sign-up-sheets'); ?>
             <span class="dls-sus-required-icon">*</span>
         </label>
         <input type="text" id="signup_firstname" class="signup_firstname" name="signup_firstname"
@@ -40,7 +40,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
 
     <p>
         <label for="signup_lastname" class="signup_lastname">
-            <?php esc_html_e('Last Name', 'fdsus'); ?>
+            <?php esc_html_e('Last Name', 'sign-up-sheets'); ?>
             <span class="dls-sus-required-icon">*</span>
         </label>
         <input type="text" id="signup_lastname" class="signup_lastname" name="signup_lastname"
@@ -51,11 +51,13 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
     <?php if ($sheet->showEmail()): ?>
         <p>
             <label for="signup_email" class="signup_email">
-                <?php esc_html_e('E-mail', 'fdsus'); ?>
-                <span class="dls-sus-required-icon">*</span>
+                <?php esc_html_e('E-mail', 'sign-up-sheets'); ?>
+                <?php if ($sheet->isEmailRequired()): ?>
+                    <span class="dls-sus-required-icon">*</span>
+                <?php endif; ?>
             </label>
             <input type="email" id="signup_email" class="signup_email" name="signup_email"
-                   maxlength="100" required aria-required="true" autocomplete="email"
+                   maxlength="100" <?php if ($sheet->isEmailRequired()) echo 'required aria-required="true"'; ?> autocomplete="email"
                    value="<?php echo esc_attr($initial['email']); ?>"/>
         </p>
 
@@ -67,7 +69,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
     <?php if ($sheet->showPhone()): ?>
         <p>
             <label for="signup_phone" class="signup_phone">
-                <?php esc_html_e('Phone', 'fdsus'); ?>
+                <?php esc_html_e('Phone', 'sign-up-sheets'); ?>
                 <?php if ($sheet->isPhoneRequired()): ?>
                     <span class="dls-sus-required-icon">*</span>
                 <?php endif; ?>
@@ -82,7 +84,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
     <?php if ($sheet->showAddress()): ?>
         <p>
             <label for="signup_address" class="signup_address">
-                <?php esc_html_e('Address', 'fdsus'); ?>
+                <?php esc_html_e('Address', 'sign-up-sheets'); ?>
                 <?php if ($sheet->isAddressRequired()): ?>
                     <span class="dls-sus-required-icon">*</span>
                 <?php endif; ?>
@@ -94,7 +96,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
         </p>
         <p class="dls-sus-city">
             <label for="signup_city" class="signup_city">
-                <?php esc_html_e('City', 'fdsus'); ?>
+                <?php esc_html_e('City', 'sign-up-sheets'); ?>
                 <?php if ($sheet->isAddressRequired()): ?>
                     <span class="dls-sus-required-icon">*</span>
                 <?php endif; ?>
@@ -106,7 +108,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
         </p>
         <p class="dls-sus-state">
             <label for="signup_state" class="signup_state">
-                <?php esc_html_e('State', 'fdsus'); ?>
+                <?php esc_html_e('State', 'sign-up-sheets'); ?>
                 <?php if ($sheet->isAddressRequired()): ?>
                     <span class="dls-sus-required-icon">*</span>
                 <?php endif; ?>
@@ -123,7 +125,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
         </p>
         <p class="dls-sus-zip">
             <label for="signup_zip" class="signup_zip">
-                <?php esc_html_e('Zip', 'fdsus'); ?>
+                <?php esc_html_e('Zip', 'sign-up-sheets'); ?>
                 <?php if ($sheet->isAddressRequired()): ?>
                     <span class="dls-sus-required-icon">*</span>
                 <?php endif; ?>
@@ -142,7 +144,7 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
     fdsus_the_signup_form_last_fields($sheet, $args);
     ?>
 
-    <p><span class="dls-sus-required-icon">*</span> = <?php esc_html_e('required', 'fdsus'); ?></p>
+    <p><span class="dls-sus-required-icon">*</span> = <?php esc_html_e('required', 'sign-up-sheets'); ?></p>
 
     <p class="submit">
         <input type="hidden" name="action" value="signup"/>
@@ -158,9 +160,9 @@ dlssus_get_template_part((fdsus_is_pro() ? 'pro/' : '') . 'fdsus/sign-up-form-he
         <input type="submit" name="Submit" <?php echo fdsus_signup_form_button_attributes(); ?>
                value="<?php echo esc_html($submit_button_text); ?>"/>
         <?php if (!is_admin() && !empty($go_back_url)): ?>
-            <?php esc_html_e('or', 'fdsus'); ?>
+            <?php esc_html_e('or', 'sign-up-sheets'); ?>
             <a href="<?php echo esc_url($go_back_url); ?>" class="dls-sus-backlink-from-task">
-                <?php esc_html_e('&laquo; go back to the Sign-Up Sheet', 'fdsus'); ?>
+                <?php esc_html_e('&laquo; go back to the Sign-Up Sheet', 'sign-up-sheets'); ?>
             </a>
         <?php endif; ?>
     </p>

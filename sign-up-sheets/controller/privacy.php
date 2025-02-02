@@ -16,14 +16,14 @@ class Privacy
     public function __construct()
     {
         $this->fields = array(
-            'dlssus_email'     => __('Email', 'fdsus'),
-            'dlssus_firstname' => __('First Name', 'fdsus'),
-            'dlssus_lastname'  => __('Last Name', 'fdsus'),
-            'dlssus_phone'     => __('Phone', 'fdsus'),
-            'dlssus_address'   => __('Address', 'fdsus'),
-            'dlssus_city'      => __('City', 'fdsus'),
-            'dlssus_state'     => __('State', 'fdsus'),
-            'dlssus_zip'       => __('Zip', 'fdsus'),
+            'dlssus_email'     => __('Email', 'sign-up-sheets'),
+            'dlssus_firstname' => __('First Name', 'sign-up-sheets'),
+            'dlssus_lastname'  => __('Last Name', 'sign-up-sheets'),
+            'dlssus_phone'     => __('Phone', 'sign-up-sheets'),
+            'dlssus_address'   => __('Address', 'sign-up-sheets'),
+            'dlssus_city'      => __('City', 'sign-up-sheets'),
+            'dlssus_state'     => __('State', 'sign-up-sheets'),
+            'dlssus_zip'       => __('Zip', 'sign-up-sheets'),
         );
 
         add_filter('wp_privacy_personal_data_exporters', array(&$this, 'registerUserDataExporters'));
@@ -41,7 +41,7 @@ class Privacy
     public function registerUserDataExporters($exporters)
     {
         $exporters['sign-up-sheets'] = array(
-            'exporter_friendly_name' => __('Sign-up Sheets Plugin', 'fdsus'),
+            'exporter_friendly_name' => __('Sign-up Sheets Plugin', 'sign-up-sheets'),
             'callback'               => array(&$this, 'exportUserDataByEmail'),
         );
         return $exporters;
@@ -57,7 +57,7 @@ class Privacy
     public function registerUserDataErasers($erasers)
     {
         $erasers['sign-up-sheets'] = array(
-            'eraser_friendly_name' => __('Sign-up Sheets Plugin', 'fdsus'),
+            'eraser_friendly_name' => __('Sign-up Sheets Plugin', 'sign-up-sheets'),
             'callback'             => array(&$this, 'removeUserDataByEmail'),
         );
         return $erasers;
@@ -78,7 +78,7 @@ class Privacy
         $page = (int)$page;
         $exportItems = array();
 
-        $fields = array('ID' => __('Sign-up ID', 'fdsus')) + $this->fields;
+        $fields = array('ID' => __('Sign-up ID', 'sign-up-sheets')) + $this->fields;
 
         $signupCollection = new SignupCollection();
         $signups = $signupCollection->getByEmail(
@@ -93,7 +93,7 @@ class Privacy
             $data = array();
             $itemId = SignupModel::POST_TYPE . '-' . $signup->ID;
             $groupId = 'fdsus-signups';
-            $groupLabel = __('Sign-ups', 'fdsus');
+            $groupLabel = __('Sign-ups', 'sign-up-sheets');
 
             foreach ($fields as $key => $name) {
                 if (!empty($signup->{$key})) {

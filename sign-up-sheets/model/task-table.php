@@ -19,14 +19,18 @@ class TaskTable
     /** @var SheetModel  */
     protected $sheet;
 
+    /** @var array */
+    public $config;
+
     /**
      * Constructor
      *
      * @param SheetModel $sheet
      */
-    public function __construct($sheet)
+    public function __construct($sheet, $config)
     {
         $this->sheet = $sheet;
+        $this->config = $config;
 
         return $this;
     }
@@ -72,11 +76,12 @@ class TaskTable
          * @param string     $value
          * @param SheetModel $sheet
          * @param string     $class
+         * @param array      $config
          *
          * @return string
          * @since 2.2
          */
-        $slug = apply_filters('fdsus_tasktable_task_cell_slug', $slug, $value, $this->sheet, $class);
+        $slug = apply_filters('fdsus_tasktable_task_cell_slug', $slug, $value, $this->sheet, $class, $this->config);
 
         /**
          * Filter task table task cell value
@@ -112,11 +117,12 @@ class TaskTable
          * @param string     $value
          * @param SheetModel $sheet
          * @param string     $class
+         * @param array      $config
          *
          * @return string
          * @since 2.2
          */
-        $slug = apply_filters('fdsus_tasktable_header_cell_slug', $slug, $value, $this->sheet, $class);
+        $slug = apply_filters('fdsus_tasktable_header_cell_slug', $slug, $value, $this->sheet, $class, $this->config);
 
         if ($slug !== false) {
             $this->header[] = array(

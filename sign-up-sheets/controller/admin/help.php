@@ -39,8 +39,8 @@ class Help
 
         add_submenu_page(
             'edit.php?post_type=' . SheetModel::POST_TYPE,
-            esc_html__('Sign-up Sheets Help', 'fdsus'),
-            esc_html__('Help', 'fdsus'),
+            esc_html__('Sign-up Sheets Help', 'sign-up-sheets'),
+            esc_html__('Help', 'sign-up-sheets'),
             $sheetCaps->get('read_post'),
             Id::PREFIX . '-help',
             array(&$this, 'page')
@@ -61,7 +61,7 @@ class Help
 
         echo '
             <div class="wrap dls_sus">
-                <h1 class="wp-heading-inline">' . esc_html__('Sign-up Sheets', 'fdsus') . (Id::isPro() ? ' <sup class="dls-sus-pro">Pro</sup>' : '') . ' ' . esc_html__('Help', 'fdsus') . '</h1>
+                <h1 class="wp-heading-inline">' . esc_html__('Sign-up Sheets', 'sign-up-sheets') . (Id::isPro() ? ' <sup class="dls-sus-pro">Pro</sup>' : '') . ' ' . esc_html__('Help', 'sign-up-sheets') . '</h1>
         ';
 
         if (is_wp_error($mail_result)) {
@@ -69,7 +69,7 @@ class Help
                 . implode('</p></div><div class="error"><p>', $mail_result->get_error_messages())
                 . '</p></div>';
         } elseif ($mail_result === true) {
-            echo '<div class="updated"><p>' . esc_html__('Test email successfully sent by WordPress.', 'fdsus') . '</p></div>';
+            echo '<div class="updated"><p>' . esc_html__('Test email successfully sent by WordPress.', 'sign-up-sheets') . '</p></div>';
         }
         ?>
 
@@ -138,16 +138,16 @@ class Help
         // Output System Information
         ?>
 
-        <h3><?php esc_html_e('System Information', 'fdsus') ?></h3>
+        <h3><?php esc_html_e('System Information', 'sign-up-sheets') ?></h3>
         <p><?php echo sprintf('%s <strong><a href="%s">%s</a></strong>',
                 esc_html__(
                     'We may request this information to help us troubleshoot your support request. You can now find this under',
-                    'fdsus'
+                    'sign-up-sheets'
                 ),
                 esc_url(admin_url('site-health.php?tab=debug')),
-                esc_html__('Tools > Site Health > Info', 'fdsus')
+                esc_html__('Tools > Site Health > Info', 'sign-up-sheets')
             ) ?></p>
-        <textarea readonly="readonly" class="dls-sus-system-info" rows="1" onclick="this.focus(); this.select();"><?php esc_html_e('System information has moved to Tools > Site Health > Info', 'fdsus') ?></textarea>
+        <textarea readonly="readonly" class="dls-sus-system-info" rows="1" onclick="this.focus(); this.select();"><?php esc_html_e('System information has moved to Tools > Site Health > Info', 'sign-up-sheets') ?></textarea>
 
         <?php
         $from = get_option('dls_sus_email_from');
@@ -155,20 +155,20 @@ class Help
             $from = get_bloginfo('admin_email');
         }
         ?>
-            <h3><?php esc_html_e('Email Test', 'fdsus') ?></h3>
-            <p><?php esc_html_e('Having trouble with emails sending on your site? Use this quick for to test your site with sending emails to different recipients.', 'fdsus') ?></p>
-            <p><?php esc_html_e('If the test email is successfully sent by WordPress, but still not being received...', 'fdsus') ?></p>
+            <h3><?php esc_html_e('Email Test', 'sign-up-sheets') ?></h3>
+            <p><?php esc_html_e('Having trouble with emails sending on your site? Use this quick for to test your site with sending emails to different recipients.', 'sign-up-sheets') ?></p>
+            <p><?php esc_html_e('If the test email is successfully sent by WordPress, but still not being received...', 'sign-up-sheets') ?></p>
             <ol>
-                <li><?php esc_html_e('Ask the recipient to check their SPAM mailbox or SPAM filters.  Your "From" address may need to be added to their list of safe senders.', 'fdsus') ?></li>
-                <li><?php esc_html_e('Check with your host to see if they can trace emails being sent from your site.  It is possible your emails are being delayed or blacklisted by your recipient\'s mail host.', 'fdsus') ?></li>
+                <li><?php esc_html_e('Ask the recipient to check their SPAM mailbox or SPAM filters.  Your "From" address may need to be added to their list of safe senders.', 'sign-up-sheets') ?></li>
+                <li><?php esc_html_e('Check with your host to see if they can trace emails being sent from your site.  It is possible your emails are being delayed or blacklisted by your recipient\'s mail host.', 'sign-up-sheets') ?></li>
                 <li><?php echo sprintf(
                     /* translators: %s is replaced with a link to an SMTP plugin */
-                        esc_html__('Try sending email via SMTP instead by using a plugin like %s.', 'fdsus'),
+                        esc_html__('Try sending email via SMTP instead by using a plugin like %s.', 'sign-up-sheets'),
                         '<a href="https://wordpress.org/plugins/easy-wp-smtp/">Easy WP SMTP</a>'
                     ) ?></li>
                 <li><?php echo sprintf(
                     /* translators: %1$s is replaced with a link to Mailgun and %2$s is replaced with a link to the Mailgun WordPress plugin */
-                        esc_html__('Try sending email via a 3rd party service like %1$s with the %2$s', 'fdsus'),
+                        esc_html__('Try sending email via a 3rd party service like %1$s with the %2$s', 'sign-up-sheets'),
                         '<a href="https://www.mailgun.com/">Mailgun</a>',
                         '<a href="https://wordpress.org/plugins/mailgun/">Mailgun for WordPress plugin</a>'
                     ) ?></li>
@@ -176,23 +176,23 @@ class Help
             <form method="post" action="<?php echo esc_url($_SERVER['REQUEST_URI']) ?>" class="dlssus-email-test">
                 <fieldset>
                     <p>
-                        <label for="from"><?php esc_html_e('From', 'fdsus') ?></label><br />
+                        <label for="from"><?php esc_html_e('From', 'sign-up-sheets') ?></label><br />
                         <input type="email" name="from" id="from" value="<?php echo esc_attr($from) ?>" />
                     </p>
                     <p>
-                        <label for="recipient"><?php esc_html_e('To', 'fdsus') ?></label><br />
+                        <label for="recipient"><?php esc_html_e('To', 'sign-up-sheets') ?></label><br />
                         <input type="email" name="recipient" id="recipient" value="" />
                     </p>
                     <p>
-                        <label><?php esc_html_e('Message', 'fdsus') ?></label><br />
-                        <textarea name="message" rows="3"><?php esc_html_e('This is a test email.', 'fdsus') ?></textarea>
+                        <label><?php esc_html_e('Message', 'sign-up-sheets') ?></label><br />
+                        <textarea name="message" rows="3"><?php esc_html_e('This is a test email.', 'sign-up-sheets') ?></textarea>
                     </p>
                     <p>
                         <input type="checkbox" name="return_path" id="return_path" value="true" checked="checked" />
-                        <label for="return_path"><?php esc_html_e('Send bounced messages to "From" address', 'fdsus') ?></label>
+                        <label for="return_path"><?php esc_html_e('Send bounced messages to "From" address', 'sign-up-sheets') ?></label>
                     </p>
                     <input type="hidden" name="mode" value="submitted" />
-                    <input type="submit" value="<?php esc_attr_e('Send', 'fdsus') ?>" class="button" />
+                    <input type="submit" value="<?php esc_attr_e('Send', 'sign-up-sheets') ?>" class="button" />
                 </fieldset>
             </form>
         </div><!-- .wrap -->
@@ -230,7 +230,7 @@ class Help
             }
             return new WP_Error(
                 Id::PREFIX . 'test_email_error',
-                esc_html__('Error sending email.', 'fdsus')
+                esc_html__('Error sending email.', 'sign-up-sheets')
                 . '.. ' . implode(' --- ', $ts_mail_errors)
             );
         }

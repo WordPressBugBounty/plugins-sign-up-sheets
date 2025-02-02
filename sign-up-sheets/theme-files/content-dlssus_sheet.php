@@ -16,7 +16,7 @@
 
 <div class="<?php echo esc_attr(fdsus_template_classes_sign_up_sheet()) ?>" id="<?php echo get_the_ID() ? 'dls-sus-sheet-' . get_the_ID() : '' ?>">
 
-    <h3><?php esc_attr_e('Sign up below...', 'fdsus'); ?></h3>
+    <h3><?php esc_attr_e('Sign up below...', 'sign-up-sheets'); ?></h3>
 
     <?php dlssus_the_tasks_table(); ?>
 

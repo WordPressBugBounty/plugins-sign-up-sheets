@@ -23,8 +23,6 @@ use WP_Error;
  * @property int    dlssus_qty
  * @property string dlssus_task_row_type
  * @property bool   dlssus_is_active
- *
- * @package FDSUS\Model
  */
 class TaskBase extends Base
 {
@@ -91,7 +89,7 @@ class TaskBase extends Base
      */
     public static function getName($singular = false)
     {
-        return $singular ? __('Task', 'fdsus') : __('Tasks', 'fdsus');
+        return $singular ? __('Task', 'sign-up-sheets') : __('Tasks', 'sign-up-sheets');
     }
 
     /**
@@ -154,7 +152,7 @@ class TaskBase extends Base
                 'add_task_err',
                 sprintf(
                     /* translators: %s is replaced with the task title */
-                    esc_html__('Error adding the task "%s"', 'fdsus'),
+                    esc_html__('Error adding the task "%s"', 'sign-up-sheets'),
                     $cleanFields['title']
                 )
                 . (Settings::isDetailedErrors() ? '.. ' . print_r($taskId->get_error_message(), true) : '')
@@ -189,7 +187,7 @@ class TaskBase extends Base
         $i = 0;
         foreach ($meta as $k => $v) {
             if (update_post_meta($taskId, $k, maybe_unserialize($v)) === false) {
-                return new WP_Error('add_task_additional_err', esc_html__('Error adding additional fields to task.', 'fdsus'));
+                return new WP_Error('add_task_additional_err', esc_html__('Error adding additional fields to task.', 'sign-up-sheets'));
             }
             $i++;
         }
@@ -238,7 +236,7 @@ class TaskBase extends Base
             return new WP_Error('update_task_err',
                 sprintf(
                     /* translators: %s is replaced with the task title */
-                    esc_html__('Error updating the task "%s"', 'fdsus'),
+                    esc_html__('Error updating the task "%s"', 'sign-up-sheets'),
                     $cleanFields['title']
                 ) . (Settings::isDetailedErrors() ? '.. ' . print_r($task_id->get_error_message(), true) : '')
             );
@@ -282,7 +280,7 @@ class TaskBase extends Base
         }
         $result = wp_delete_post($id, true);
         if ($result === false) {
-            return new WP_Error('task_delete_err', esc_html__('Error deleting task.', 'fdsus'));
+            return new WP_Error('task_delete_err', esc_html__('Error deleting task.', 'sign-up-sheets'));
         }
 
         return $result;
@@ -494,7 +492,7 @@ class TaskBase extends Base
      */
     public function getSignupLink($linkText = '') {
         if (empty($linkText)) {
-            $linkText = esc_html__('Sign up &raquo;', 'fdsus');
+            $linkText = esc_html__('Sign up &raquo;', 'sign-up-sheets');
         }
 
         return sprintf(

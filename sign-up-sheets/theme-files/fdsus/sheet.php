@@ -19,7 +19,7 @@
 <?php if ($args['show_backlink']): ?>
     <p class="dls-sus-backlink">
         <a href="<?php echo esc_url(remove_query_arg(array('sheet_id', 'task_id'), $_SERVER['REQUEST_URI'])); ?>">
-            <?php esc_attr_e('&laquo; View all', 'fdsus'); ?>
+            <?php esc_attr_e('&laquo; View all', 'sign-up-sheets'); ?>
         </a>
     </p>
 <?php endif; ?>
