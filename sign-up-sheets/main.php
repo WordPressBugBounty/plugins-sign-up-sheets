@@ -59,7 +59,8 @@ Settings::instance();
 
 if (
     (
-        fdsusIsFallbackPlugin()
+        empty(Id::version('pro'))
+        || fdsusIsFallbackPlugin()
         || (!empty(Id::version('free')) && !empty(Id::version('pro'))
             && version_compare(Id::version('free'), Id::version('pro'), '==')
             && !class_exists('\FDSUS\Main')

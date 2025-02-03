@@ -2,7 +2,7 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.7
-Stable tag: 2.3.0
+Stable tag: 2.3.0.1
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -114,6 +114,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.0.1 | 2025-02-02 =
+* Fixed issue where base version wouldn't load on its own.
+
 = 2.3.0 | 2025-02-02 =
 * Added ability to mark email field as optional.
 * Updated translation textdomain to better match WordPress standard of 'sign-up-sheets'. [⚠️Breaking Change]
@@ -188,6 +191,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.0.1 | 2025-02-02 =
+* Fixed issue where base version wouldn't load on its own.
 
 = 2.3.0 | 2025-02-02 =
 * Added ability to mark email field as optional.
