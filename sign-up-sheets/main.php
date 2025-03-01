@@ -28,11 +28,6 @@ if (!function_exists('\FDSUS\fdsusAutoloader')):
             $classesDir = realpath(plugin_dir_path(__FILE__)) . DIRECTORY_SEPARATOR;
             $classFile = str_replace(__NAMESPACE__ . '/', '', str_replace('\\', '/', $className)) . '.php';
             $classFile = strtolower(preg_replace('/\B([A-Z])/', '-$1', $classFile)); // add hyphen before uppercase classes then convert to all lowercase
-        } elseif (0 === strpos($className,  'FDSUSPRO\\') && Id::isProActivating()) {
-            // Autoload Pro if it's in the process of activating
-            $classesDir = dirname(realpath(plugin_dir_path(__FILE__))) . DIRECTORY_SEPARATOR . dirname(Id::PRO_PLUGIN_BASENAME) . DIRECTORY_SEPARATOR;
-            $classFile = str_replace('FDSUSPRO/', '', str_replace('\\', '/', $className)) . '.php';
-            $classFile = strtolower(preg_replace('/\B([A-Z])/', '-$1', $classFile)); // add hyphen before uppercase classes then convert to all lowercase
         }
 
         if ($classesDir && $classFile) {
@@ -50,7 +45,7 @@ endif;
 if (!function_exists('\FDSUS\fdsusIsFallbackPlugin')):
     function fdsusIsFallbackPlugin()
     {
-        return dirname(__FILE__) !== dirname(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . Id::FREE_PLUGIN_BASENAME);
+        return dirname(__FILE__) !== dirname(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . Id::getPluginBasename('free'));
     }
 endif;
 
@@ -133,8 +128,8 @@ if (
                 $this->data->detailed_errors = true;
             }
 
-            register_activation_hook(FDSUS_FREE_PLUGIN_BASENAME, array(&$this, 'activate'));
-            register_deactivation_hook(FDSUS_FREE_PLUGIN_BASENAME, array(&$this, 'deactivate'));
+            register_activation_hook(Id::getPluginBasename('free'), array(&$this, 'activate'));
+            register_deactivation_hook(Id::getPluginBasename('free'), array(&$this, 'deactivate'));
 
             add_action('wp_enqueue_scripts', array(&$this, 'add_css_and_js_to_frontend'));
             add_action('init', array(&$this, 'setDefaultOptions'), 0);
@@ -178,8 +173,7 @@ if (
         function add_css_and_js_to_frontend()
         {
             // Pull pro or free
-            $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::isPro() ? Id::PRO_PLUGIN_BASENAME
-                    : Id::FREE_PLUGIN_BASENAME);
+            $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::getPluginBasename());
 
             wp_enqueue_script('jquery');
 

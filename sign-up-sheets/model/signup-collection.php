@@ -11,7 +11,7 @@ use FDSUS\Model\Task as TaskModel;
 use WP_Query;
 use WP_Post;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\SignupCollection')) {
     class SignupCollectionParent extends \FDSUSPRO\Model\Pro\SignupCollection {}
 } else {
     class SignupCollectionParent extends Base {}

@@ -9,7 +9,7 @@ use FDSUS\Id;
 use FDSUS\Model\Sheet as SheetModel;
 use WP_Post;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\Task')) {
     class TaskParent extends \FDSUSPRO\Model\Pro\Task {}
 } else {
     class TaskParent extends TaskBase {}

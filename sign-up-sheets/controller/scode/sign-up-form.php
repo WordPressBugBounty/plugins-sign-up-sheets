@@ -109,14 +109,9 @@ class SignUpForm extends Base
         $signup_titles = array();
         if (isset($_POST['signup_task_ids'])) { // If submitted with task IDs
             if (is_array($_POST['signup_task_ids'])) {
-                $tasks = $_POST['signup_task_ids'];
+                $tasks = array_map('intval', $_POST['signup_task_ids']);
 
-                $tasks_str = '';
                 foreach ($tasks as $t) {
-                    if ($tasks_str != '') {
-                        $tasks_str .= ',';
-                    }
-                    $tasks_str .= $t;
                     $task = new TaskModel($t);
                     $date_display = null;
                     if ($date = $task->getDate()) {
@@ -126,7 +121,7 @@ class SignUpForm extends Base
                             );
                     }
                     $signup_titles[] = $task->post_title . $date_display;
-                    $signupTaskIdsTag .= '<input type="hidden" id="signup_task_ids"  name="signup_task_ids[]"  value="' . esc_attr($task->ID) . '" />';
+                    $signupTaskIdsTag .= '<input type="hidden" id="signup_task_ids"  name="signup_task_ids[]"  value="' . ($task->ID) . '" />';
                     $signupTaskIds[] = $task->ID;
                 }
             }

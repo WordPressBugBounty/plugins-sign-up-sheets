@@ -79,6 +79,27 @@ class SettingsMetaBoxes
 
         $sheetOrder = new SheetOrder();
 
+        $defaultEmailVariables = sprintf(
+            '%s<br>
+            <code>{signup_details}</code> - %s<br>
+            <code>{signup_firstname}</code> - %s<br>
+            <code>{signup_lastname}</code> - %s<br>
+            <code>{signup_email}</code> - %s<br>
+            <code>{site_name}</code> - %s<br>
+            <code>{site_url}</code> - %s<br>
+            <code>{sheet_url}</code> - %s<br>
+            <code>{sheet_title}</code> - %s',
+            esc_html__('Variables that can be used in template...', 'sign-up-sheets'),
+            esc_html__('Multi-line list of sign-up details such as date, sheet title, task title', 'sign-up-sheets'),
+            esc_html__('First name of user that signed up', 'sign-up-sheets'),
+            esc_html__('Last name of user that signed up', 'sign-up-sheets'),
+            esc_html__('Email of user that signed up', 'sign-up-sheets'),
+            esc_html__('Name of site as defined in Settings > General > Site Title', 'sign-up-sheets'),
+            esc_html__('URL of site', 'sign-up-sheets'),
+            esc_html__('Main permalink URL for the sheet', 'sign-up-sheets'),
+            esc_html__('Title of the sign-up sheet', 'sign-up-sheets')
+        );
+
         $options['sheet'] = array(
             'id'      => 'sheet',
             'title'   => esc_html__('Sign-up Sheet', 'sign-up-sheets'),
@@ -396,24 +417,11 @@ class SettingsMetaBoxes
                     'label'    => esc_html__('Message', 'sign-up-sheets'),
                     'name'     => 'dls_sus_email_message',
                     'type'     => 'textarea',
-                    'note'     => sprintf(
-                        '%s<br>
-                            <code>{signup_details}</code> - %s<br>
-                            <code>{signup_firstname}</code> - %s<br>
-                            <code>{signup_lastname}</code> - %s<br>
-                            <code>{signup_email}</code> - %s<br>
-                            <code>{site_name}</code> - %s<br>
-                            <code>{site_url}</code> - %s<br>
+                    'note'     => $defaultEmailVariables . sprintf(
+                            '<br>
                             <code>{removal_link}</code> - %s',
-                        esc_html__('Variables that can be used in template...', 'sign-up-sheets'),
-                        esc_html__('Multi-line list of sign-up details such as date, sheet title, task title', 'sign-up-sheets'),
-                        esc_html__('First name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Last name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Email of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Name of site as defined in Settings > General > Site Title', 'sign-up-sheets'),
-                        esc_html__('URL of site', 'sign-up-sheets'),
-                        esc_html__('Link to remove sign-up', 'sign-up-sheets')
-                    ),
+                            esc_html__('Link to remove sign-up', 'sign-up-sheets')
+                        ),
                     'order'    => 50,
                     'pro'      => true
                 )
@@ -437,22 +445,7 @@ class SettingsMetaBoxes
                     'label' => esc_html__('Message', 'sign-up-sheets'),
                     'name'  => 'dls_sus_removed_email_message',
                     'type'  => 'textarea',
-                    'note'  => sprintf(
-                        '%s<br>
-                            <code>{signup_details}</code> - %s<br>
-                            <code>{signup_firstname}</code> - %s<br>
-                            <code>{signup_lastname}</code> - %s<br>
-                            <code>{signup_email}</code> - %s<br>
-                            <code>{site_name}</code> - %s<br>
-                            <code>{site_url}</code> - %s',
-                        esc_html__('Variables that can be used in template...', 'sign-up-sheets'),
-                        esc_html__('Multi-line list of sign-up details such as date, sheet title, task title', 'sign-up-sheets'),
-                        esc_html__('First name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Last name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Email of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Name of site as defined in Settings > General > Site Title', 'sign-up-sheets'),
-                        esc_html__('URL of site', 'sign-up-sheets')
-                    ),
+                    'note'  => $defaultEmailVariables,
                     'order' => 20,
                     'pro' => true
                 ),
@@ -515,22 +508,7 @@ class SettingsMetaBoxes
                     'label' => esc_html__('Message', 'sign-up-sheets'),
                     'name'  => 'dls_sus_reminder_email_message',
                     'type'  => 'textarea',
-                    'note'  => sprintf(
-                        '%s<br>
-                            <code>{signup_details}</code> - %s<br>
-                            <code>{signup_firstname}</code> - %s<br>
-                            <code>{signup_lastname}</code> - %s<br>
-                            <code>{signup_email}</code> - %s<br>
-                            <code>{site_name}</code> - %s<br>
-                            <code>{site_url}</code> - %s',
-                        esc_html__('Variables that can be used in template...', 'sign-up-sheets'),
-                        esc_html__('Multi-line list of sign-up details such as date, sheet title, task title', 'sign-up-sheets'),
-                        esc_html__('First name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Last name of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Email of user that signed up', 'sign-up-sheets'),
-                        esc_html__('Name of site as defined in Settings > General > Site Title', 'sign-up-sheets'),
-                        esc_html__('URL of site', 'sign-up-sheets')
-                    ),
+                    'note'  => $defaultEmailVariables,
                     'pro' => true
                 ),
             )

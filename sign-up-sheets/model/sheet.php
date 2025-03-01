@@ -8,7 +8,7 @@ namespace FDSUS\Model;
 use FDSUS\Id;
 use WP_Post;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\Sheet')) {
     class SheetParent extends \FDSUSPRO\Model\Pro\Sheet {}
 } else {
     class SheetParent extends SheetBase {}

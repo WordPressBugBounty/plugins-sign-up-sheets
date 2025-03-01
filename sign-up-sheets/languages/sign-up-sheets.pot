@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sign-up Sheets 2.3.0.1\n"
+"Project-Id-Version: Sign-up Sheets 2.3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sign-up-sheets\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-03T19:47:12+00:00\n"
+"POT-Creation-Date: 2025-03-01T12:42:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: sign-up-sheets\n"
@@ -82,11 +82,11 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: controller/admin.php:298
+#: controller/admin.php:297
 msgid "ID"
 msgstr ""
 
-#: controller/admin.php:307
+#: controller/admin.php:306
 #: controller/admin/manage-signups.php:38
 #: controller/admin/manage-signups.php:39
 #: controller/admin/manage-signups.php:68
@@ -94,23 +94,23 @@ msgstr ""
 msgid "Manage Sign-ups"
 msgstr ""
 
-#: controller/admin.php:326
+#: controller/admin.php:325
 msgid "Copy"
 msgstr ""
 
-#: controller/admin.php:376
+#: controller/admin.php:375
 msgid "Made by"
 msgstr ""
 
-#: controller/admin.php:379
+#: controller/admin.php:378
 msgid "Get Pro"
 msgstr ""
 
-#: controller/admin.php:383
+#: controller/admin.php:382
 msgid "Need help? Get Support &raquo;"
 msgstr ""
 
-#: controller/admin.php:402
+#: controller/admin.php:401
 #: controller/admin/settings.php:52
 #: controller/admin/settings.php:73
 msgid "Settings"
@@ -163,7 +163,7 @@ msgstr ""
 
 #: controller/admin/edit-signup-page.php:135
 #: controller/admin/manage-signups.php:78
-#: controller/mail.php:174
+#: controller/mail.php:182
 #: controller/sheet.php:345
 #: model/meta-boxes.php:42
 #: theme-files/fdsus/sheet-list.php:35
@@ -196,7 +196,7 @@ msgstr ""
 
 #: controller/admin/edit-signup-page.php:209
 #: controller/admin/edit-signup-page.php:278
-#: controller/scode/sign-up-form.php:237
+#: controller/scode/sign-up-form.php:232
 msgid "Sign-up nonce not valid."
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 #. translators: %s is replaced with a comma separated list of all missing required fields
 #: controller/admin/edit-signup-page.php:233
 #: controller/admin/edit-signup-page.php:295
-#: controller/scode/sign-up-form.php:322
+#: controller/scode/sign-up-form.php:317
 msgid "Please complete the following required fields: %s"
 msgstr ""
 
@@ -371,9 +371,9 @@ msgid "To"
 msgstr ""
 
 #: controller/admin/help.php:187
-#: model/settings-meta-boxes.php:396
-#: model/settings-meta-boxes.php:437
-#: model/settings-meta-boxes.php:515
+#: model/settings-meta-boxes.php:417
+#: model/settings-meta-boxes.php:445
+#: model/settings-meta-boxes.php:508
 msgid "Message"
 msgstr ""
 
@@ -390,7 +390,7 @@ msgid "Send"
 msgstr ""
 
 #: controller/admin/help.php:233
-#: controller/mail.php:130
+#: controller/mail.php:129
 msgid "Error sending email."
 msgstr ""
 
@@ -515,7 +515,7 @@ msgstr ""
 msgid "Oh dear, 7 + 1 does not equal %s. Please try again."
 msgstr ""
 
-#: controller/mail.php:175
+#: controller/mail.php:183
 msgid "Event"
 msgstr ""
 
@@ -546,31 +546,31 @@ msgstr ""
 
 #: controller/migrate.php:646
 #: model/meta-boxes.php:170
-#: model/settings-meta-boxes.php:138
+#: model/settings-meta-boxes.php:159
 msgid "Disabled"
 msgstr ""
 
 #: controller/migrate.php:647
 #: model/meta-boxes.php:171
-#: model/settings-meta-boxes.php:139
+#: model/settings-meta-boxes.php:160
 msgid "Enabled"
 msgstr ""
 
 #: controller/migrate.php:648
 #: model/meta-boxes.php:172
-#: model/settings-meta-boxes.php:140
+#: model/settings-meta-boxes.php:161
 msgid "Semi-Compact"
 msgstr ""
 
 #: controller/migrate.php:650
 #: model/meta-boxes.php:174
-#: model/settings-meta-boxes.php:136
+#: model/settings-meta-boxes.php:157
 msgid "Show sign-up spots on one line with just # of open spots and a link to sign-up if open. Semi-Compact will also include the names of those who already signed up (assuming \"Front-end Display Names\" is not set to \"anonymous\""
 msgstr ""
 
 #: controller/migrate.php:689
 #: model/meta-boxes.php:156
-#: model/settings-meta-boxes.php:489
+#: model/settings-meta-boxes.php:482
 msgid "Number of days before the date on the sign-up sheet that the email should be sent.  Use whole numbers, for example, to remind one day before use..."
 msgstr ""
 
@@ -675,56 +675,56 @@ msgstr ""
 msgid "No Sign-up Sheet Found."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:123
-#: controller/scode/sign-up-form.php:135
+#: controller/scode/sign-up-form.php:118
+#: controller/scode/sign-up-form.php:130
 msgid "on"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:180
+#: controller/scode/sign-up-form.php:175
 msgid "Sign me up!"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:250
+#: controller/scode/sign-up-form.php:245
 msgid "Hmm... we could not find the task for this sign-up."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:259
+#: controller/scode/sign-up-form.php:254
 msgid "Sign-ups on this sheet can no longer be edited."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:270
+#: controller/scode/sign-up-form.php:265
 msgid "Sign-ups on this task can no longer be edited."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:278
+#: controller/scode/sign-up-form.php:273
 msgid "Sign-ups are no longer being accepted for this sheet."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:285
+#: controller/scode/sign-up-form.php:280
 msgid "Signing up for more than one sheet is not currently supported."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:293
+#: controller/scode/sign-up-form.php:288
 msgid "Hmm... we could not find the sheet for this sign-up."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:301
+#: controller/scode/sign-up-form.php:296
 msgid "Sign-ups are no longer being accepted for this task."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:311
+#: controller/scode/sign-up-form.php:306
 msgid "No valid task was found for this sign-up."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:331
+#: controller/scode/sign-up-form.php:326
 msgid "Please check that your email address is properly formatted"
 msgstr ""
 
-#: controller/scode/sign-up-form.php:343
+#: controller/scode/sign-up-form.php:338
 msgid "Whoops, it looks like your email domain may not be valid."
 msgstr ""
 
-#: controller/scode/sign-up-form.php:351
+#: controller/scode/sign-up-form.php:346
 msgid "Sorry, your submission has been blocked."
 msgstr ""
 
@@ -899,32 +899,32 @@ msgid "# of Spots"
 msgstr ""
 
 #: model/meta-boxes.php:101
-#: model/settings-meta-boxes.php:253
+#: model/settings-meta-boxes.php:274
 msgid "Set Phone as Optional"
 msgstr ""
 
 #: model/meta-boxes.php:108
-#: model/settings-meta-boxes.php:259
+#: model/settings-meta-boxes.php:280
 msgid "Set Address as Optional"
 msgstr ""
 
 #: model/meta-boxes.php:115
-#: model/settings-meta-boxes.php:265
+#: model/settings-meta-boxes.php:286
 msgid "Set Email as Optional"
 msgstr ""
 
 #: model/meta-boxes.php:122
-#: model/settings-meta-boxes.php:271
+#: model/settings-meta-boxes.php:292
 msgid "Hide Phone Field"
 msgstr ""
 
 #: model/meta-boxes.php:129
-#: model/settings-meta-boxes.php:277
+#: model/settings-meta-boxes.php:298
 msgid "Hide Address Fields"
 msgstr ""
 
 #: model/meta-boxes.php:136
-#: model/settings-meta-boxes.php:283
+#: model/settings-meta-boxes.php:304
 msgid "Hide Email Field"
 msgstr ""
 
@@ -937,27 +937,27 @@ msgid "Comma-separated list of emails to be copied on confirmations/removals"
 msgstr ""
 
 #: model/meta-boxes.php:152
-#: model/settings-meta-boxes.php:486
+#: model/settings-meta-boxes.php:479
 msgid "Reminder Schedule"
 msgstr ""
 
 #: model/meta-boxes.php:165
-#: model/settings-meta-boxes.php:133
+#: model/settings-meta-boxes.php:154
 msgid "Compact Sign-up Mode"
 msgstr ""
 
 #: model/meta-boxes.php:180
-#: model/settings-meta-boxes.php:162
+#: model/settings-meta-boxes.php:183
 msgid "Enable Task Checkboxes"
 msgstr ""
 
 #: model/meta-boxes.php:188
-#: model/settings-meta-boxes.php:146
+#: model/settings-meta-boxes.php:167
 msgid "Enable task sign-up limit"
 msgstr ""
 
 #: model/meta-boxes.php:196
-#: model/settings-meta-boxes.php:154
+#: model/settings-meta-boxes.php:175
 msgid "Enable contiguous task sign-up limit"
 msgstr ""
 
@@ -977,372 +977,366 @@ msgstr ""
 msgid "Reminder Email Message"
 msgstr ""
 
-#: model/settings-meta-boxes.php:84
+#: model/settings-meta-boxes.php:92
+msgid "Variables that can be used in template..."
+msgstr ""
+
+#: model/settings-meta-boxes.php:93
+msgid "Multi-line list of sign-up details such as date, sheet title, task title"
+msgstr ""
+
+#: model/settings-meta-boxes.php:94
+msgid "First name of user that signed up"
+msgstr ""
+
+#: model/settings-meta-boxes.php:95
+msgid "Last name of user that signed up"
+msgstr ""
+
+#: model/settings-meta-boxes.php:96
+msgid "Email of user that signed up"
+msgstr ""
+
+#: model/settings-meta-boxes.php:97
+msgid "Name of site as defined in Settings > General > Site Title"
+msgstr ""
+
+#: model/settings-meta-boxes.php:98
+msgid "URL of site"
+msgstr ""
+
+#: model/settings-meta-boxes.php:99
+msgid "Main permalink URL for the sheet"
+msgstr ""
+
+#: model/settings-meta-boxes.php:100
+msgid "Title of the sign-up sheet"
+msgstr ""
+
+#: model/settings-meta-boxes.php:105
 #: model/sheet-base.php:211
 msgid "Sign-up Sheet"
 msgstr ""
 
-#: model/settings-meta-boxes.php:88
+#: model/settings-meta-boxes.php:109
 msgid "Sheet order on Front-end"
 msgstr ""
 
-#: model/settings-meta-boxes.php:95
+#: model/settings-meta-boxes.php:116
 msgid "Show All Sign-up Data Fields on Front-end"
 msgstr ""
 
-#: model/settings-meta-boxes.php:98
+#: model/settings-meta-boxes.php:119
 msgid "WARNING: Sign-up sheet table will appear much like the table when sign-ups are viewed via the admin. This option will potentially display personal user information on the frontend like email address and phone.  This option is best used if you are using the [sign_up_sheet] short code within a password protected area. (This also overrides the \"Front-end Display Names\" option and displays all as full names.)"
 msgstr ""
 
-#: model/settings-meta-boxes.php:102
+#: model/settings-meta-boxes.php:123
 msgid "Front-end Display Names"
 msgstr ""
 
-#: model/settings-meta-boxes.php:105
+#: model/settings-meta-boxes.php:126
 msgid "How the user's name should be displayed on the front-end after they sign-up"
 msgstr ""
 
-#: model/settings-meta-boxes.php:109
+#: model/settings-meta-boxes.php:130
 msgid "Filled"
 msgstr ""
 
-#: model/settings-meta-boxes.php:109
+#: model/settings-meta-boxes.php:130
 msgid "anonymous"
 msgstr ""
 
-#: model/settings-meta-boxes.php:119
+#: model/settings-meta-boxes.php:140
 msgid "For logged in users, override the Front-end Display Name with their WP username on their sign-ups."
 msgstr ""
 
-#: model/settings-meta-boxes.php:123
+#: model/settings-meta-boxes.php:144
 msgid "Not Enabled"
 msgstr ""
 
-#: model/settings-meta-boxes.php:124
+#: model/settings-meta-boxes.php:145
 msgid "Public Display Name"
 msgstr ""
 
-#: model/settings-meta-boxes.php:125
+#: model/settings-meta-boxes.php:146
 msgid "Nickname"
 msgstr ""
 
-#: model/settings-meta-boxes.php:126
+#: model/settings-meta-boxes.php:147
 msgid "Username"
 msgstr ""
 
-#: model/settings-meta-boxes.php:149
+#: model/settings-meta-boxes.php:170
 msgid "Prevent users from being able to sign-up for a task more than once.  This is checked by email address."
 msgstr ""
 
-#: model/settings-meta-boxes.php:157
+#: model/settings-meta-boxes.php:178
 msgid "Prevent users from being able to sign-up for a task directly before or after a task for which they have already signed up.  This is checked by email address."
 msgstr ""
 
-#: model/settings-meta-boxes.php:165
+#: model/settings-meta-boxes.php:186
 msgid "Allow check boxes on signup line items that allow user to sign up for multiple tasks."
 msgstr ""
 
-#: model/settings-meta-boxes.php:170
+#: model/settings-meta-boxes.php:191
 msgid "Enable Spot Lock"
 msgstr ""
 
-#: model/settings-meta-boxes.php:173
+#: model/settings-meta-boxes.php:194
 msgid "Spot will be locked and held for current user for 3 minutes when they access the sign-up form page.  Spot Lock is available when signing up for a single task at a time."
 msgstr ""
 
-#: model/settings-meta-boxes.php:178
+#: model/settings-meta-boxes.php:199
 msgid "Hide self-removal from Sign-up Sheet"
 msgstr ""
 
-#: model/settings-meta-boxes.php:181
+#: model/settings-meta-boxes.php:202
 msgid "Hides the \"Remove\" link from the sign-up form if users were logged in when they signed up. This is always hidden if \"Front-end Display Names\" is set to \"anonymous\"."
 msgstr ""
 
-#: model/settings-meta-boxes.php:186
+#: model/settings-meta-boxes.php:207
 msgid "Number of days before sheet/task date to allow users to edit their own sign-ups"
 msgstr ""
 
-#: model/settings-meta-boxes.php:189
+#: model/settings-meta-boxes.php:210
 msgid "Leave blank to disable the user edit feature. Number entered will calculate based on the task date, if set, otherwise it will use the sheet date.  If no sheet and task date is set, editing will be allowed indefinitely.  Use negative numbers to allow editing after the date has passed"
 msgstr ""
 
-#: model/settings-meta-boxes.php:194
+#: model/settings-meta-boxes.php:215
 msgid "Show Filled Spots in Admin Edit Sheet"
 msgstr ""
 
-#: model/settings-meta-boxes.php:197
+#: model/settings-meta-boxes.php:218
 msgid "Show names and count of filled spots in the admin Edit Sheet screen."
 msgstr ""
 
-#: model/settings-meta-boxes.php:202
+#: model/settings-meta-boxes.php:223
 msgid "Allow Auto-Clearing Sign-ups Per Sheet"
 msgstr ""
 
 #. translators: %s is replaced with the timestamp of the next cron scheduled
-#: model/settings-meta-boxes.php:207
-#: model/settings-meta-boxes.php:473
+#: model/settings-meta-boxes.php:228
+#: model/settings-meta-boxes.php:466
 msgid "Next scheduled check: %s"
 msgstr ""
 
-#: model/settings-meta-boxes.php:211
+#: model/settings-meta-boxes.php:232
 msgid "Enabling this activates the optional setting on each Sheet under \"Additional Settings\" which provides the ability auto-clear all sign-ups for that sheet on a schedule."
 msgstr ""
 
-#: model/settings-meta-boxes.php:213
+#: model/settings-meta-boxes.php:234
 msgid "Your site will check if there are sheets that need to be cleared that need to be sent using the"
 msgstr ""
 
-#: model/settings-meta-boxes.php:214
-#: model/settings-meta-boxes.php:478
+#: model/settings-meta-boxes.php:235
+#: model/settings-meta-boxes.php:471
 msgid "WordPress Cron"
 msgstr ""
 
-#: model/settings-meta-boxes.php:216
-#: model/settings-meta-boxes.php:480
+#: model/settings-meta-boxes.php:237
+#: model/settings-meta-boxes.php:473
 msgid "If you just enabled/disabled this, you may need to refresh this page to see the updated \"Next scheduled check\""
 msgstr ""
 
-#: model/settings-meta-boxes.php:223
+#: model/settings-meta-boxes.php:244
 msgid "Custom Task Fields"
 msgstr ""
 
-#: model/settings-meta-boxes.php:242
+#: model/settings-meta-boxes.php:263
 msgid "Sign-up Form"
 msgstr ""
 
-#: model/settings-meta-boxes.php:246
+#: model/settings-meta-boxes.php:267
 msgid "Show \"Remember Me\" checkbox"
 msgstr ""
 
-#: model/settings-meta-boxes.php:289
+#: model/settings-meta-boxes.php:310
 msgid "Disable User Auto-populate"
 msgstr ""
 
-#: model/settings-meta-boxes.php:292
+#: model/settings-meta-boxes.php:313
 msgid "By default, for users that are logged in, their name and email auto-populates on sign-up form when available. This option disables that behavior."
 msgstr ""
 
-#: model/settings-meta-boxes.php:296
+#: model/settings-meta-boxes.php:317
 msgid "Disable Mail Check Validation"
 msgstr ""
 
-#: model/settings-meta-boxes.php:299
+#: model/settings-meta-boxes.php:320
 msgid "Validation includes a JS check for standard email formatting, possible incorrect domains with suggestions as well as an MX record check on the domain to confirm it is setup to receive emails"
 msgstr ""
 
-#: model/settings-meta-boxes.php:303
+#: model/settings-meta-boxes.php:324
 msgid "Disable sign-up link auto-scroll to sheet (hash in sign-up link)"
 msgstr ""
 
-#: model/settings-meta-boxes.php:306
+#: model/settings-meta-boxes.php:327
 msgid "The hash on the sign-up link is useful especially on longer pages where sheets are embedded further down the page or where the sheet description is longer.  When the feature is enabled and the user clicks the sign-up link, it includes a `#` hash to and ID pointing to that same location where the sign-up form will appear on the next page."
 msgstr ""
 
-#: model/settings-meta-boxes.php:310
+#: model/settings-meta-boxes.php:331
 msgid "Sign-up Success Message Receipt"
 msgstr ""
 
-#: model/settings-meta-boxes.php:313
+#: model/settings-meta-boxes.php:334
 msgid "Displays a receipt below the sign-up success message which includes a copy of all the task details and all fields they entered in the sign-up form. Default: `unchecked`"
 msgstr ""
 
-#: model/settings-meta-boxes.php:318
+#: model/settings-meta-boxes.php:339
 msgid "Custom Sign-up Fields"
 msgstr ""
 
-#: model/settings-meta-boxes.php:339
+#: model/settings-meta-boxes.php:360
 msgid "Captcha and Spam Prevention"
 msgstr ""
 
-#: model/settings-meta-boxes.php:343
+#: model/settings-meta-boxes.php:364
 msgid "Disable honeypot"
 msgstr ""
 
-#: model/settings-meta-boxes.php:346
+#: model/settings-meta-boxes.php:367
 msgid "A honeypot is a less-invasive technique to reduce SPAM submission using a hidden field on the sign-up form.  It can be used in place of or alongside the captcha."
 msgstr ""
 
-#: model/settings-meta-boxes.php:349
+#: model/settings-meta-boxes.php:370
 msgid "Disable all Captcha"
 msgstr ""
 
-#: model/settings-meta-boxes.php:351
+#: model/settings-meta-boxes.php:372
 msgid "Will disable all captcha even if you have reCAPTCHA enabled below"
 msgstr ""
 
-#: model/settings-meta-boxes.php:352
+#: model/settings-meta-boxes.php:373
 msgid "Will replace the default simple captcha validation"
 msgstr ""
 
-#: model/settings-meta-boxes.php:353
-#: model/settings-meta-boxes.php:354
+#: model/settings-meta-boxes.php:374
+#: model/settings-meta-boxes.php:375
 msgid "From your account at https://www.google.com/recaptcha/"
 msgstr ""
 
-#: model/settings-meta-boxes.php:361
+#: model/settings-meta-boxes.php:382
 msgid "Confirmation E-mail"
 msgstr ""
 
-#: model/settings-meta-boxes.php:365
-#: model/settings-meta-boxes.php:429
+#: model/settings-meta-boxes.php:386
+#: model/settings-meta-boxes.php:437
 msgid "Enable"
 msgstr ""
 
-#: model/settings-meta-boxes.php:373
-#: model/settings-meta-boxes.php:493
-#: model/settings-meta-boxes.php:552
+#: model/settings-meta-boxes.php:394
+#: model/settings-meta-boxes.php:486
+#: model/settings-meta-boxes.php:530
 msgid "Subject"
 msgstr ""
 
 #. translators: %s is replaced with the default subject
-#: model/settings-meta-boxes.php:377
-#: model/settings-meta-boxes.php:497
-#: model/settings-meta-boxes.php:556
+#: model/settings-meta-boxes.php:398
+#: model/settings-meta-boxes.php:490
+#: model/settings-meta-boxes.php:534
 msgid "If blank, defaults to... \"%s\""
 msgstr ""
 
-#: model/settings-meta-boxes.php:381
-#: model/settings-meta-boxes.php:501
-#: model/settings-meta-boxes.php:560
+#: model/settings-meta-boxes.php:402
+#: model/settings-meta-boxes.php:494
+#: model/settings-meta-boxes.php:538
 msgid "From E-mail Address"
 msgstr ""
 
-#: model/settings-meta-boxes.php:384
-#: model/settings-meta-boxes.php:504
-#: model/settings-meta-boxes.php:563
+#: model/settings-meta-boxes.php:405
+#: model/settings-meta-boxes.php:497
+#: model/settings-meta-boxes.php:541
 msgid "If blank, defaults to WordPress email on file under Settings > General"
 msgstr ""
 
-#: model/settings-meta-boxes.php:388
-#: model/settings-meta-boxes.php:508
+#: model/settings-meta-boxes.php:409
+#: model/settings-meta-boxes.php:501
 msgid "BCC"
 msgstr ""
 
-#: model/settings-meta-boxes.php:391
-#: model/settings-meta-boxes.php:511
+#: model/settings-meta-boxes.php:412
+#: model/settings-meta-boxes.php:504
 msgid "Comma separate for multiple email addresses"
 msgstr ""
 
-#: model/settings-meta-boxes.php:408
-#: model/settings-meta-boxes.php:448
-#: model/settings-meta-boxes.php:526
-msgid "Variables that can be used in template..."
-msgstr ""
-
-#: model/settings-meta-boxes.php:409
-#: model/settings-meta-boxes.php:449
-#: model/settings-meta-boxes.php:527
-msgid "Multi-line list of sign-up details such as date, sheet title, task title"
-msgstr ""
-
-#: model/settings-meta-boxes.php:410
-#: model/settings-meta-boxes.php:450
-#: model/settings-meta-boxes.php:528
-msgid "First name of user that signed up"
-msgstr ""
-
-#: model/settings-meta-boxes.php:411
-#: model/settings-meta-boxes.php:451
-#: model/settings-meta-boxes.php:529
-msgid "Last name of user that signed up"
-msgstr ""
-
-#: model/settings-meta-boxes.php:412
-#: model/settings-meta-boxes.php:452
-#: model/settings-meta-boxes.php:530
-msgid "Email of user that signed up"
-msgstr ""
-
-#: model/settings-meta-boxes.php:413
-#: model/settings-meta-boxes.php:453
-#: model/settings-meta-boxes.php:531
-msgid "Name of site as defined in Settings > General > Site Title"
-msgstr ""
-
-#: model/settings-meta-boxes.php:414
-#: model/settings-meta-boxes.php:454
-#: model/settings-meta-boxes.php:532
-msgid "URL of site"
-msgstr ""
-
-#: model/settings-meta-boxes.php:415
+#: model/settings-meta-boxes.php:423
 msgid "Link to remove sign-up"
 msgstr ""
 
-#: model/settings-meta-boxes.php:425
+#: model/settings-meta-boxes.php:433
 msgid "Removal Confirmation E-mail"
 msgstr ""
 
-#: model/settings-meta-boxes.php:464
+#: model/settings-meta-boxes.php:457
 msgid "Reminder E-mail"
 msgstr ""
 
-#: model/settings-meta-boxes.php:464
+#: model/settings-meta-boxes.php:457
 msgid "Pro Feature"
 msgstr ""
 
-#: model/settings-meta-boxes.php:464
+#: model/settings-meta-boxes.php:457
 msgid "Pro"
 msgstr ""
 
-#: model/settings-meta-boxes.php:468
+#: model/settings-meta-boxes.php:461
 msgid "Enable Reminders"
 msgstr ""
 
-#: model/settings-meta-boxes.php:477
+#: model/settings-meta-boxes.php:470
 msgid "Your site will check hourly to see if there are reminders that need to be sent using the"
 msgstr ""
 
-#: model/settings-meta-boxes.php:489
+#: model/settings-meta-boxes.php:482
 msgid "This field is required."
 msgstr ""
 
-#: model/settings-meta-boxes.php:541
+#: model/settings-meta-boxes.php:519
 msgid "Status E-mail"
 msgstr ""
 
-#: model/settings-meta-boxes.php:545
+#: model/settings-meta-boxes.php:523
 msgid "Enable Status E-mail"
 msgstr ""
 
-#: model/settings-meta-boxes.php:548
+#: model/settings-meta-boxes.php:526
 msgid "Shows all signups for a sheet.  Sent when a user adds or removes a signup from the frontend."
 msgstr ""
 
-#: model/settings-meta-boxes.php:567
+#: model/settings-meta-boxes.php:545
 msgid "Send to main admin emails"
 msgstr ""
 
-#: model/settings-meta-boxes.php:570
+#: model/settings-meta-boxes.php:548
 msgid "E-mail address specified under Settings > General"
 msgstr ""
 
-#: model/settings-meta-boxes.php:574
+#: model/settings-meta-boxes.php:552
 msgid "Send to \"Sheet BCC\" recipients"
 msgstr ""
 
-#: model/settings-meta-boxes.php:577
+#: model/settings-meta-boxes.php:555
 msgid "These addresses will be added as a recipient only for sheets on which they are assigned."
 msgstr ""
 
-#: model/settings-meta-boxes.php:585
+#: model/settings-meta-boxes.php:563
 msgid "Advanced"
 msgstr ""
 
-#: model/settings-meta-boxes.php:594
+#: model/settings-meta-boxes.php:572
 msgid "Reset All Settings"
 msgstr ""
 
-#: model/settings-meta-boxes.php:597
-#: model/settings-meta-boxes.php:603
+#: model/settings-meta-boxes.php:575
+#: model/settings-meta-boxes.php:581
 msgid "This will erase any custom configurations you have made on this page and reset them back to the defaults. This action cannot be undone."
 msgstr ""
 
-#: model/settings-meta-boxes.php:602
+#: model/settings-meta-boxes.php:580
 msgid "Are you sure?"
 msgstr ""
 
-#: model/settings-meta-boxes.php:612
+#: model/settings-meta-boxes.php:590
 msgid "Text Overrides"
 msgstr ""
 
@@ -1366,7 +1360,7 @@ msgstr ""
 msgid "Task Title Label"
 msgstr ""
 
-#: model/settings.php:302
+#: model/settings.php:299
 msgid "Not Scheduled"
 msgstr ""
 

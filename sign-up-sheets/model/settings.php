@@ -11,7 +11,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\Settings')) {
     class SettingsParent extends \FDSUSPRO\Model\Pro\Settings {}
 } else {
     class SettingsParent {}
@@ -210,16 +210,6 @@ class Settings extends SettingsParent
     }
 
     /**
-     * Get current plugin basename depending on if we are running the pro or free version
-     *
-     * @return string
-     */
-    public static function getCurrentPluginBasename()
-    {
-        return Id::isPro() ? Id::PRO_PLUGIN_BASENAME : Id::FREE_PLUGIN_BASENAME;
-    }
-
-    /**
      * Is confirmation email enabled?
      * This method is the source of truth for this option including default value if not set
      *
@@ -270,6 +260,13 @@ class Settings extends SettingsParent
         return $url;
     }
 
+    /**
+     * Get Manage Sign-ups Page URL
+     *
+     * @param string|int $sheetId
+     *
+     * @return string|null
+     */
     public static function getManageSignupsPageUrl($sheetId)
     {
         return admin_url(
@@ -345,5 +342,61 @@ class Settings extends SettingsParent
     {
         $ids = get_option('fdsus_cache_clear_on_signup');
         return empty($ids) ? array() : explode(',', $ids);
+    }
+
+    /**
+     * Is reminder email functionality enabled?
+     *
+     * @return bool
+     */
+    public static function isReminderEnabled()
+    {
+        return self::parentMethodExists(__FUNCTION__) ? parent::{__FUNCTION__}() : false;
+    }
+
+    /**
+     * Is remember me feature enabled?
+     *  Fallback method in case Pro isn't loaded.
+     *
+     * @return bool
+     */
+    public static function isRememberMeEnabled()
+    {
+        return self::parentMethodExists(__FUNCTION__) ? parent::{__FUNCTION__}() : false;
+    }
+
+    /**
+     * Is auto-clearing of sign-ups allowed globally?
+     * Fallback method in case Pro isn't loaded.
+     *
+     * @return bool
+     */
+    public static function isAutoclearSignupsAllowed()
+    {
+        return self::parentMethodExists(__FUNCTION__) ? parent::{__FUNCTION__}() : false;
+    }
+
+    /**
+     * Is the spot lock enabled?
+     *
+     * @return bool
+     */
+    public static function isSpotLockEnabled()
+    {
+        return self::parentMethodExists(__FUNCTION__) ? parent::{__FUNCTION__}() : false;
+    }
+
+    /**
+     * Check if method exists in parent class and is callable
+     *  Fallback method in case Pro isn't loaded.
+     *
+     * @param string $function
+     *
+     * @return bool
+     */
+    protected static function parentMethodExists($function)
+    {
+        return is_callable(get_parent_class(self::class) . '::' . $function)
+            && method_exists(get_parent_class(self::class), $function);
     }
 }

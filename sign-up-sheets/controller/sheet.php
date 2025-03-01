@@ -212,7 +212,7 @@ class Sheet extends PostTypeBase
         foreach ($toProcess['update'] as $data) {
             // Disable/Re-enable filter to avoid infinite recursion
             remove_filter(current_filter(), array(&$this, __FUNCTION__));
-            $taskModel = new TaskModel($data['id']);
+            $taskModel = new TaskModel((int)$data['id']);
             $result = $taskModel->update($data);
             add_filter(current_filter(), array(&$this, __FUNCTION__), 10, 4);
 
@@ -407,8 +407,8 @@ class Sheet extends PostTypeBase
                 return;
             }
 
-            $signupIds = explode(',', $_GET['signups']);
-            $taskIds = explode(',', $_GET['tasks']);
+            $signupIds = array_map('intval', explode(',', $_GET['signups']));
+            $taskIds = array_map('intval', explode(',', $_GET['tasks']));
             foreach ($signupIds as $key => $signupId) {
                 $signup = Settings::isReceiptEnabled() ? new SignupModel($signupId) : false;
 

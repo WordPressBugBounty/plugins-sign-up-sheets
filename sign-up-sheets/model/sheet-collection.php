@@ -11,7 +11,7 @@ use FDSUS\Model\Sheet as SheetModel;
 use WP_Post;
 use WP_Query;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\SheetCollection')) {
     class SheetCollectionParent extends \FDSUSPRO\Model\Pro\SheetCollection {}
 } else {
     class SheetCollectionParent extends Base {}

@@ -13,7 +13,7 @@ use FDSUS\Model\Task as TaskModel;
 use WP_Post;
 use WP_Error;
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\Signup')) {
     class SignupParent extends \FDSUSPRO\Model\Pro\Signup {}
 } else {
     class SignupParent extends SignupBase {}

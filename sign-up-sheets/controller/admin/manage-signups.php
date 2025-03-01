@@ -34,7 +34,7 @@ class ManageSignups extends PageBase
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
 
         add_submenu_page(
-            '',
+            '', // Will throw notice in PHP 8.1+ due to WP core bug @see https://core.trac.wordpress.org/ticket/57579
             esc_html__('Manage Sign-ups', 'sign-up-sheets'),
             esc_html__('Manage Sign-ups', 'sign-up-sheets'),
             $sheetCaps->get('read_post'),
@@ -150,7 +150,7 @@ class ManageSignups extends PageBase
             Notice::add('success', esc_html__('Spot(s) cleared.', 'sign-up-sheets'), false, Id::PREFIX . '-clear-success');
         } else {
             /* translators: %d is replaced with the sheet ID */
-            Notice::add('success', sprintf(esc_html__('Error clearing a spot (Sheet ID #%d)', 'sign-up-sheets'), $_GET['sheet_id']), false, Id::PREFIX . '-clear-error');
+            Notice::add('success', sprintf(esc_html__('Error clearing a spot (Sheet ID #%d)', 'sign-up-sheets'), (int)$_GET['sheet_id']), false, Id::PREFIX . '-clear-error');
         }
     }
 

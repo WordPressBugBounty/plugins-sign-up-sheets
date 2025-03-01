@@ -411,8 +411,8 @@ class TaskTable extends Base
                         // Clear Checkbox
                         if ($this->config['displayAll'] && is_admin()) {
                             $clear_url = wp_nonce_url(
-                                '?post_type=' . SheetModel::POST_TYPE . '&amp;action=clear&amp;page=fdsus-manage&amp;sheet_id=' . $_GET['sheet_id'] . '&amp;clear=' . $signup->ID,
-                                'clear-signup_' . $signup->ID,
+                                '?post_type=' . SheetModel::POST_TYPE . '&amp;action=clear&amp;page=fdsus-manage&amp;sheet_id=' . (int)$_GET['sheet_id'] . '&amp;clear=' . (int)$signup->ID,
+                                'clear-signup_' . (int)$signup->ID,
                                 'manage_signup_nonce'
                             );
                             $userDisplay = '(not logged in)';
@@ -432,7 +432,7 @@ class TaskTable extends Base
                                         <i class="dashicons dashicons-trash" aria-hidden="true"></i>
                                     </a>
                                 </span>
-                                <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($signup->ID, $_GET['sheet_id'])) . '">
+                                <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($signup->ID, (int)$_GET['sheet_id'])) . '">
                                     <span class="screen-reader-text">' . esc_html__('Edit', 'sign-up-sheets') . '</span>
                                     <i class="dashicons dashicons-edit" aria-hidden="true"></i>
                                 </a>
@@ -528,7 +528,7 @@ class TaskTable extends Base
                         $signupLink = esc_html__('(empty)', 'sign-up-sheets');
                         if (is_admin()) {
                             $signupLink .= '
-                                <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($task->ID, $_GET['sheet_id'], 'add')) . '">
+                                <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($task->ID, (int)$_GET['sheet_id'], 'add')) . '">
                                     <span class="screen-reader-text">' . esc_html__('Add Sign-up', 'sign-up-sheets') . '</span>
                                     <i class="dashicons dashicons-plus" aria-hidden="true"></i>
                                 </a>';

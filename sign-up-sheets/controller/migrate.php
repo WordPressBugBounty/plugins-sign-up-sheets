@@ -19,7 +19,7 @@ if (!FDSUS_DISABLE_MIGRATE_2_0_to_2_1) {
     require_once(ABSPATH . DIRECTORY_SEPARATOR . 'wp-load.php');
 }
 
-if (Id::isPro()) {
+if (Id::isPro() && class_exists('FDSUSPRO\Controller\Pro\Migrate')) {
     class MigrateParent extends \FDSUSPRO\Controller\Pro\Migrate {}
 } else {
     class MigrateParent extends Base {}

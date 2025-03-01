@@ -49,7 +49,7 @@ class Admin
         add_action('manage_' . SheetModel::POST_TYPE . '_posts_custom_column', array(&$this, 'addSheetsColumns'), 10, 2);
         add_action('admin_init', array(&$this, 'checkMigrateStatus'), 0);
         add_action('pre_get_posts', array(&$this, 'orderbyTaskDate'));
-        add_filter('plugin_action_links_' . Settings::getCurrentPluginBasename(), array(&$this, 'settingsLink'));
+        add_filter('plugin_action_links_' . Id::getPluginBasename(), array(&$this, 'settingsLink'));
         add_action('in_admin_footer', array(&$this, 'admin_footer_text'), 100);
         add_filter('post_row_actions', array(&$this, 'post_row_actions'), 10, 2);
         add_filter('manage_edit-' . SheetModel::POST_TYPE . '_columns', array(&$this, 'addSheetsColumnHeader'));
@@ -185,8 +185,7 @@ class Admin
     public function head()
     {
         // Pull pro or free
-        $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::isPro() ? Id::PRO_PLUGIN_BASENAME
-                : Id::FREE_PLUGIN_BASENAME);
+        $pluginPath = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . (Id::getPluginBasename());
 
         // Dequeue meta library scripts for now
         if (wp_script_is('dlsmb-main', $list = 'enqueued')) {

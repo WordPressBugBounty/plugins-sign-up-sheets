@@ -8,7 +8,7 @@
  * @subpackage  Sign_Up_Sheets
  * @see         https://www.fetchdesigns.com/sign-up-sheets-pro-overriding-templates-in-your-theme/
  * @since       2.2 (plugin version)
- * @version     1.0.1 (template file version)
+ * @version     1.0.2 (template file version)
  */
 
 /** @var array $args */
@@ -30,7 +30,9 @@
 
     <?php if (!empty($_GET['task_id'])): ?>
 
-        <?php echo do_shortcode('[sign_up_form task_ids=' . implode(',', (array)$_GET['task_id']) . ']'); ?>
+        <?php echo do_shortcode(
+            '[sign_up_form task_ids=' . implode(',', array_map('intval', (array)$_GET['task_id'])) . ']'
+        ); ?>
 
     <?php else: ?>
 

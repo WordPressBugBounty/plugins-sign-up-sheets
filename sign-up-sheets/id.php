@@ -19,8 +19,11 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
         const DEBUG = false; // log detailed debug info to logs
         const DEBUG_DISPLAY = false; // display detailed debug info on screen
         const IS_LOCAL = false;
-        CONST FREE_PLUGIN_BASENAME = 'sign-up-sheets/sign-up-sheets.php'; // Use Settings::getCurrentPluginBasename() to get current
-        CONST PRO_PLUGIN_BASENAME = 'sign-up-sheets-pro/sign-up-sheets.php'; // Use Settings::getCurrentPluginBasename() to get current
+        // TODO update basename constants to use private visibility to prevent direct usage, but requires php 7.1+ so only do in larger version update
+        /** @var string Fallback free basename. Don't use directly, instead use IdPro::getPluginBasename($type) */
+        const FREE_PLUGIN_BASENAME = 'sign-up-sheets/sign-up-sheets.php';
+        /** @var string Fallback pro basename. Don't use directly, instead use IdPro::getPluginBasename($type) */
+        const PRO_PLUGIN_BASENAME = 'sign-up-sheets-pro/sign-up-sheets.php';
 
         /**
          * @var int
@@ -40,16 +43,7 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
                 require_once(ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php');
             }
 
-            switch ($type) {
-                case 'pro':
-                    $pluginBasename = self::PRO_PLUGIN_BASENAME;
-                    break;
-                case 'free':
-                    $pluginBasename = self::FREE_PLUGIN_BASENAME;
-                    break;
-                default:
-                    $pluginBasename = self::isPro() ? self::PRO_PLUGIN_BASENAME : self::FREE_PLUGIN_BASENAME;
-            }
+            $pluginBasename = self::getPluginBasename($type);
 
             if (!file_exists(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $pluginBasename)) {
                 return '';
@@ -170,32 +164,29 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
         }
 
         /**
-         * Is Pro?
+         * Get plugin basename
+         *
+         * @param 'pro'|'free'|'' $type
+         *
+         * @return string
          */
-        public static function isPro()
+        public static function getPluginBasename($type = '')
         {
-            if (self::isProActivating()) {
-                return true;
+            if ($type === '') {
+                $type = self::isPro() ? 'pro' : 'free';
             }
 
-            return is_plugin_active(self::PRO_PLUGIN_BASENAME);
+            return ($type === 'pro')
+                ? (defined('FDSUS_PRO_PLUGIN_BASENAME') ? FDSUS_PRO_PLUGIN_BASENAME : self::PRO_PLUGIN_BASENAME)
+                : (defined('FDSUS_FREE_PLUGIN_BASENAME') ? FDSUS_FREE_PLUGIN_BASENAME : self::FREE_PLUGIN_BASENAME);
         }
 
         /**
-         * Is the pro version currently activating?
-         *
-         * @return bool
+         * Is the Pro version running?
          */
-        public static function isProActivating()
+        public static function isPro()
         {
-            if (!empty($_GET['action']) && $_GET['action'] === 'activate'
-                && !empty($_GET['plugin'])
-                && $_GET['plugin'] === Id::PRO_PLUGIN_BASENAME
-            ) {
-                return true;
-            }
-
-            return false;
+            return is_plugin_active(Id::getPluginBasename('pro'));
         }
     }
 

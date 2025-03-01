@@ -5,7 +5,6 @@
 
 namespace FDSUS\Controller;
 
-use FDSUS\Id;
 use FDSUS\Model\Settings;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Task as TaskModel;
@@ -153,10 +152,19 @@ class Mail
      */
     public function addDynamicContent($message, $args)
     {
+        /** @var SheetModel $sheet */
+        $sheet = $args['sheet'];
+        /** @var TaskModel $task */
+
+        $task = $args['task'];
+
+        /** @var SignupModel $signup */
+        $signup = $args['signup'];
+
         // Set sign-up date
         $signupDate = null;
-        if (!empty($args['sheet']->dlssus_date)) {
-            $signupDate = $args['sheet']->dlssus_date;
+        if (!empty($sheet->dlssus_date)) {
+            $signupDate = $sheet->dlssus_date;
         }
 
         /**
@@ -172,9 +180,9 @@ class Mail
 
         // Build initial signup details
         $signupDetails = (!empty($signupDate) ? esc_html__('Date', 'sign-up-sheets') . ': ' . date(get_option('date_format'), strtotime($signupDate)) . PHP_EOL : null)
-            . esc_html__('Event', 'sign-up-sheets') . ': ' . wp_kses_post($args['sheet']->post_title) . PHP_EOL
+            . esc_html__('Event', 'sign-up-sheets') . ': ' . wp_kses_post($sheet->post_title) . PHP_EOL
             . esc_html(Settings::$text['task_title_label']['value'])
-            . ': ' . wp_kses_post($args['task']->post_title);
+            . ': ' . wp_kses_post($task->post_title);
 
         /**
          * Filter signup_details in the mail dynamic content
@@ -190,11 +198,18 @@ class Mail
         // Replace
         $message = str_replace('{signup_details}', wp_kses_post($signupDetails), $message);
         $message = str_replace('{from_email}', sanitize_email($args['from']), $message);
-        $message = str_replace('{site_name}', wp_kses_post($this->plain_blogname), $message);
-        $message = str_replace('{site_url}', get_bloginfo('url'), $message);
-        $message = str_replace('{signup_firstname}', esc_html($args['signup']->{Id::PREFIX . '_firstname'}), $message);
-        $message = str_replace('{signup_lastname}', esc_html($args['signup']->{Id::PREFIX . '_lastname'}), $message);
-        $message = str_replace('{signup_email}', sanitize_email($args['signup']->{Id::PREFIX . '_email'}), $message);
+        $message = str_replace('{signup_firstname}', esc_html($signup->dlssus_firstname), $message);
+        $message = str_replace('{signup_lastname}', esc_html($signup->dlssus_lastname), $message);
+        $message = str_replace('{signup_email}', sanitize_email($signup->dlssus_email), $message);
+        if (strpos($message, '{site_url}') !== false) {
+            $message = str_replace('{site_url}', get_bloginfo('url'), $message);
+        }
+        if (strpos($message, '{sheet_url}') !== false) {
+            $message = str_replace('{sheet_url}', esc_html(get_post_permalink($sheet->ID)), $message);
+        }
+        if (strpos($message, '{sheet_title}') !== false) {
+            $message = str_replace('{sheet_title}', esc_html($sheet->post_title), $message);
+        }
 
         /**
          * Filter the mail dynamic content

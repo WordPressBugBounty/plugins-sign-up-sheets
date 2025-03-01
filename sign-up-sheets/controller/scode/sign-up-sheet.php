@@ -94,7 +94,7 @@ class SignUpSheet extends Base
 
         $forceOneSheet = false;
         if (!empty($_GET['sheet_id'])) {
-            $id = $_GET['sheet_id']; // ID overrides shortcode id if defined
+            $id = (int)$_GET['sheet_id']; // ID overrides shortcode id if defined
         }
         if (!empty($_GET['sheet_id']) || !empty($_GET['task_id'])) {
             $args['show_backlink'] = true;
@@ -104,7 +104,7 @@ class SignUpSheet extends Base
 
         // Get sheet id from task id
         if (!empty($_GET['task_id'])) {
-            $firstTaskId = (is_array($_GET['task_id'])) ? current($_GET['task_id']) : $_GET['task_id'];
+            $firstTaskId = intval((is_array($_GET['task_id'])) ? current($_GET['task_id']) : $_GET['task_id']);
             $task = new TaskModel($firstTaskId);
             $id = $task->post_parent;
         }

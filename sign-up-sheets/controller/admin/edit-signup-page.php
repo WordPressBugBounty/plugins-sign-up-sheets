@@ -44,7 +44,7 @@ class EditSignupPage extends PageBase
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
 
         add_submenu_page(
-            '',
+            '', // Will throw notice in PHP 8.1+ due to WP core bug @see https://core.trac.wordpress.org/ticket/57579
             esc_html__('Edit Sign-up', 'sign-up-sheets'),
             '',
             $sheetCaps->get('edit_posts'),
@@ -66,13 +66,13 @@ class EditSignupPage extends PageBase
         $signup = null;
 
         if (!empty($_GET['signup'])) {
-            $signup = new SignupModel($_GET['signup']);
+            $signup = new SignupModel((int)$_GET['signup']);
             if (!$signup->isValid()) {
                 wp_die(__('Sign-up invalid', 'sign-up-sheets'));
             }
         }
 
-        $task = new TaskModel(!empty($_GET['task']) ? $_GET['task'] : $signup->post_parent);
+        $task = new TaskModel(!empty($_GET['task']) ? (int)$_GET['task'] : $signup->post_parent);
         if (!$task->isValid()) {
             wp_die(__('Task invalid', 'sign-up-sheets'));
         }
@@ -212,7 +212,7 @@ class EditSignupPage extends PageBase
             Notice::instance();
 
             // Update signup
-            $signup = new SignupModel($_GET['signup']);
+            $signup = new SignupModel((int)$_GET['signup']);
 
             if (!$signup->isValid()) {
                 Notice::add('error', esc_html__('Sign-up not found.', 'sign-up-sheets'));
@@ -282,9 +282,9 @@ class EditSignupPage extends PageBase
             $signup = new SignupModel();
 
             try {
-                $signup->add($_POST, $_GET['task'], true);
+                $signup->add($_POST, (int)$_GET['task'], true);
 
-                $task = new TaskModel($_GET['task']);
+                $task = new TaskModel((int)$_GET['task']);
                 $sheet = new SheetModel($task->post_parent);
 
                 // Error Handling
