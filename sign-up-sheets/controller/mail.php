@@ -198,6 +198,7 @@ class Mail
         // Replace
         $message = str_replace('{signup_details}', wp_kses_post($signupDetails), $message);
         $message = str_replace('{from_email}', sanitize_email($args['from']), $message);
+        $message = str_replace('{site_name}', wp_kses_post($this->plain_blogname), $message);
         $message = str_replace('{signup_firstname}', esc_html($signup->dlssus_firstname), $message);
         $message = str_replace('{signup_lastname}', esc_html($signup->dlssus_lastname), $message);
         $message = str_replace('{signup_email}', sanitize_email($signup->dlssus_email), $message);

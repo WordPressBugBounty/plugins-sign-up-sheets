@@ -1,8 +1,8 @@
-v=== Sign-up Sheets ===
+=== Sign-up Sheets ===
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.7
-Stable tag: 2.3.1
+Stable tag: 2.3.1.1
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -104,6 +104,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.1.1 | 2025-03-01 =
+* Fixed {site_name} variable in email template. (pro)
+
 = 2.3.1 | 2025-03-01 =
 * Added support for Pro email variables `{sheet_url}` and `{sheet_title}` to email template message configurations.
 * Fixed security on sign-up form to prevent content injection.
@@ -147,6 +150,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.1.1 | 2025-03-01 =
+* Fixed {site_name} variable in email template. (pro)
 
 = 2.3.1 | 2025-03-01 =
 * Added support for Pro email variables `{sheet_url}` and `{sheet_title}` to email template message configurations.
