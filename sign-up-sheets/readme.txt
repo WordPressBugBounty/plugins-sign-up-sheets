@@ -105,7 +105,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Upgrade Notice ==
 
 = 2.3.1.1 | 2025-03-01 =
-* Fixed {site_name} variable in email template. (pro)
+* Fixed {site_name} variable in email template.
 
 = 2.3.1 | 2025-03-01 =
 * Added support for Pro email variables `{sheet_url}` and `{sheet_title}` to email template message configurations.
@@ -152,7 +152,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 2.3.1.1 | 2025-03-01 =
-* Fixed {site_name} variable in email template. (pro)
+* Fixed {site_name} variable in email template.
 
 = 2.3.1 | 2025-03-01 =
 * Added support for Pro email variables `{sheet_url}` and `{sheet_title}` to email template message configurations.
