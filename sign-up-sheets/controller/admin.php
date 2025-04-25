@@ -165,7 +165,7 @@ class Admin
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('edit_post'))) {
+        if (!current_user_can($sheetCaps->get('create_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
@@ -293,12 +293,6 @@ class Admin
     {
         if ($post->post_type == SheetModel::POST_TYPE) {
 
-            $id = array('fdsus-id' => sprintf(
-                '<span class="fdsus-id-value">' . esc_html__('ID', 'sign-up-sheets') . ': %s</span>',
-                $post->ID
-            ));
-            $actions = $id + $actions;
-
             if ($post->post_status != 'trash') {
                 $actions['fdsus-manage'] = sprintf(
                     '<a href="%s" title="" rel="permalink">%s</a>',
@@ -307,7 +301,7 @@ class Admin
                 );
 
                 $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-                if (current_user_can($sheetCaps->get('edit_post'))) {
+                if (current_user_can($sheetCaps->get('create_posts'))) {
                     $actions['fdsus-copysheet'] = sprintf(
                         '<a href="%s" title="" rel="permalink">%s</a>',
                         esc_url(wp_nonce_url(
@@ -326,6 +320,13 @@ class Admin
                     );
                 }
             }
+
+            // Add ID to the beginning
+            $id = array('fdsus-id' => sprintf(
+                '<span class="fdsus-id-value">' . esc_html__('ID', 'sign-up-sheets') . ': %s</span>',
+                $post->ID
+            ));
+            $actions = $id + $actions;
         }
 
         return $actions;
@@ -422,7 +423,7 @@ class Admin
                 foreach ($tasks as $task) {
                     $signups = $task->getSignups();
                     foreach ($signups as $signup) {
-                        $signup->delete();
+                        $signup->delete(0, false);
                     }
                     $task->delete();
                 }
@@ -432,7 +433,7 @@ class Admin
                 $signupCollection = new SignupCollection();
                 $signups = $signupCollection->getByTask($postId);
                 foreach ($signups as $signup) {
-                    $signup->delete();
+                    $signup->delete(0, false);
                 }
                 $taskModel = new TaskModel();
                 $taskModel->delete($postId);

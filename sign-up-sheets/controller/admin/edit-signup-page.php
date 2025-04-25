@@ -7,8 +7,7 @@ namespace FDSUS\Controller\Admin;
 
 use FDSUS\Id;
 use FDSUS\Lib\Dls\Notice;
-use FDSUS\Model\Capabilities;
-use FDSUS\Model\Data;
+use FDSUS\Model\Capabilities as CapabilitiesModel;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Task as TaskModel;
 use FDSUS\Model\Signup as SignupModel;
@@ -23,17 +22,17 @@ class EditSignupPage extends PageBase
 {
     /** @var string */
     protected $menuSlug = 'fdsus-edit-signup';
+    protected $parentMenuSlug = 'edit.php?post_type=' . SheetModel::POST_TYPE;
+    protected $hideInParentMenu = true;
 
     public function __construct()
     {
-        $this->data = new Data();
+        parent::__construct();
         add_action('admin_menu', array(&$this, 'menu'));
         add_action('current_screen', array(&$this, 'maybeProcessEditSignup'));
         add_action('current_screen', array(&$this, 'maybeProcessAddSignup'));
         add_action('current_screen', array(&$this, 'maybeDisplayNotice'));
         add_action('fdsus_signup_form_last_fields', array(&$this, 'addFieldsToForm'), 10, 2);
-
-        parent::__construct();
     }
 
     /**
@@ -41,13 +40,13 @@ class EditSignupPage extends PageBase
      */
     public function menu()
     {
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
+        $signupCaps = new CapabilitiesModel(SignupModel::POST_TYPE);
 
         add_submenu_page(
-            '', // Will throw notice in PHP 8.1+ due to WP core bug @see https://core.trac.wordpress.org/ticket/57579
+            $this->parentMenuSlug,
             esc_html__('Edit Sign-up', 'sign-up-sheets'),
             '',
-            $sheetCaps->get('edit_posts'),
+            $signupCaps->get('edit_posts'),
             $this->menuSlug,
             array(&$this, 'page')
         );
@@ -58,10 +57,7 @@ class EditSignupPage extends PageBase
      */
     public function page()
     {
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('edit_posts'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.'));
-        }
+        $signupCaps = new CapabilitiesModel(SignupModel::POST_TYPE);
 
         $signup = null;
 
@@ -70,6 +66,14 @@ class EditSignupPage extends PageBase
             if (!$signup->isValid()) {
                 wp_die(__('Sign-up invalid', 'sign-up-sheets'));
             }
+        }
+
+        if ($signup && !$signup->currentUserCanEdit()) {
+            wp_die(esc_html__('You do not have sufficient permissions to edit this sign-up.'));
+        }
+
+        if (!$signup && !current_user_can($signupCaps->get('create_posts'))) {
+            wp_die(esc_html__('You do not have sufficient permissions to add sign-ups.'));
         }
 
         $task = new TaskModel(!empty($_GET['task']) ? (int)$_GET['task'] : $signup->post_parent);
@@ -119,17 +123,18 @@ class EditSignupPage extends PageBase
             <div id="postbox-container-1" class="postbox-container">
                 <div class="fdsus-edit-quick-info" role="group"
                      aria-label="<?php esc_attr_e('Sheet Quick Info', 'sign-up-sheets') ?>">
-                    <span class="quick-info-item quick-info-id"><strong><?php esc_html_e(
-                                'Sheet ID', 'sign-up-sheets'
-                            ) ?>: </strong> <code><?php echo $sheet->ID ?></code></span>
+                    <span class="quick-info-item quick-info-id"><strong><?php
+                            esc_html_e('Sheet ID', 'sign-up-sheets')
+                            ?>: </strong> <code><?php echo $sheet->ID ?></code></span>
                     <?php do_action('fdsus_edit_sheet_quick_info', $sheet->getData()); ?>
                 </div>
 
                 <div class="postbox ">
-                    <div class="postbox-header"><h2>Sheet and Task Info</h2></div>
+                    <div class="postbox-header"><h2><?php
+                            esc_html_e('Sheet and Task Info', 'sign-up-sheets') ?></h2></div>
                     <div class="inside">
                         <dl>
-                            <dt><?php _e('Sheet', 'sign-up-sheets'); ?>:</dt>
+                            <dt><?php esc_html_e('Sheet', 'sign-up-sheets'); ?>:</dt>
                             <dd><?php echo wp_kses_post($sheet->post_title); ?></dd>
 
                             <dt><?php esc_html_e('Date', 'sign-up-sheets'); ?>:</dt>
@@ -140,7 +145,7 @@ class EditSignupPage extends PageBase
                                 ); ?>
                             </dd>
 
-                            <dt><?php _e('Task', 'sign-up-sheets'); ?>:</dt>
+                            <dt><?php esc_html_e('Task', 'sign-up-sheets'); ?>:</dt>
                             <dd><?php esc_html_e($task->post_title); ?></dd>
                         </dl>
                     </div>
@@ -188,61 +193,58 @@ class EditSignupPage extends PageBase
      */
     public function maybeProcessEditSignup($currentScreen)
     {
-        if (empty($_GET['action']) || $_GET['action'] !== 'edit' || !$this->isCurrentScreen($currentScreen)) {
+        if (empty($_POST) || empty($_GET['action']) || $_GET['action'] !== 'edit' || !$this->isCurrentScreen($currentScreen)) {
             return;
-        }
-
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('edit_posts'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
         if (empty($_GET['signup'])) {
             wp_die(esc_html__('Sign-up ID missing', 'sign-up-sheets'));
         }
 
-        if (!empty($_POST)) {
-            if (
-                !isset($_POST['signup_nonce'])
-                || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
-            ) {
-                wp_die(esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'));
+        if (
+            !isset($_POST['signup_nonce'])
+            || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
+        ) {
+            wp_die(esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'));
+        }
+
+        Notice::instance();
+
+        // Update signup
+        $signup = new SignupModel((int)$_GET['signup']);
+
+        if (!$signup->currentUserCanEdit()) {
+            wp_die(esc_html__('You do not have sufficient permissions to edit this sign-up.', 'sign-up-sheets'));
+        }
+
+        if (!$signup->isValid()) {
+            Notice::add('error', esc_html__('Sign-up not found.', 'sign-up-sheets'));
+            return;
+        }
+
+        try {
+            $signup->update(0, $_POST, true);
+
+            $task = new TaskModel($signup->post_parent);
+            $sheet = new SheetModel($task->post_parent);
+
+            // Error Handling
+            if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $sheet))) {
+                throw new Exception(
+                    sprintf(
+                    /* translators: %s is replaced with a comma separated list of all missing required fields */
+                        esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
+                        implode(', ', $missingFieldNames)
+                    )
+                );
             }
 
-            Notice::instance();
-
-            // Update signup
-            $signup = new SignupModel((int)$_GET['signup']);
-
-            if (!$signup->isValid()) {
-                Notice::add('error', esc_html__('Sign-up not found.', 'sign-up-sheets'));
-                return;
-            }
-
-            try {
-                $signup->update(0, $_POST, true);
-
-                $task = new TaskModel($signup->post_parent);
-                $sheet = new SheetModel($task->post_parent);
-
-                // Error Handling
-                if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $sheet))) {
-                    throw new Exception(
-                        sprintf(
-                        /* translators: %s is replaced with a comma separated list of all missing required fields */
-                            esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
-                            implode(', ', $missingFieldNames)
-                        )
-                    );
-                }
-
-                wp_redirect(add_query_arg(
-                    array('notice' => 'edited'),
-                    Settings::getManageSignupsPageUrl($_GET['sheet'])
-                ));
-            } catch (Exception $e) {
-                Notice::add('error', esc_html($e->getMessage()));
-            }
+            wp_redirect(add_query_arg(
+                array('notice' => 'edited'),
+                Settings::getManageSignupsPageUrl($_GET['sheet'])
+            ));
+        } catch (Exception $e) {
+            Notice::add('error', esc_html($e->getMessage()));
         }
     }
 
@@ -255,58 +257,57 @@ class EditSignupPage extends PageBase
      */
     public function maybeProcessAddSignup($currentScreen)
     {
-        if (empty($_GET['action']) || $_GET['action'] !== 'add' || !$this->isCurrentScreen($currentScreen)) {
+        if (empty($_POST) || empty($_GET['action']) || $_GET['action'] !== 'add' || !$this->isCurrentScreen($currentScreen)) {
             return;
         }
 
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('edit_posts'))) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
+        $signupCaps = new CapabilitiesModel(SignupModel::POST_TYPE);
+        if (!current_user_can($signupCaps->get('create_posts'))) {
+            wp_die(esc_html__('You do not have sufficient permissions to add a sign-up.', 'sign-up-sheets'));
         }
 
         Notice::instance();
 
         if (empty($_GET['task'])) {
-            wp_die(esc_html__('Task-up ID missing', 'sign-up-sheets'));
+            wp_die(esc_html__('Task-up ID is missing.', 'sign-up-sheets'));
         }
 
-        if (!empty($_POST)) {
-            if (
-                !isset($_POST['signup_nonce'])
-                || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')
-            ) {
-                wp_die(esc_html__('Sign-up nonce not valid.', 'sign-up-sheets'));
-            }
+        if (!isset($_POST['signup_nonce']) || !wp_verify_nonce($_POST['signup_nonce'], 'fdsus_signup_submit')) {
+            Notice::add(
+                'error',
+                esc_html__('Sign-up nonce not valid.', 'sign-up-sheets')
+            );
+            return;
+        }
 
-            // Add signup
-            $signup = new SignupModel();
+        // Add signup
+        $signup = new SignupModel();
 
-            try {
-                $signup->add($_POST, (int)$_GET['task'], true);
+        try {
+            $signup->add($_POST, (int)$_GET['task'], true);
 
-                $task = new TaskModel((int)$_GET['task']);
-                $sheet = new SheetModel($task->post_parent);
+            $task = new TaskModel((int)$_GET['task']);
+            $sheet = new SheetModel($task->post_parent);
 
-                // Error Handling
-                if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $sheet))) {
-                    throw new Exception(
-                        sprintf(
-                        /* translators: %s is replaced with a comma separated list of all missing required fields */
-                            esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
-                            implode(', ', $missingFieldNames)
-                        )
-                    );
-                }
-
-                wp_redirect(
-                    add_query_arg(
-                        array('notice' => 'added'),
-                        Settings::getManageSignupsPageUrl($_GET['sheet'])
+            // Error Handling
+            if (is_array($missingFieldNames = SignupModel::validateRequiredFields($_POST, $sheet))) {
+                throw new Exception(
+                    sprintf(
+                    /* translators: %s is replaced with a comma separated list of all missing required fields */
+                        esc_html__('Please complete the following required fields: %s', 'sign-up-sheets'),
+                        implode(', ', $missingFieldNames)
                     )
                 );
-            } catch (Exception $e) {
-                Notice::add('error', esc_html($e->getMessage()));
             }
+
+            wp_redirect(
+                add_query_arg(
+                    array('notice' => 'added'),
+                    Settings::getManageSignupsPageUrl($_GET['sheet'])
+                )
+            );
+        } catch (Exception $e) {
+            Notice::add('error', esc_html($e->getMessage()));
         }
     }
 
@@ -333,6 +334,11 @@ class EditSignupPage extends PageBase
                 <option value=""></option>
                 <?php
                 foreach ($users as $user) {
+                    // Only output the current user if they aren't able to edit others sign-ups
+                    $signupCaps = new CapabilitiesModel(SignupModel::POST_TYPE);
+                    if (!current_user_can($signupCaps->get('edit_others_posts')) && get_current_user_id() !== $user->ID) {
+                        continue;
+                    }
                     $selected = ($args['initial']['user_id'] == $user->ID) ? ' selected="selected"' : null;
                     echo sprintf('<option value="%s"%s>%s</option>', $user->ID, $selected, $user->user_login . ' (' . $user->display_name . ')');
                 }

@@ -29,7 +29,7 @@ class EditSheet
      * @param array     $v
      * @param int       $i
      *
-     * @return null|mixed
+     * @return bool|null
      */
     public function repeaterRowOutput($check, $field, $v, $i)
     {
@@ -37,10 +37,13 @@ class EditSheet
 
         $check = true;
 
-        echo '<tr class="dlsmb-repeater-dlssus_tasks-row dls-sus-task-header-row" id="dlsmb-repeater-dlssus_tasks-row-' . $i . '"><td colspan="99">
-            <input name="dlssus_tasks[' . $i . '][title]" value="' . $v['title'] . '" type="text">
-            <input name="dlssus_tasks[' . $i . '][task_row_type]" value="header" type="hidden">
-            <input name="dlssus_tasks[' . $i . '][id]" value="' . $v['id'] . '" type="hidden">
+        $sanitizedTitle = wp_kses_post($v['title']);
+        $attributeSafeTitle = htmlspecialchars($sanitizedTitle, ENT_QUOTES, 'UTF-8');
+
+        echo '<tr class="dlsmb-repeater-dlssus_tasks-row dls-sus-task-header-row" id="dlsmb-repeater-dlssus_tasks-row-' . (int)$i . '"><td colspan="99">
+            <input name="dlssus_tasks[' . (int)$i . '][title]" value="' . $attributeSafeTitle . '" type="text">
+            <input name="dlssus_tasks[' . (int)$i . '][task_row_type]" value="header" type="hidden">
+            <input name="dlssus_tasks[' . (int)$i . '][id]" value="' . esc_attr($v['id']) . '" type="hidden">
             <a href="#" class="dlsmb-icon dlsmb-js-remove" title="Delete Row"><i class="dashicons dashicons-trash"></i></a>
             </td></tr>
         ';
@@ -74,7 +77,7 @@ class EditSheet
      * Display tasks in admin meta field (overrides default from DLSMB)
      *
      * @param null|bool $value    Value of field
-     * @param int       $field    Meta field
+     * @param array     $field    Meta field
      * @param int       $post_id  Post ID
      * @param array     $meta_box Current meta box data
      *
@@ -104,7 +107,7 @@ class EditSheet
                 );
 
                 foreach ($field['fields'] as $f) {
-                    if ($f['key'] != 'title' && $f['key'] != 'id') {
+                    if ($f['key'] !== 'title' && $f['key'] !== 'id') {
                         $taskFields[$f['key']] = $task->{Id::PREFIX . '_' . $f['key']};
                     }
                 }

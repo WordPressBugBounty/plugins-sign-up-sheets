@@ -41,7 +41,7 @@ class Help
             'edit.php?post_type=' . SheetModel::POST_TYPE,
             esc_html__('Sign-up Sheets Help', 'sign-up-sheets'),
             esc_html__('Help', 'sign-up-sheets'),
-            $sheetCaps->get('read_post'),
+            $sheetCaps->get('edit_others_posts'),
             Id::PREFIX . '-help',
             array(&$this, 'page')
         );
@@ -53,7 +53,7 @@ class Help
     public function page()
     {
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('read_post'))) {
+        if (!current_user_can($sheetCaps->get('edit_others_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.'));
         }
 

@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+use FDSUS\Model\Capabilities;
+
 class PostTypeBase extends Base
 {
     /** @var */
@@ -24,6 +26,8 @@ class PostTypeBase extends Base
      */
     public function __construct()
     {
+        parent::__construct();
+
         if ($this->removeBaseSlug) {
             add_filter('post_type_link', array(&$this, 'removeBaseSlug'), 10, 2);
             add_action('pre_get_posts', array(&$this, 'addPostNamesToMainQuery'));
@@ -95,6 +99,7 @@ class PostTypeBase extends Base
             'edit_item'          => __('Edit', 'sign-up-sheets') . ' ' . $singular,
             'new_item'           => __('New', 'sign-up-sheets') . ' ' . $singular,
             'view_item'          => __('View', 'sign-up-sheets') . ' ' . $singular,
+            'view_items'         => __('View', 'sign-up-sheets') . ' ' . $plural,
             'search_items'       => __('Search', 'sign-up-sheets') . ' ' . $plural,
             /* translators: %s is replaced with the plural post type name */
             'not_found'          => sprintf(__('No %s found', 'sign-up-sheets'), $plural),
@@ -109,27 +114,19 @@ class PostTypeBase extends Base
     /**
      * Get add caps array
      *
-     * @param string $postType
+     * @param string $singular
+     * @param string $plural
      *
      * @return array
      */
-    protected function getAddCapsArray($postType)
+    protected function getAddCapsArray($singular = '', $plural = '')
     {
-        return array(
-            'edit_post'              => "edit_{$postType}",
-            'read_post'              => "read_{$postType}",
-            'delete_post'            => "delete_{$postType}",
-            'edit_posts'             => "edit_{$postType}s",
-            'edit_others_posts'      => "edit_others_{$postType}s",
-            'publish_posts'          => "publish_{$postType}s",
-            'read_private_posts'     => "read_private_{$postType}s",
-            'delete_posts'           => "delete_{$postType}s",
-            'delete_private_posts'   => "delete_private_{$postType}s",
-            'delete_published_posts' => "delete_published_{$postType}s",
-            'delete_others_posts'    => "delete_others_{$postType}s",
-            'edit_private_posts'     => "edit_private_{$postType}s",
-            'edit_published_posts'   => "edit_published_{$postType}s",
-        );
+        if (empty($singular)) {
+            $singular = $this->postType;
+        }
+        $caps = new Capabilities($singular, $plural);
+
+        return $caps->getAll() + array('read' => 'read');
     }
 
     /**

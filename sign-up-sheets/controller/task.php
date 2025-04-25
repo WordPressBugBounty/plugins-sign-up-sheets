@@ -6,6 +6,7 @@
 namespace FDSUS\Controller;
 
 use FDSUS\Model\Task as TaskModel;
+use FDSUS\Model\Sheet as SheetModel;
 
 class Task extends PostTypeBase
 {
@@ -41,8 +42,7 @@ class Task extends PostTypeBase
             'query_var'           => true,
             'can_export'          => true,
             'rewrite'             => array('slug' => TaskModel::getBaseSlug()),
-            'capability_type'     => TaskModel::POST_TYPE,
-            'capabilities'        => $this->getAddCapsArray(TaskModel::POST_TYPE),
+            'capability_type'     => SheetModel::POST_TYPE,
         );
         register_post_type(TaskModel::POST_TYPE, $args);
     }

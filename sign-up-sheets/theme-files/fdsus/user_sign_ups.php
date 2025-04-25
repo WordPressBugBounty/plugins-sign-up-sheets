@@ -87,7 +87,7 @@ $taskTitleLabel = $args['task_title_label'];
                 <?php endif; ?>
 
                 <?php if ($row['sheet']->isExpired() || $row['task']->isExpired()): ?>
-                    <span class="fdsus-signups-closed"><?php _e('Sign-ups Closed', 'sign-up-sheets') ?></span>
+                    <span class="fdsus-signups-closed"><?php esc_html_e('Sign-ups Closed', 'sign-up-sheets') ?></span>
                 <?php endif; ?>
             </td>
         </tr>

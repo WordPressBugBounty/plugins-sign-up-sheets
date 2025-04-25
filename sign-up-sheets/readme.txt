@@ -1,8 +1,8 @@
 === Sign-up Sheets ===
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
-Tested up to: 6.7
-Stable tag: 2.3.1.1
+Tested up to: 6.8
+Stable tag: 2.3.2
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -14,11 +14,11 @@ This plugin lets you quickly and easily setup sign-up sheets on your WordPress s
 
 The free version of Sign-Up Sheets includes the following features:
 
-* Unlimited number of sign-up sheets and sign-up spot
 * Administrator can add, edit and clear sign-up spots as needed - add/edit is NEW as of version 2.2.9
 * Copy a sheet or a task to a new one
 * Confirmation emails on sign-up
 * Allow logged-in users to see all the tasks they've signed up for on one page using the [`[user_sign_ups]` shortcode](https://www.fetchdesigns.com/doc/user_sign_ups-shortcode/).
+* No limit on the number of sign-up sheets and sign-up spots
 * reCAPTCHA (optional) - NEW as of version 2.2
 * Export sign-up information for a single sheet or all sheets to a CSV
 * Supports WordPress [GDPR privacy features for your sign-up sheets]((https://www.fetchdesigns.com/doc/gdpr-sign-up-sheets-wordpress-plugin/))
@@ -104,6 +104,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.2 | 2025-04-24 =
+* Added "Sign-up Sheet Viewer" role and revised the admin grid and Manage Sign-ups to honor that new role.
+* Added option to disable the custom "Sign-up Sheet Manager" and/or "Sign-up Sheet Viewer" roles.
+* Updated capabilities (permissions) to allow improved customization and support for 3rd party or custom roles and capabilities configurations.
+* Updated Auto-Scroll sign-up link hash feature to be disabled by default due to conflicts with some 3rd party themes that contain overly broad JavaScript that breaks some hashtag links.
+* Fixed conflict with The Events Calendar plugin that caused TypeError on wp_insert_post copy sheet functionality.
+* Fixed reCAPTCHA to show more graceful error if it's enabled without a private key configured to prevent a Fatal Error.
+* Fixed "Deprecated: strip_tags()" warning in logs by adding a workaround for the WP bug 57579 for the Manage Sign-ups and Edit Sign-ups admin pages.
+* Fixed vertical alignment of task title in Manage Sign-ups admin page.
+* Fixed bottom spacing on SUS Help page so footer doesn't overlap.
+* Fixed WP 6.7 notice being thrown of "Function _load_textdomain_just_in_time was called incorrectly." for fresh installs with empty settings and from Privacy logic.
+
 = 2.3.1.1 | 2025-03-01 =
 * Fixed {site_name} variable in email template.
 
@@ -151,10 +163,22 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 2.3.2 | 2025-04-24 =
+* Added "Sign-up Sheet Viewer" role and revised the admin grid and Manage Sign-ups to honor that new role.
+* Added option to disable the custom "Sign-up Sheet Manager" and/or "Sign-up Sheet Viewer" roles.
+* Updated capabilities (permissions) to allow improved customization and support for 3rd party or custom roles and capabilities configurations.
+* Updated Auto-Scroll sign-up link hash feature to be disabled by default due to conflicts with some 3rd party themes that contain overly broad JavaScript that breaks some hashtag links.
+* Fixed conflict with The Events Calendar plugin that caused TypeError on wp_insert_post copy sheet functionality.
+* Fixed reCAPTCHA to show more graceful error if it's enabled without a private key configured to prevent a Fatal Error.
+* Fixed "Deprecated: strip_tags()" warning in logs by adding a workaround for the WP bug 57579 for the Manage Sign-ups and Edit Sign-ups admin pages.
+* Fixed vertical alignment of task title in Manage Sign-ups admin page.
+* Fixed bottom spacing on SUS Help page so footer doesn't overlap.
+* Fixed WP 6.7 notice being thrown of "Function _load_textdomain_just_in_time was called incorrectly." for fresh installs with empty settings and from Privacy logic.
+
 = 2.3.1.1 | 2025-03-01 =
 * Fixed {site_name} variable in email template.
 
-= 2.3.1 | 2025-03-01 =
+= 2.3.1 | 2025-03-01 =n
 * Added support for Pro email variables `{sheet_url}` and `{sheet_title}` to email template message configurations.
 * Fixed security on sign-up form to prevent content injection.
 

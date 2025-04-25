@@ -14,7 +14,6 @@ use FDSUS\Model\Signup as SignupModel;
 use WP_Error;
 use wpdb;
 use WP_Post;
-use WP_Roles;
 
 class Data extends Base
 {
@@ -431,130 +430,6 @@ class Data extends Base
         }
 
         return $cache;
-    }
-
-    /**
-     * Delete a signup
-     *
-     * @param    int $id
-     *
-     * @return   bool
-     *
-     * @todo move to Signup object
-     */
-    public function delete_signup($id)
-    {
-        $result = wp_delete_post($id, true);
-        if (!$result) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Add/remove sign-up sheet capabilities to all roles that need them
-     */
-    public function set_capabilities()
-    {
-        /** @global WP_Roles $wp_roles */
-        global $wp_roles;
-        $allRoles = $wp_roles->get_names();
-        if (!is_array($allRoles)) {
-            $allRoles = array();
-        }
-        $manager_roles = get_option('dls_sus_roles');
-        if (!is_array($manager_roles)) {
-            $manager_roles = array();
-        }
-        $manager_roles[] = 'administrator';
-        $manager_roles[] = 'signup_sheet_manager';
-
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        $taskCaps = new Capabilities(TaskModel::POST_TYPE);
-        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
-        $capsAll = array(
-            $sheetCaps->getAll(),
-            $taskCaps->getAll(),
-            $signupCaps->getAll()
-        );
-
-        foreach ($allRoles as $k => $v) {
-            $role = get_role($k);
-            if (is_object($role)) {
-                if (in_array($k, $manager_roles)) {
-                    if ($k == 'signup_sheet_manager') {
-                        $role->add_cap('read');
-                    }
-                    foreach ($capsAll as $caps) {
-                        foreach ($caps as $cap) {
-                            $role->add_cap($cap);
-                        }
-                        reset($caps);
-                    }
-                    reset($capsAll);
-                } else {
-                    foreach ($capsAll as $caps) {
-                        foreach ($caps as $cap) {
-                            $role->remove_cap($cap);
-                        }
-                        reset($caps);
-                    }
-                    reset($capsAll);
-                }
-            }
-        }
-    }
-
-    /**
-     * Remove plugin specific capabilities from all roles
-     */
-    public function remove_capabilities()
-    {
-        /** @global WP_Roles $wp_roles */
-        global $wp_roles;
-
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        $taskCaps = new Capabilities(TaskModel::POST_TYPE);
-        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
-        $capsAll = array(
-            $sheetCaps->getAll(),
-            $taskCaps->getAll(),
-            $signupCaps->getAll()
-        );
-
-        $allRoles = $wp_roles->get_names();
-        foreach ($allRoles as $k => $v) {
-            $role = get_role($k);
-            foreach ($capsAll as $caps) {
-                foreach ($caps as $cap) {
-                    $role->remove_cap($cap);
-                }
-                reset($caps);
-            }
-            reset($capsAll);
-        }
-    }
-
-    /**
-     * Is the honeypot enabled on the sign-up form
-     *
-     * @return bool
-     */
-    public function is_honeypot_enabled()
-    {
-        $disable_honeypot = get_option('dls_sus_disable_honeypot');
-
-        return !($disable_honeypot === 'true');
-    }
-
-    /**
-     * Generate Token
-     *
-     * @return  string  random token
-     */
-    public function generate_token()
-    {
-        return sha1(uniqid(mt_rand(), true));
     }
 
     /**

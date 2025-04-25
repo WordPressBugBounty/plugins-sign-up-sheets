@@ -99,6 +99,7 @@ if (
             new \FDSUS\Controller\Sheet();
             new \FDSUS\Controller\Task();
             new \FDSUS\Controller\Signup();
+            new \FDSUS\Controller\Capabilities();
             new \FDSUS\Controller\Privacy();
             new \FDSUS\Controller\Ajax();
             new \FDSUS\Controller\Block(__DIR__);
@@ -285,10 +286,6 @@ if (
             $this->dbUpdate->check();
             set_transient(Id::PREFIX . '_flush_rewrite_rules', true);
 
-            // Add custom role and capability
-            add_role('signup_sheet_manager', 'Sign-up Sheet Manager');
-            $this->data->set_capabilities();
-
             /**
              * Action that runs on plugin activation
              */
@@ -302,20 +299,11 @@ if (
         {
             set_transient(Id::PREFIX . '_flush_rewrite_rules', true);
 
-            // Remove custom role and capability
-            $role = get_role('signup_sheet_manager');
-            if (is_object($role)) {
-                $role->remove_cap('read');
-                remove_role('signup_sheet_manager');
-            }
-
-            $this->data->remove_capabilities();
-
             // Crons
             wp_clear_scheduled_hook('fdsus_dbupdate_action');
 
             /**
-             * Action that runs on plugin activation
+             * Action that runs on plugin deactivation
              */
             do_action('fdsus_deactivate');
         }

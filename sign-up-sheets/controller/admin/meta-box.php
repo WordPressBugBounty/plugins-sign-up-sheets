@@ -135,17 +135,18 @@ class MetaBox
                     $o['note'] = isset($o[3]) ? $o[3] : null;
                 }
                 $thRowspan = !empty($o['th-rowspan']) ? ' rowspan="' . esc_attr($o['th-rowspan']) . '" ' : '';
+                $labelFor = !empty($o['name']) ? ' for="' . esc_attr($o['name']) . '"' : '';
                 $labelId = !empty($o['name']) ? ' id="' . esc_attr($o['name']) . '-label"' : '';
                 ?>
                 <tr<?php if (!empty($o['class'])) echo ' class="' . esc_attr($o['class']) . '"'; ?>>
                     <?php if ($o['label'] !== false): ?>
                         <th scope="row"<?php echo $thRowspan ?>>
-                            <span <?php echo $labelId ?>>
-                            <?php echo wp_kses_post($o['label']); ?></span>:
+                            <label <?php echo $labelFor ?> <?php echo $labelId ?>>
+                            <?php echo wp_kses_post($o['label']); ?></label>:
                         </th>
                     <?php endif; ?>
                     <td>
-                        <?php $this->displayFieldByType($o); ?>
+                        <?php $this->displayFieldByType($o, null, null, $o['label']); ?>
                         <?php if (!empty($o['note'])) :?>
                             <span class="description"><?php echo wp_kses_post($o['note']); ?></span>
                         <?php endif; ?>
@@ -162,8 +163,9 @@ class MetaBox
      * @param array|string $o
      * @param string|null  $parentName
      * @param string|null  $value
+     * @param string|null  $parentLabel
      */
-    public function displayFieldByType($o, $parentName = null, $value = null)
+    public function displayFieldByType($o, $parentName = null, $value = null, $parentLabel = null)
     {
         // Set variables
         if (!isset($o['label'])) {
@@ -206,6 +208,7 @@ class MetaBox
                 break;
             case 'checkboxes':
                 $i = 0;
+                echo '<fieldset><legend class="screen-reader-text">' . wp_kses_post($parentLabel) . '</legend>';
                 foreach ($o['options'] as $k => $v) {
                     $checked = (is_array($value) && in_array($k, $value)) ? ' checked="checked"' : '';
                     echo '<input type="checkbox" name="' . esc_attr($o['name']) . '[]" value="' . esc_attr($k) . '"'
@@ -213,6 +216,28 @@ class MetaBox
                     echo ' <label for="' . esc_attr($o['name']) . '-' . $i . '">' . esc_html($v) . '</label><br>';
                     $i++;
                 }
+                echo '</fieldset>';
+                break;
+            case 'radio':
+                $i = 0;
+                echo '<fieldset><legend class="screen-reader-text">' . wp_kses_post($parentLabel) . '</legend>';
+                foreach ($o['options'] as $k => $v) {
+                    $checked = $value === (string)$k ? ' checked="checked"' : '';
+                    $name = esc_attr($o['name']);
+                    $inputId = sprintf('%1$s-%2$d', $name, $i);
+                    echo sprintf(
+                        '<label id="%1$s"><input type="radio" name="%2$s" value="%3$s" id="%4$s" %5$s %6$s> %7$s</label><br>',
+                        esc_attr($inputId . '-label'),
+                        esc_attr($o['name']),
+                        esc_attr($k),
+                        $inputId,
+                        $checked,
+                        $disabled,
+                        esc_html($v)
+                    );
+                    $i++;
+                }
+                echo '</fieldset>';
                 break;
             case 'textarea':
                 echo '<textarea id="' . esc_attr($o['name']) . '" name="' . esc_attr($o['name'])
@@ -255,15 +280,22 @@ class MetaBox
                 if (!empty($o['options'])) {
                     foreach ($o['options'] AS $k=>$v) {
                         $description = (!empty($v['note'])) ? ' <span class="description">'.$v['note'].'</span>' : null;
-                        echo '<th class="' . esc_attr($o['name']) . '_'
-                            . esc_attr($k).'"><span id="' . esc_attr($o['name']) . '_' . esc_attr($k) . '-label">'
-                            . wp_kses($v['label'] . $description, array(
-                                'span' => array(
-                                    'class' => array(),
-                                    'id' => array(),
-                                    'aria-describedby' => array(),
+
+                        echo sprintf(
+                            '<th class="%1$s_%2$s"><label for="%1$s" id="%1$s_%2$s-label">%3$s</label></th>',
+                            esc_attr($o['name']),
+                            esc_attr($k),
+                            wp_kses(
+                                $v['label'] . $description,
+                                array(
+                                    'span' => array(
+                                        'class' => array(),
+                                        'id' => array(),
+                                        'aria-describedby' => array(),
+                                    )
                                 )
-                            )) . '</a></th>';
+                            )
+                        );
                     }
                 }
                 echo '</tr>';

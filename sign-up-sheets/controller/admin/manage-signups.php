@@ -7,8 +7,9 @@ namespace FDSUS\Controller\Admin;
 
 use FDSUS\Id;
 use FDSUS\Model\Capabilities;
-use FDSUS\Model\Data;
+use FDSUS\Model\Settings;
 use FDSUS\Model\Sheet as SheetModel;
+use FDSUS\Model\Signup as SignupModel;
 use FDSUS\Lib\Dls\Notice;
 use FDSUS\Controller\TaskTable as TaskTableController;
 use WP_Post;
@@ -17,13 +18,16 @@ class ManageSignups extends PageBase
 {
     /** @var string */
     protected $menuSlug = 'fdsus-manage';
+    protected $parentMenuSlug = 'edit.php?post_type=' . SheetModel::POST_TYPE;
+    protected $hideInParentMenu = true;
 
     public function __construct()
     {
-        $this->data = new Data();
+        parent::__construct();
         add_action('admin_menu', array(&$this, 'menu'));
         add_action('init', array(&$this, 'maybeProcessClear'), 9);
         add_action('fdsus_edit_sheet_quick_info', array(&$this, 'addManageSheetLinkOnEditSheet'), 10, 1);
+        add_filter('post_row_actions', array(&$this, 'addPostRowAction'), 10, 2);
     }
 
     /**
@@ -31,13 +35,13 @@ class ManageSignups extends PageBase
      */
     public function menu()
     {
-        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
+        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
 
         add_submenu_page(
-            '', // Will throw notice in PHP 8.1+ due to WP core bug @see https://core.trac.wordpress.org/ticket/57579
-            esc_html__('Manage Sign-ups', 'sign-up-sheets'),
-            esc_html__('Manage Sign-ups', 'sign-up-sheets'),
-            $sheetCaps->get('read_post'),
+            $this->parentMenuSlug,
+            esc_html($this->getPageTitle()),
+            '',
+            $signupCaps->get('edit_posts'),
             $this->menuSlug,
             array(&$this, 'page')
         );
@@ -49,7 +53,8 @@ class ManageSignups extends PageBase
     public function page()
     {
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can($sheetCaps->get('read_post'))) {
+        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
+        if (!current_user_can($sheetCaps->get('edit_posts')) || !current_user_can($signupCaps->get('edit_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
@@ -65,10 +70,12 @@ class ManageSignups extends PageBase
 
         <div class="wrap dls_sus">
             <h1>
-                <?php esc_html_e('Manage Sign-ups', 'sign-up-sheets'); ?>
+                <?php echo esc_html($this->getPageTitle()); ?>
                 <span class="fdsus-manage-h1-suffix">
                     <a href="<?php echo esc_attr(get_permalink($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('View Sheet', 'sign-up-sheets'); ?></a>
-                    <a href="<?php echo esc_attr(get_edit_post_link($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('Edit Sheet', 'sign-up-sheets'); ?></a>
+                    <?php if (current_user_can($sheetCaps->get('edit_others_posts'))): ?>
+                        <a href="<?php echo esc_attr(get_edit_post_link($sheet->getData())); ?>" class="add-new-h2 page-title-action"><?php esc_html_e('Edit Sheet', 'sign-up-sheets'); ?></a>
+                    <?php endif; ?>
                     <?php do_action('fdsus_manage_signup_h1_suffix', $sheet); ?>
                 </span>
             </h1>
@@ -141,17 +148,18 @@ class ManageSignups extends PageBase
 
         $sheet = new SheetModel($sheetId);
         if (!$sheet->isValid()) {
-            Notice::add('error', esc_html__('Invalid Sheet', 'sign-up-sheets'), false, Id::PREFIX . '-sheet-invalid');
+            Notice::add('error', esc_html__('Invalid Sheet', 'sign-up-sheets'), false, 'fdsus-sheet-invalid');
             return;
         }
 
         $result = $sheet->deleteSignups($idsToClear);
-        if ($result) {
-            Notice::add('success', esc_html__('Spot(s) cleared.', 'sign-up-sheets'), false, Id::PREFIX . '-clear-success');
-        } else {
-            /* translators: %d is replaced with the sheet ID */
-            Notice::add('success', sprintf(esc_html__('Error clearing a spot (Sheet ID #%d)', 'sign-up-sheets'), (int)$_GET['sheet_id']), false, Id::PREFIX . '-clear-error');
+
+        if (is_wp_error($result)) {
+            Notice::add('error', $result->get_error_message(), false, 'fdsus-clear-error');
+            return;
         }
+
+        Notice::add('success', esc_html__('Spot(s) cleared.', 'sign-up-sheets'), false, 'fdsus-clear-success');
     }
 
     /**
@@ -172,8 +180,47 @@ class ManageSignups extends PageBase
                     ), 'edit.php'
                 )
             )),
-            esc_html__('Manage Sign-ups', 'sign-up-sheets')
+            esc_html($this->getPageTitle())
         );
+    }
+
+    /**
+     * Add post row action item.
+     *
+     * @param array  $actions
+     * @param object $post
+     *
+     * @return mixed
+     */
+    public function addPostRowAction($actions, $post)
+    {
+        if ($post->post_type !== SheetModel::POST_TYPE || $post->post_status === 'trash') {
+            return $actions;
+        }
+
+        $actions['fdsus-manage'] = sprintf(
+            '<a href="%s" title="" rel="permalink">%s</a>',
+            esc_url(Settings::getManageSignupsPageUrl($post->ID)),
+            esc_html($this->getPageTitle())
+        );
+
+        return $actions;
+    }
+
+    /**
+     * Get the page title.
+     *
+     * @return string|null
+     */
+    protected function getPageTitle()
+    {
+        $pageTitle = __('View Sign-ups', 'sign-up-sheets');
+        $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
+        if (current_user_can($sheetCaps->get('edit_others_posts'))) {
+            $pageTitle = __('Manage Sign-ups', 'sign-up-sheets');
+        }
+
+        return $pageTitle;
     }
 
 }

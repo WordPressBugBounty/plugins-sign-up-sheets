@@ -24,6 +24,7 @@ if (Id::isPro() && class_exists('FDSUSPRO\Model\Pro\Signup')) {
  *
  * @property int    ID
  * @property int    post_parent
+ * @property string post_author
  * @property string post_date
  * @property string post_modified
  * @property string dlssus_firstname
@@ -258,15 +259,24 @@ class Signup extends SignupParent
     /**
      * Delete a signup
      *
-     * @param int $id optional signup ID if not already initialized
+     * @param int  $id optional signup ID if not already initialized
+     * @param bool $checkPermissions
      *
-     * @return   bool
+     * @return WP_Error|true
      */
-    public function delete($id = 0)
+    public function delete($id = 0, $checkPermissions = true)
     {
         if (empty($id)) {
             $id = $this->ID;
         }
+
+        if ($checkPermissions && !$this->currentUserCanDelete()) {
+            return new WP_Error(
+                'fdsus_not_permitted_to_delete_this_signup',
+                esc_html__('You do not have permission to delete this sign-up.', 'sign-up-sheets')
+            );
+        }
+
         $taskId = wp_get_post_parent_id($id);
         $result = wp_delete_post($id, true);
 
@@ -282,7 +292,14 @@ class Signup extends SignupParent
             do_action('fdsus_after_delete_signup', $id, $taskId);
         }
 
-        return !empty($result);
+        if (empty($result)) {
+            return new WP_Error(
+                'fdsus_error_deleting_signup',
+                esc_html__('There was an error deleting the sign-up', 'sign-up-sheets')
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -505,6 +522,55 @@ class Signup extends SignupParent
      *
      * @return true|array true if it validates, otherwise returns array of missing fields
      */
+
+    /**
+     * Can the current user edit this signup?
+     *
+     * @return bool
+     */
+    public function currentUserCanEdit()
+    {
+        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
+
+        // Can edit others sign-ups
+        if (current_user_can($signupCaps->get('edit_others_posts'))) {
+            return true;
+        }
+
+        // Can edit their own sign-ups
+        if ((get_current_user_id() === $this->dlssus_user_id || get_current_user_id() === (int)$this->post_author)
+            && current_user_can($signupCaps->get('edit_posts'))
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Can the current user delete this signup?
+     *
+     * @return bool
+     */
+    public function currentUserCanDelete()
+    {
+        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
+
+        // Can edit others sign-ups
+        if (current_user_can($signupCaps->get('delete_others_posts'))) {
+            return true;
+        }
+
+        // Can edit their own sign-ups
+        if ((get_current_user_id() === $this->dlssus_user_id || get_current_user_id() === (int)$this->post_author)
+            && current_user_can($signupCaps->get('delete_posts'))
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function validateRequiredFields($fields, $sheet)
     {
         $missingFieldNames = array();

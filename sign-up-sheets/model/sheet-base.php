@@ -216,10 +216,18 @@ class SheetBase extends Base
      *
      * @param array $idsToDelete
      *
-     * @return   bool
+     * @return WP_Error|true
      */
     public function deleteSignups($idsToDelete)
     {
+        $signupCaps = new Capabilities(SignupModel::POST_TYPE);
+        if (!current_user_can($signupCaps->get('delete_posts'))) {
+            return new WP_Error(
+                'fdsus_not_permitted_to_delete_signups',
+                esc_html__('You do not have permission to delete sign-ups.', 'sign-up-sheets')
+            );
+        }
+
         if (!is_array($idsToDelete)) {
             $idsToDelete = array($idsToDelete);
         }
@@ -246,11 +254,13 @@ class SheetBase extends Base
                     continue;
                 }
                 $signup = new SignupModel($signupPost);
-                if (!$signup->delete()) {
-                    return false;
+                $result = $signup->delete();
+                if (is_wp_error($result)) {
+                    return $result;
                 }
             }
         }
+
         return true;
     }
 
@@ -294,10 +304,10 @@ class SheetBase extends Base
         $tasks = $this->getTasks();
         foreach ($tasks as $task) {
             $origTaskId = $task->ID;
-            $taskPost = $task->getData();
-            $this->cleanBeforeCopy($taskPost);
-            $taskPost->post_parent = $newSheetId;
-            $newTaskId = wp_insert_post($taskPost, true);
+            $taskPostArray = $this->objectToArray($task->getData());
+            $this->cleanBeforeCopy($taskPostArray);
+            $taskPostArray['post_parent'] = $newSheetId;
+            $newTaskId = wp_insert_post($taskPostArray, true);
             if (is_wp_error($newTaskId)) {
                 foreach ($postsAdded as $postId) {
                     wp_delete_post($postId, true);
@@ -343,7 +353,7 @@ class SheetBase extends Base
     /**
      * Clean object of post specific fields before copying it
      *
-     * @param $obj
+     * @param object|array $obj
      */
     private function cleanBeforeCopy(&$obj)
     {

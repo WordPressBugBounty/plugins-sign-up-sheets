@@ -6,6 +6,7 @@
 namespace FDSUS\Controller;
 
 use FDSUS\Id;
+use FDSUS\Model\Capabilities;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Task as TaskModel;
 use FDSUS\Model\Signup as SignupModel;
@@ -37,6 +38,9 @@ class TaskTable extends Base
     /** @var TaskTableModel */
     public $table;
 
+    /** @var Capabilities */
+    protected $signupCaps;
+
     /**
      * TaskTable constructor.
      *
@@ -46,6 +50,7 @@ class TaskTable extends Base
     public function __construct($sheet, $atts = array())
     {
         $this->sheet = $sheet;
+        $this->signupCaps = new Capabilities(SignupModel::POST_TYPE);
 
         /**
          * @var bool $showSignupLink
@@ -220,18 +225,16 @@ class TaskTable extends Base
          */
         $this->table = apply_filters('fdsus_tasktable-table-header_data_after_core_signup_info', $this->table, $this->sheet, $this->config);
 
-        if ($this->config['displayAll']) {
-            if (is_admin()) {
-                $this->table->addHeaderCell(
-                    'clear-checkbox',
-                    '<label>
-                        <span class="screen-reader-text">' . esc_html__('Select all spots to Clear', 'sign-up-sheets') . '</span>
-                        <input type="checkbox" value="" id="select-all-clear">
-                    </label>
-                    <input name="multi_submit" type="submit" class="button" value="' . esc_html__('Clear Selected', 'sign-up-sheets') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'sign-up-sheets') . '\');">',
-                    'fdsus-col-clear'
-                );
-            }
+        if ($this->config['displayAll'] && is_admin()) {
+            $this->table->addHeaderCell(
+                'clear-checkbox',
+                !current_user_can($this->signupCaps->get('delete_others_posts')) ? '' : '<label>
+                    <span class="screen-reader-text">' . esc_html__('Select all spots to Clear', 'sign-up-sheets') . '</span>
+                    <input type="checkbox" value="" id="select-all-clear">
+                </label>
+                <input name="multi_submit" type="submit" class="button" value="' . esc_html__('Clear Selected', 'sign-up-sheets') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'sign-up-sheets') . '\');">',
+                'fdsus-col-clear'
+            );
         }
     }
 
@@ -419,23 +422,43 @@ class TaskTable extends Base
                             if ($user = get_userdata($signup->dlssus_user_id)) {
                                 $userDisplay = '<a href="' . esc_url(get_edit_profile_url($user->ID)) . '">' . $user->user_login . '</a>';
                             }
-                            $cellValue = sprintf(
-                                '
-                                <span class="delete">
-                                    <label>
-                                        <span class="screen-reader-text">'
-                                            .  /* translators: %s is replaced with the index of the spot within the current task */
-                                            sprintf(__('Select spot #%s to clear', 'sign-up-sheets'), (int)$this->config['spotIndex']) . '</span>
+
+                            $cellValue = '';
+
+                            // Delete sign-up control
+                            $cellValue .= '<span class="delete">';
+                            if (current_user_can($this->signupCaps->get('delete_others_posts'))) {
+                                $cellValue .= sprintf('<label>
+                                        <span class="screen-reader-text">%s</span>
                                         <input type="checkbox" name="clear[]" value="' . (int)$signup->ID . '" class="clear-checkbox">
-                                    </label>
-                                    <a href="' . esc_attr($clear_url) . '" aria-label="%1$s" title="%1$s" %2$s>
-                                        <i class="dashicons dashicons-trash" aria-hidden="true"></i>
-                                    </a>
-                                </span>
-                                <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($signup->ID, (int)$_GET['sheet_id'])) . '">
+                                    </label>',
+                                    esc_html(sprintf(
+                                        /* translators: %s is replaced with the index of the spot within the current task */
+                                        __('Select spot #%s to clear', 'sign-up-sheets'), (int)$this->config['spotIndex']
+                                    ))
+                                );
+                            }
+                            if ($signup->currentUserCanDelete()) {
+                                $cellValue .= sprintf('<a href="' . esc_attr($clear_url) . '" aria-label="%1$s" title="%1$s" %2$s>
+                                            <i class="dashicons dashicons-trash" aria-hidden="true"></i>
+                                        </a>',
+                                        esc_html__('Clear Spot Now', 'sign-up-sheets'),
+                                        'onclick="return confirm(\'' . esc_html__('This will permanently remove this sign-up.', 'sign-up-sheets') . '\');"'
+                                    );
+                            }
+                            $cellValue .= '</span>';
+
+                            // Edit sign-up control
+                            if ($signup->currentUserCanEdit()) {
+                                $cellValue .= '<a href="' . esc_url(Settings::getAdminEditSignupPageUrl($signup->ID, (int)$_GET['sheet_id'])) . '">
                                     <span class="screen-reader-text">' . esc_html__('Edit', 'sign-up-sheets') . '</span>
                                     <i class="dashicons dashicons-edit" aria-hidden="true"></i>
-                                </a>
+                                </a>';
+                            }
+
+                            // Info toggletip
+                            $cellValue .= sprintf(
+                                '
                                 <div class="fdsus-toggletip">
                                     <a href="#/" aria-expanded="false"
                                         id="fdsus-signup-metadata-control-' . (int)$signup->ID . '"
@@ -447,15 +470,13 @@ class TaskTable extends Base
                                         id="fdsus-signup-metadata-detail-' . (int)$signup->ID . '"
                                         aria-labelledby="fdsus-signup-metadata-control-' . (int)$signup->ID . '">
                                         <ul class="fdsus-signup-metadata">
-                                            <li>' . esc_html__('Added', 'sign-up-sheets') . ': %3$s</li>
-                                            <li>' . esc_html__('Updated', 'sign-up-sheets') . ': %4$s</li>
-                                            <li>' . esc_html__('Linked user', 'sign-up-sheets') . ':  %5$s</li>
+                                            <li>' . esc_html__('Added', 'sign-up-sheets') . ': %1$s</li>
+                                            <li>' . esc_html__('Updated', 'sign-up-sheets') . ': %2$s</li>
+                                            <li>' . esc_html__('Linked user', 'sign-up-sheets') . ':  %3$s</li>
                                         </ul>
                                     </div>
                                 </div>
                                 ',
-                                esc_html__('Clear Spot Now', 'sign-up-sheets'),
-                                'onclick="return confirm(\'' . esc_html__('This will permanently remove this sign-up.', 'sign-up-sheets') . '\');"',
                                 date('Y-m-d ' . get_option('time_format'), strtotime($signup->post_date)),
                                 date('Y-m-d ' . get_option('time_format'), strtotime($signup->post_modified)),
                                 $userDisplay
@@ -526,7 +547,7 @@ class TaskTable extends Base
                         $signupLink = $task->getSignupLink();
                     } else {
                         $signupLink = esc_html__('(empty)', 'sign-up-sheets');
-                        if (is_admin()) {
+                        if (is_admin() && current_user_can($this->signupCaps->get('create_posts'))) {
                             $signupLink .= '
                                 <a href="' . esc_url(Settings::getAdminEditSignupPageUrl($task->ID, (int)$_GET['sheet_id'], 'add')) . '">
                                     <span class="screen-reader-text">' . esc_html__('Add Sign-up', 'sign-up-sheets') . '</span>

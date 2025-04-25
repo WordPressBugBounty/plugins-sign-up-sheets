@@ -21,6 +21,9 @@ class DbUpdate
     /** @var Data  */
     public $data;
 
+    /** @var string */
+    private $previousVersion;
+
     public function __construct()
     {
         global $wpdb;
@@ -36,11 +39,30 @@ class DbUpdate
      */
     public function check()
     {
-        if (Id::version() != get_option('dls_sus_db_version')
-            || get_option('dls_sus_db_version_type') != (Id::isPro() ? 'pro' : 'free')
+        if ($this->newVersion() !== $this->previousVersion()
+            || get_option('dls_sus_db_version_type') !== (Id::isPro() ? 'pro' : 'free')
         ) {
             $this->updateDb();
         }
+    }
+
+    /**
+     * Get previous version
+     *
+     * @return false|mixed|string|null
+     */
+    protected function previousVersion()
+    {
+        if (isset($this->previousVersion)) {
+            return $this->previousVersion;
+        }
+        $this->previousVersion = get_option('dls_sus_db_version');
+        return $this->previousVersion;
+    }
+
+    protected function newVersion()
+    {
+        return Id::version();
     }
 
     /**
@@ -125,9 +147,20 @@ class DbUpdate
             }
         }
 
-        // Update capabilities
-        $this->data->remove_capabilities();
-        $this->data->set_capabilities();
+        // Update settings
+        if (version_compare($this->previousVersion(), '2.3.1.1', '<=')) {
+            // fdsus_disable_signup_link_hash - Deprecated as of 2.3.2. Replaced by fdsus_signup_link_hash
+            $disableSignupLinkHash = get_option('fdsus_disable_signup_link_hash');
+            if ($disableSignupLinkHash === 'true') {
+                update_option('fdsus_signup_link_hash', 'off');
+                delete_option('fdsus_disable_signup_link_hash');
+            }
+        }
+
+        /**
+         * Action that runs when the DB update is bring processed.
+         */
+        do_action('fdsus_update_db');
 
         update_option('dls_sus_db_version', Id::version());
         update_option('dls_sus_db_version_type', Id::isPro() ? 'pro' : 'free');

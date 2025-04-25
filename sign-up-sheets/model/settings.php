@@ -40,10 +40,10 @@ class Settings extends SettingsParent
     private function __construct()
     {
         self::$defaultMailSubjects = array(
-            'signup'   => esc_html__('Thank you for signing up!', 'sign-up-sheets'),
-            'remove'   => esc_html__('Sign-up has been removed', 'sign-up-sheets'),
-            'reminder' => esc_html__('Sign-up Reminder', 'sign-up-sheets'),
-            'status'   => esc_html__('Sign-up Status Report', 'sign-up-sheets'),
+            'signup'   => 'Thank you for signing up!',
+            'remove'   => 'Sign-up has been removed',
+            'reminder' => 'Sign-up Reminder',
+            'status'   => 'Sign-up Status Report',
         );
 
         self::$defaultMailMessages['signup'] = 'This message was sent to confirm that you signed up for...'
@@ -79,8 +79,8 @@ class Settings extends SettingsParent
     {
         self::$text = array(
             'task_title_label' => array(
-                'label'   => esc_html__('Task Title Label', 'sign-up-sheets'),
-                'default' => esc_html__('What', 'sign-up-sheets'),
+                'label'   => 'Task Title Label',
+                'default' => 'What',
             ),
         );
 
@@ -162,7 +162,7 @@ class Settings extends SettingsParent
      */
     public static function isSignUpLinkHashEnabled()
     {
-        return get_option('fdsus_disable_signup_link_hash') !== 'true';
+        return get_option('fdsus_signup_link_hash') === 'on';
     }
 
     /**

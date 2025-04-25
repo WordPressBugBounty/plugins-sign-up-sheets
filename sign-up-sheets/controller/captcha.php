@@ -88,7 +88,15 @@ class Captcha extends Base
             && empty($_POST['spam_check'])
             && !isset($_POST['double_signup'])
         ) {
-            $recaptcha = new ReCaptcha(get_option('dls_sus_recaptcha_private_key'));
+            $privateKey = get_option('dls_sus_recaptcha_private_key', '');
+            if (empty($privateKey)) {
+                return new WP_Error(
+                    'fdsus-captcha-private-key-missing',
+                    __('Please check that reCAPTCHA is configured correctly.', 'sign-up-sheets')
+                );
+            }
+
+            $recaptcha = new ReCaptcha($privateKey);
             $resp = $recaptcha->setExpectedHostname($_SERVER['HTTP_HOST'])
                 ->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
             if (!$resp->isSuccess()) {

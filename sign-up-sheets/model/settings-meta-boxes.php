@@ -34,7 +34,7 @@ class SettingsMetaBoxes
      *         'name'     => 'field_name',
      *         'type'     => 'text', // Field type
      *         'note'     => 'Optional note',
-     *         'options'  => array(), // optional array for select and multi-checbox/radio type fields
+     *         'options'  => array(), // optional array for select and multi-checkbox/radio type fields
      *         'order'    => 10, // sort order
      *         'pro'      => false, // pro feature
      *         'class'    => 'some-class', // adds class to surrounding <tr> element
@@ -50,8 +50,14 @@ class SettingsMetaBoxes
         /** @global WP_Roles $wp_roles */
         global $wp_roles;
         $roles = $wp_roles->get_names();
+        $rolesModel = new Roles();
+        $susSpecificRoles = $rolesModel->getCustomRoles();
         unset($roles['administrator']);
-        unset($roles['signup_sheet_manager']);
+        foreach ($susSpecificRoles as $roleKey => $roleValue) {
+            unset($roles[$roleKey]);
+        }
+
+        $susRoles = array();
 
         // Sheets Listing
         $sheetSelection = array('' => esc_html__('All', 'sign-up-sheets'));
@@ -321,11 +327,15 @@ class SettingsMetaBoxes
                     'order' => 50
                 ),
                 array(
-                    'label' => esc_html__('Disable sign-up link auto-scroll to sheet (hash in sign-up link)', 'sign-up-sheets'),
-                    'name'  => 'fdsus_disable_signup_link_hash',
-                    'type'  => 'checkbox',
-                    'note'  => esc_html__('The hash on the sign-up link is useful especially on longer pages where sheets are embedded further down the page or where the sheet description is longer.  When the feature is enabled and the user clicks the sign-up link, it includes a `#` hash to and ID pointing to that same location where the sign-up form will appear on the next page.', 'sign-up-sheets'),
-                    'order' => 55
+                    'label'  => esc_html__('Sign-up link auto-scroll to sheet (hash in sign-up link)', 'sign-up-sheets'),
+                    'name'   => 'fdsus_signup_link_hash',
+                    'type'   => 'radio',
+                    'options' => array(
+                        'off' => esc_html__('Off', 'sign-up-sheets') . ' ' . esc_html__('(Default)', 'sign-up-sheets'),
+                        'on' => esc_html__('On', 'sign-up-sheets'),
+                    ),
+                    'note'   => esc_html__('The hash on the sign-up link is useful especially on longer pages where sheets are embedded further down the page or where the sheet description is longer.  When the feature is enabled and the user clicks the sign-up link, it includes a `#` hash to and ID pointing to that same location where the sign-up form will appear on the next page.', 'sign-up-sheets'),
+                    'order'  => 55
                 ),
                 array(
                     'label' => esc_html__('Sign-up Success Message Receipt', 'sign-up-sheets'),
@@ -373,7 +383,7 @@ class SettingsMetaBoxes
                 array('Use reCAPTCHA', 'dls_sus_recaptcha', 'checkbox', esc_html__('Will replace the default simple captcha validation', 'sign-up-sheets')),
                 array('reCAPTCHA Public Key', 'dls_sus_recaptcha_public_key', 'text', esc_html__('From your account at https://www.google.com/recaptcha/', 'sign-up-sheets')),
                 array('reCAPTCHA Private Key', 'dls_sus_recaptcha_private_key', 'text', esc_html__('From your account at https://www.google.com/recaptcha/', 'sign-up-sheets')),
-                array('reCAPTCHA Version', 'dls_sus_recaptcha_version', 'dropdown', '', array('v3' => 'v3', 'v2-checkbox' => 'v2 Checkbox', 'v2-invisible' => 'v2 Invisible')),
+                array('reCAPTCHA Version', 'dls_sus_recaptcha_version', 'dropdown', '', array('v3' => esc_html__('v3', 'sign-up-sheets'), 'v2-checkbox' => esc_html__('v2 Checkbox', 'sign-up-sheets'), 'v2-invisible' => esc_html__('v2 Invisible', 'sign-up-sheets'))),
             )
         );
 
@@ -563,11 +573,42 @@ class SettingsMetaBoxes
             'title'   => esc_html__('Advanced', 'sign-up-sheets'),
             'order'   => 80,
             'options' => array(
-                array('Sheet URL Slug', 'dls_sus_sheet_slug', 'text', 'Will be used in permalinks for your frontend archive page as well as single sheets pages. Default is <code>sheet</code>  Ex: https://example.com/<code>sheet</code>/my-signup-sheet/'),
-                array('User roles that can manage sheets', 'dls_sus_roles', 'checkboxes', '(Note: Administrators and Sign-up Sheet Managers can always manage sheets)', $roles),
-                array('Clear Cache for these Post IDs when a sign-up is added or removed', 'fdsus_cache_clear_on_signup', 'text', 'If using a <a href="https://www.fetchdesigns.com/doc/caching/">supported caching plugin</a>, you can specify individual post IDs to flush after a sign-up occurs. This should be a comma-separated list such as <code>123,5000</code>.  ID entered can be for a post, page or a custom post type.'),
-                array('Re-run Data Migration', 'dls_sus_rerun_migrate', 'button', '<span id="' . Id::PREFIX . '-rerun-migrate"></span>', array('href' => add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()))),
-                array('Display Detailed Errors', 'dls_sus_detailed_errors', 'checkbox', '(Not recommended for production sites)'),
+                array(
+                    'label' => esc_html__('Sheet URL Slug', 'sign-up-sheets'),
+                    'name' => 'dls_sus_sheet_slug',
+                    'type' => 'text',
+                    'note' => 'Will be used in permalinks for your frontend archive page as well as single sheets pages. Default is <code>sheet</code>  Ex: https://example.com/<code>sheet</code>/my-signup-sheet/'),
+                array(
+                    'label' => esc_html__('User roles that can manage sheets', 'sign-up-sheets'),
+                    'name' => 'dls_sus_roles',
+                    'type' => 'checkboxes',
+                    'note' => esc_html__('(Note: Administrators and Sign-up Sheet Managers can always manage sheets)', 'sign-up-sheets'),
+                    'options' => $roles
+                ),
+                array(
+                    'label' => esc_html__('Disable Sign-up Sheets Roles', 'sign-up-sheets'),
+                    'name' => 'fdsus_disabled_roles',
+                    'type' => 'checkboxes',
+                    'note' => esc_html__('(Note: These roles are added by default, but can be removed if not needed.)', 'sign-up-sheets'),
+                    'options' => $susSpecificRoles
+                ),
+                array(
+                    'label' => esc_html__('Clear Cache for these Post IDs when a sign-up is added or removed', 'sign-up-sheets'),
+                    'name' => 'fdsus_cache_clear_on_signup',
+                    'type' => 'text',
+                    'note' => 'If using a <a href="https://www.fetchdesigns.com/doc/caching/">supported caching plugin</a>, you can specify individual post IDs to flush after a sign-up occurs. This should be a comma-separated list such as <code>123,5000</code>.  ID entered can be for a post, page or a custom post type.'),
+                array(
+                    'label' => esc_html__('Re-run Data Migration', 'sign-up-sheets'),
+                    'name' => 'dls_sus_rerun_migrate',
+                    'type' => 'button',
+                    'note' => '<span id="dlssus-rerun-migrate"></span>',
+                    'options' => array('href' => add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()))),
+                array(
+                    'label' => esc_html__('Display Detailed Errors', 'sign-up-sheets'),
+                    'name' => 'dls_sus_detailed_errors',
+                    'type' => 'checkbox',
+                    'note' => esc_html__('(Not recommended for production sites)', 'sign-up-sheets')
+                ),
                 array(
                     'label' => esc_html__('Reset All Settings', 'sign-up-sheets'),
                     'name' => 'fdsus_reset',

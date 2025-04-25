@@ -33,17 +33,18 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
         /**
          * Get version from main PHP file `Version:` comment header
          *
-         * @param string $type 'pro', 'free' (not fallback) or '' for the current type
+         * @param 'pro'|'free'|'' $type 'pro', 'free', or '' for the current type
+         * @param bool            $fallbackAllowed set to false if it forces uses the correct non-fallback version
          *
          * @return string version number
          */
-        public static function version($type = '')
+        public static function version($type = '', $fallbackAllowed = true)
         {
             if (!function_exists('get_plugin_data')) {
                 require_once(ABSPATH . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php');
             }
 
-            $pluginBasename = self::getPluginBasename($type);
+            $pluginBasename = self::getPluginBasename($type, $fallbackAllowed);
 
             if (!file_exists(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $pluginBasename)) {
                 return '';
@@ -167,13 +168,18 @@ if (!class_exists('\\' . __NAMESPACE__ . '\Id')):
          * Get plugin basename
          *
          * @param 'pro'|'free'|'' $type
+         * @param bool            $fallbackAllowed
          *
          * @return string
          */
-        public static function getPluginBasename($type = '')
+        public static function getPluginBasename($type = '', $fallbackAllowed = true)
         {
             if ($type === '') {
                 $type = self::isPro() ? 'pro' : 'free';
+            }
+
+            if ($type === 'free' && !$fallbackAllowed) {
+                return self::FREE_PLUGIN_BASENAME;
             }
 
             return ($type === 'pro')

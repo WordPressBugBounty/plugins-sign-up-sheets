@@ -134,7 +134,7 @@ class MetaBoxes
      */
     public function addMetaBoxes($postType, $post)
     {
-        if ($postType != $this->meta_box['post_type']) return;
+        if ($postType !== $this->meta_box['post_type']) return;
 
         if (!empty($this->meta_box['limit_ids'])
             && is_array($this->meta_box['limit_ids'])
@@ -198,12 +198,11 @@ class MetaBoxes
             /**
              * Filter a metabox field value
              *
-             * @since 0.5
-             *
              * @param null|bool $value Value of field
-             * @param int $field Meta field
-             * @param int $post_id Post ID
+             * @param array $field Meta field
+             * @param int $postId Post ID
              * @param array $meta_box Current meta box data
+             * @since 0.5
              */
             $filtered_field_value = apply_filters($this->prefix . '_display_meta_field_value', $value, $field, $post->ID, $this->meta_box);
 
@@ -300,17 +299,20 @@ class MetaBoxes
     /**
      * Save details when data is updated
      *
-     * @param int $post_id
+     * @param int $postId
      * @param WP_Post $post
      *
      * @return mixed
      */
-    public function saveDetails($post_id, $post)
+    public function saveDetails($postId, $post)
     {
-        if (!isset($post->ID)) return $post_id;
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return $post_id;
-        if (wp_is_post_revision($post_id)) return;
-        if (!in_array($post->post_type, (array)$this->meta_box['post_type'])) return $post_id;
+        if (!isset($post->ID)
+            || (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+            || wp_is_post_revision($postId)
+            || !in_array($post->post_type, (array)$this->meta_box['post_type'])
+        ) {
+            return $postId;
+        }
 
         foreach ($this->meta_box['fields'] as $field) {
             $value = null;
@@ -345,7 +347,7 @@ class MetaBoxes
              * @since 0.5
              *
              * @param null|bool $check Whether to allow updating metadata.
-             * @param int $post_id Post ID.
+             * @param int $postId Post ID.
              * @param string $meta_key Meta key.
              * @param mixed $meta_value Meta value. Must be serializable if non-scalar.
              */
@@ -534,7 +536,7 @@ class MetaBoxes
         return $columns;
     }
 
-    public function populatePostsColumns($column_name, $post_id)
+    public function populatePostsColumns($column_name, $postId)
     {
         foreach ($this->meta_box['fields'] as $field) {
             if (empty($field['show_column']) || $field['show_column'] !== true) continue;
@@ -542,7 +544,7 @@ class MetaBoxes
 
             // Set column output
             $text = null;
-            $values = get_post_meta($post_id, $field['key']);
+            $values = get_post_meta($postId, $field['key']);
 
 
             switch ($field['type']) {
@@ -560,7 +562,7 @@ class MetaBoxes
              *
              * @param string $display_output The actual content that will be displayed to users
              * @param string $column_name
-             * @param int $post_id
+             * @param int $postId
              * @param array $field The meta field
              * @param array $values The result of get_post_meta() for this field
              */
@@ -568,7 +570,7 @@ class MetaBoxes
                 $this->prefix . '_column_display',
                 implode(', ', $values),
                 $column_name,
-                $post_id,
+                $postId,
                 $field,
                 $values
             );
@@ -580,7 +582,7 @@ class MetaBoxes
              *
              * @param string $display_output The current quick edit value
              * @param string $column_name
-             * @param int $post_id
+             * @param int $postId
              * @param array $field The meta field
              * @param array $values The result of get_post_meta() for this field
              */
@@ -588,7 +590,7 @@ class MetaBoxes
                 $this->prefix . '_column_qe_value',
                 json_encode($values),
                 $column_name,
-                $post_id,
+                $postId,
                 $field,
                 $values
             );
@@ -597,7 +599,7 @@ class MetaBoxes
 
             echo sprintf('<div id="%s-%s">%s</div>',
                 $column_name,
-                $post_id,
+                $postId,
                 $output
             );
         }
@@ -606,43 +608,44 @@ class MetaBoxes
 
     public function addToBulkQuickEditCustomBox($column_name, $postType)
     {
-        if ($postType == $this->meta_box['post_type']) {
-            $field_count = count($this->meta_box['fields']);
-            $i = 0;
-            foreach ($this->meta_box['fields'] as $field) {
-                if (empty($field['show_column']) || $field['show_column'] !== true) continue;
-                if ($column_name != $field['key']) continue;
-                $i++;
+        if ($postType !== $this->meta_box['post_type']) {
+            return;
+        }
 
-                if ($i === 1) {
-                    ?>
-                    <div class="dlsmb-field dlsmb-field-type-<?php echo $field['type'] ?> dlsmb-field-key-<?php echo $field['type'] ?>-<?php echo $field['key'] ?>">
-                    <fieldset class="inline-edit-col-right">
-                    <div class="inline-edit-col">
-                    <div class="inline-edit-group">
-                    <?php
-                }
+        $i = 0;
+        foreach ($this->meta_box['fields'] as $field) {
+            if (empty($field['show_column']) || $field['show_column'] !== true) continue;
+            if ($column_name != $field['key']) continue;
+            $i++;
+
+            if ($i === 1) {
                 ?>
-                <label class="inline-edit-status">
-                <span class="title"><?php echo $field['label']; ?></span>
-                <?php
-
-                $this->_displayInput($field, null);
-                ?>
-                </label>
-
+                <div class="dlsmb-field dlsmb-field-type-<?php echo $field['type'] ?> dlsmb-field-key-<?php echo $field['type'] ?>-<?php echo $field['key'] ?>">
+                <fieldset class="inline-edit-col-right">
+                <div class="inline-edit-col">
+                <div class="inline-edit-group">
                 <?php
             }
-            reset($this->meta_box);
-            if ($i > 0) {
-                ?>
-                </div><!-- .inline-edit-group -->
-                </div><!-- .inline-edit-col -->
-                </fieldset>
-                </div>
-                <!-- .dlsmb-field -->
-                <?php
-            }
+            ?>
+            <label class="inline-edit-status">
+            <span class="title"><?php echo $field['label']; ?></span>
+            <?php
+
+            $this->_displayInput($field, null);
+            ?>
+            </label>
+
+            <?php
+        }
+        reset($this->meta_box);
+        if ($i > 0) {
+            ?>
+            </div><!-- .inline-edit-group -->
+            </div><!-- .inline-edit-col -->
+            </fieldset>
+            </div>
+            <!-- .dlsmb-field -->
+            <?php
         }
     }
 
@@ -656,7 +659,6 @@ class MetaBoxes
      */
     private function _displayField($field, $value, $repeaterKey = null, $repeaterCount = 0)
     {
-
         echo '<div class="dlsmb-field dlsmb-field-type-' . $field['type']
             . ' dlsmb-field-key-' . $field['type'] . '-' . $field['key']
             . (!empty($field['wrap_class']) ? ' ' . $field['wrap_class'] : '')
@@ -1239,15 +1241,15 @@ class MetaBoxes
      */
     public function saveBulkEdit()
     {
-        $post_ids = (isset($_POST['post_ids']) && !empty($_POST['post_ids'])) ? $_POST['post_ids'] : array();
-        if (empty($post_ids) || !is_array($post_ids)) return;
+        $postIds = (isset($_POST['post_ids']) && !empty($_POST['post_ids'])) ? $_POST['post_ids'] : array();
+        if (empty($postIds) || !is_array($postIds)) return;
 
-        foreach ($post_ids as $post_id) {
-            if (get_post_type($post_id) != $this->meta_box['post_type']) continue;
+        foreach ($postIds as $postId) {
+            if (get_post_type($postId) != $this->meta_box['post_type']) continue;
             foreach ($this->meta_box['fields'] as $field) {
                 if (empty($field['show_column']) || $field['show_column'] !== true) continue;
                 $value = (!empty($_POST[$field['key']])) ? $_POST[$field['key']] : null;
-                $this->_saveMeta($post_id, $value, $field);
+                $this->_saveMeta($postId, $value, $field);
             }
         }
     }

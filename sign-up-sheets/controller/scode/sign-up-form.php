@@ -341,7 +341,7 @@ class SignUpForm extends Base
             return false;
         }
 
-        if ($this->data->is_honeypot_enabled() && !empty($_POST['website'])) {
+        if (Settings::isHoneypotDisabled() && !empty($_POST['website'])) {
             Notice::add(
                 'warn', esc_html__('Sorry, your submission has been blocked.', 'sign-up-sheets'),
                 false, 'fdsus-signup-form-honeypot'

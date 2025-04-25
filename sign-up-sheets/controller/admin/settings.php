@@ -62,7 +62,7 @@ class Settings extends PageBase
     public function page()
     {
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
+        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('edit_others_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
         ?>
@@ -124,9 +124,9 @@ class Settings extends PageBase
 
             $migrate = new Migrate();
             update_option($migrate->statusKey, array('state' => 'rerun'));
-            delete_transient(Id::PREFIX . '_migration_running');
+            delete_transient('dlssus_migration_running');
 
-            delete_transient(Id::PREFIX . '_migration_timeout_rerun_count');
+            delete_transient('dlssus_migration_timeout_rerun_count');
             $update = new DbUpdate();
             $update->scheduleAsyncUpdate();
 
@@ -153,7 +153,7 @@ class Settings extends PageBase
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
+        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('edit_others_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
@@ -184,12 +184,8 @@ class Settings extends PageBase
                  */
                 $optionValue = apply_filters('fdsus_settings_page_option_value_before_reset', $optionValue, $optionName);
 
-                $deleted = delete_option($optionName);
+                delete_option($optionName);
                 $numberSaved++;
-
-                // Cleanup process
-                $this->data->set_capabilities();
-                set_transient(Id::PREFIX . '_flush_rewrite_rules', true);
 
                 /**
                  * Action that runs after an option is saved
@@ -211,6 +207,9 @@ class Settings extends PageBase
             }
         }
 
+        // Cleanup process
+        set_transient('dlssus_flush_rewrite_rules', true);
+
         SettingsModel::resetUserMetaBoxOrder();
     }
 
@@ -230,7 +229,7 @@ class Settings extends PageBase
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
+        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('edit_others_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'sign-up-sheets'));
         }
 
@@ -262,12 +261,11 @@ class Settings extends PageBase
                 $optionValue = apply_filters('fdsus_settings_page_option_value_before_save', $optionValue, $optionName);
 
                 $updated = update_option($optionName, $optionValue);
-                if ($optionName == 'dls_sus_roles') $this->data->set_capabilities();
                 $numberSaved++;
 
                 // Set flag to flush rewrite on next page load
                 if ($optionName === 'dls_sus_sheet_slug' && $updated) {
-                    set_transient(Id::PREFIX . '_flush_rewrite_rules', true);
+                    set_transient('dlssus_flush_rewrite_rules', true);
                 }
 
                 /**
@@ -276,10 +274,11 @@ class Settings extends PageBase
                  * @param string $optionName
                  * @param array  $optionValue
                  * @param int    $numberSaved
+                 * @param bool   $updated
                  *
                  * @since 2.2
                  */
-                do_action('fdsus_settings_page_after_save', $optionName, $optionValue, $numberSaved);
+                do_action('fdsus_settings_page_after_save', $optionName, $optionValue, $numberSaved, $updated);
 
                 if ($numberSaved === 1) {
                     Notice::add('success', esc_html__('Settings saved.', 'sign-up-sheets'));

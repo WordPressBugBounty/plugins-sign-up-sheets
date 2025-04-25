@@ -16,6 +16,12 @@ class PageBase
     /** @var string */
     protected $menuSlug = '';
 
+    /** @var  */
+    protected $parentMenuSlug;
+
+    /** @var bool */
+    protected $hideInParentMenu = false;
+
     /** @var string */
     protected $currentScreen;
 
@@ -31,6 +37,29 @@ class PageBase
         $this->currentScreen = SheetModel::POST_TYPE . '_page_' . $this->menuSlug;
         $this->hiddenFieldName = 'fdsus_submit_screen';
         $this->hiddenFieldValue = $this->currentScreen;
+
+        add_filter('submenu_file', array(&$this, 'maybeRemoveFromMenu'));
+    }
+
+    /**
+     * Remove from parent menu item, when configured.
+     * Workaround for the bug https://core.trac.wordpress.org/ticket/57579
+     *
+     * @param $submenuFile
+     *
+     * @return mixed
+     *
+     * @see https://stackoverflow.com/a/47577455/1197807
+     */
+    function maybeRemoveFromMenu($submenuFile)
+    {
+        if (!$this->hideInParentMenu) {
+            return $submenuFile;
+        }
+
+        remove_submenu_page($this->parentMenuSlug, $this->menuSlug);
+
+        return $submenuFile;
     }
 
     /**

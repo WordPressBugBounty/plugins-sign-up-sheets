@@ -15,20 +15,11 @@ class Privacy
 
     public function __construct()
     {
-        $this->fields = array(
-            'dlssus_email'     => __('Email', 'sign-up-sheets'),
-            'dlssus_firstname' => __('First Name', 'sign-up-sheets'),
-            'dlssus_lastname'  => __('Last Name', 'sign-up-sheets'),
-            'dlssus_phone'     => __('Phone', 'sign-up-sheets'),
-            'dlssus_address'   => __('Address', 'sign-up-sheets'),
-            'dlssus_city'      => __('City', 'sign-up-sheets'),
-            'dlssus_state'     => __('State', 'sign-up-sheets'),
-            'dlssus_zip'       => __('Zip', 'sign-up-sheets'),
-        );
-
         add_filter('wp_privacy_personal_data_exporters', array(&$this, 'registerUserDataExporters'));
         add_filter('wp_privacy_personal_data_erasers', array(&$this, 'registerUserDataErasers'));
     }
+
+
 
     /**
      * Registers all data exporters
@@ -78,7 +69,7 @@ class Privacy
         $page = (int)$page;
         $exportItems = array();
 
-        $fields = array('ID' => __('Sign-up ID', 'sign-up-sheets')) + $this->fields;
+        $fields = array('ID' => __('Sign-up ID', 'sign-up-sheets')) + $this->getFields();
 
         $signupCollection = new SignupCollection();
         $signups = $signupCollection->getByEmail(
@@ -156,8 +147,8 @@ class Privacy
 
         foreach ($signups as $signup) {
             $id = $signup->ID;
-            $result = $signup->delete();
-            if ($result) {
+            $result = $signup->delete(0, false);
+            if ($result === true) {
                 $itemsRemoved = true;
             } else {
                 $failedSignups[$id] = $signup;
@@ -171,5 +162,28 @@ class Privacy
                 ? array('IDs failed: ' . implode(', ', array_keys($failedSignups))) : array(),
             'done'           => $signupCollection->getMaxNumPages() <= $page || empty($signups),
         );
+    }
+
+    /**
+     * Get fields
+     *
+     * @return array
+     */
+    protected function getFields()
+    {
+        if (!empty($this->fields)) {
+            return $this->fields;
+        }
+        $this->fields = array(
+            'dlssus_email' => __('Email', 'sign-up-sheets'),
+            'dlssus_firstname' => __('First Name', 'sign-up-sheets'),
+            'dlssus_lastname' => __('Last Name', 'sign-up-sheets'),
+            'dlssus_phone' => __('Phone', 'sign-up-sheets'),
+            'dlssus_address' => __('Address', 'sign-up-sheets'),
+            'dlssus_city' => __('City', 'sign-up-sheets'),
+            'dlssus_state' => __('State', 'sign-up-sheets'),
+            'dlssus_zip' => __('Zip', 'sign-up-sheets'),
+        );
+        return $this->fields;
     }
 }

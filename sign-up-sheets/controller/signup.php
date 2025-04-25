@@ -42,6 +42,7 @@ class Signup extends PostTypeBase
             'can_export'          => true,
             'rewrite'             => array('slug' => SignupModel::getBaseSlug()),
             'capability_type'     => SignupModel::POST_TYPE,
+            'map_meta_cap'        => true,
             'capabilities'        => $this->getAddCapsArray(SignupModel::POST_TYPE),
         );
         register_post_type(SignupModel::POST_TYPE, $args);

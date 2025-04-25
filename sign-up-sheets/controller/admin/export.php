@@ -117,7 +117,7 @@ class Export
         }
 
         $sheetCaps = new Capabilities(SheetModel::POST_TYPE);
-        if (!current_user_can('manage_options') && !current_user_can($sheetCaps->get('read_post'))) {
+        if (!current_user_can($sheetCaps->get('edit_posts'))) {
             wp_die(esc_html__('You do not have sufficient permissions to export.', 'sign-up-sheets'));
         }
 

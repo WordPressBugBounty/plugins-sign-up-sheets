@@ -100,7 +100,3 @@ class Ajax
     }
 
 }
-
-if (isset($_GET['manual']) && $_GET['manual'] == 'true') {
-    $fdsus_ajax = new Ajax();
-}

@@ -8,6 +8,7 @@ namespace FDSUS\Controller;
 use FDSUS\Id;
 use FDSUS\Lib\Dls\MetaBoxes\MetaBoxes;
 use FDSUS\Lib\Dls\Notice;
+use FDSUS\Model\Capabilities;
 use FDSUS\Model\MetaBoxes as MetaBoxesModel;
 use FDSUS\Model\Settings;
 use FDSUS\Model\Sheet as SheetModel;
@@ -17,23 +18,30 @@ use FDSUS\Model\Task as TaskModel;
 use FDSUS\Lib\Exception;
 use WP_Post;
 use WP_Query;
+use wpdb;
 
 class Sheet extends PostTypeBase
 {
+    /** @var string[]  */
     public $bodyClasses = array('');
+
+    /** @var Capabilities  */
+    protected $sheetCaps;
 
     public function __construct()
     {
         $this->postType = SheetModel::POST_TYPE;
+        $this->sheetCaps = new Capabilities(SheetModel::POST_TYPE);
 
         add_action('init', array(&$this, 'addPostType'), 0);
         add_action('init', array(&$this, 'initMetaboxes'), 0);
-        add_filter('dlsmb_update_post_metadata', array(&$this, 'process_tasks'), 10, 4);
+        add_filter('dlsmb_update_post_metadata', array(&$this, 'processTasks'), 10, 4);
         add_filter('posts_join', array(&$this, 'modifyCollectionJoin'), 10, 2);
         add_action('posts_where', array(&$this, 'modifyCollectionWhere'), 10, 2);
         add_filter('the_content', array(&$this, 'modifyTheContent'));
         add_action('gdlr_core_print_page_builder', array(&$this, 'goodlayersWorkaround'), 10, 0);
         add_action('wp', array(&$this, 'maybeAddSheetNotices'), 0);
+        add_filter('bulk_actions-edit-' . SheetModel::POST_TYPE, array(&$this, 'modifyBulkActions'), 10, 1);
 
         parent::__construct();
     }
@@ -63,6 +71,7 @@ class Sheet extends PostTypeBase
             'can_export'          => true,
             'rewrite'             => array('slug' => SheetModel::getBaseSlug()),
             'capability_type'     => SheetModel::POST_TYPE,
+            'map_meta_cap'        => true,
             'capabilities'        => $this->getAddCapsArray(SheetModel::POST_TYPE),
             'menu_icon' => 'data:image/svg+xml;base64,' . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" style="isolation:isolate" viewBox="0 0 24 24" aria-hidden="true"><defs><clipPath id="a"><path d="M0 0H24V24H0z"/></clipPath></defs><g clip-path="url(#a)"><path fill="#a7aaad" d="M8.11 20c-.822-.222-2.083 1.278-3.069 2.056A11.1 11.1 0 0 0 9.315 24v-.056C9.205 22.5 9.918 20.5 8.11 20zM0 12.167c0 3.222 1.26 6.166 3.288 8.333 1.863-2.5 4-4.556 7.123-5.722 1.425-.5 2.685-1.945 3.671-3.278 1.589-2.278 2.904-4.778 4.329-7.167.931-.722 1.863.5 1.26 1.723-.493 1.277-.876 2.555-1.479 3.777-1.754 3.278-2.63 6.723-2.302 10.389.11 1.445.384 2.722-.109 3.5C20.548 22.111 24 17.556 24 12.167 24 5.444 18.63 0 12 0S0 5.444 0 12.167zm5.808-1c.11-1.778 1.48-3.056 3.124-2.945 1.589.111 2.958 1.611 2.849 3.222-.055 1.667-1.534 3-3.178 2.889-1.699-.055-2.85-1.444-2.795-3.166z"/></g></svg>')
         );
@@ -95,7 +104,7 @@ class Sheet extends PostTypeBase
      * @return bool|null If not null, meta field will not be updated by default method
      * @since 2.1
      */
-    public function process_tasks($check, $sheetId, $metaKey, $metaValue)
+    public function processTasks($check, $sheetId, $metaKey, $metaValue)
     {
         if ($metaKey !== Id::PREFIX . '_tasks' || !is_array($metaValue)) {
             return null;
@@ -250,11 +259,13 @@ class Sheet extends PostTypeBase
      *
      * @param string|false $text
      *
+     * @return void
+     *
      * @todo convert to use Notice class?
      */
     public function addAdminNotice($text)
     {
-        if (!is_admin()) return false;
+        if (!is_admin()) return;
 
         $notices = get_transient(Id::PREFIX . '_admin_notices');
         if (empty($notices)) {
@@ -309,13 +320,18 @@ class Sheet extends PostTypeBase
             return $where;
         }
 
+        /** @var wpdb $wpdb */
+        global $wpdb;
+
         // Ignore sheet dates in past if not using task date
-        $where .= "AND IF (
+        $where .= $wpdb->prepare("AND IF (
             sheet_date.meta_value IS NOT NULL
             AND sheet_date.meta_value <> ''
-            AND sheet_date.meta_value < '" . current_time('Ymd') . "'
+            AND sheet_date.meta_value < %s
             " . (Id::isPro() ? "AND (use_task_dates.meta_value <> 'true' OR use_task_dates.meta_value IS NULL)" : '') . "
-        , FALSE, TRUE)";
+        , FALSE, TRUE)",
+            current_time('Ymd')
+        );
 
         return $where;
     }
@@ -447,4 +463,32 @@ class Sheet extends PostTypeBase
             }
         }
     }
+
+    /**
+     * Modify bulk actions for users with less access such as Sign-up Sheet Viewers
+     *
+     * @param array $actions An array of the available bulk actions.
+     *
+     * @return mixed
+     */
+    function modifyBulkActions($actions) {
+        if (!current_user_can($this->sheetCaps->get('edit_others_posts'))) {
+            unset($actions['edit']);
+            unset($actions['inline hide-if-no-js']);
+        }
+
+        return $actions;
+    }
+
+//    function restrictDirectAddNewAccess() {
+//        $restricted_roles = ['author', 'contributor']; // Roles that cannot add new posts
+//        $current_user = wp_get_current_user();
+//
+//        if (array_intersect($restricted_roles, $current_user->roles) && isset($_GET['post_type']) && $_GET['post_type'] === 'sign_up_sheet') {
+//            if (basename($_SERVER['PHP_SELF']) === 'post-new.php') {
+//                wp_die('You do not have permission to create new Sign-up Sheets.');
+//            }
+//        }
+//    }
+//    add_action('admin_init', 'restrict_direct_add_new_access');
 }

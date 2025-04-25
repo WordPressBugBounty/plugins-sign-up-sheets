@@ -131,13 +131,11 @@ class Base
         foreach ($input as $k => $v) {
             $cleanedKey = $k;
 
-            // Disallow sending the user ID if not an admin with proper permissions
+            // Disallow sending the user ID other than the current users without proper permissions
             $signupCaps = new Capabilities(SignupModel::POST_TYPE);
             if ($k === 'signup_user_id'
-                && (
-                    !is_admin()
-                    || !current_user_can($signupCaps->get('edit_post'))
-                )
+                && get_current_user_id() !== (int)$v
+                && !current_user_can($signupCaps->get('edit_others_posts'))
             ) {
                 continue;
             }

@@ -50,7 +50,7 @@ class Migrate extends MigrateParent
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->data = new Data();
-        $this->statusKey = Id::PREFIX . '_migrate_2.0_to_2.1';
+        $this->statusKey = 'dlssus_migrate_2.0_to_2.1';
         $this->timeout = new TimeoutHandler();
         parent::__construct();
     }
@@ -68,10 +68,10 @@ class Migrate extends MigrateParent
             Id::log('Sign-up Sheets Migration already running.', 'migrate');
             return;
         }
-        set_transient(Id::PREFIX . '_migration_running', $this->runningTransientValue, 60 * 60 * 6);
+        set_transient('dlssus_migration_running', $this->runningTransientValue, 60 * 60 * 6);
 
-        $this->data->remove_capabilities();
-        $this->data->set_capabilities();
+        do_action('fdsus_remove_capabilities');
+        do_action('fdsus_set_capabilities');
 
         // Check migration status
         $status = $this->getStatus();
@@ -101,7 +101,7 @@ class Migrate extends MigrateParent
             || (method_exists($this, 'migrateSheetsCategoriesLinks') && is_wp_error($links = $result = $this->migrateSheetsCategoriesLinks($sheets, $categories)))
             || (method_exists($this, 'migrateCustomFields') && is_wp_error($result = $this->migrateCustomFields()))
         ) {
-            delete_transient(Id::PREFIX . '_migration_running');
+            delete_transient('dlssus_migration_running');
             Id::log('MIGRATION ERROR: ' . $result->get_error_message(), 'migrate');
             return;
         }
@@ -111,8 +111,8 @@ class Migrate extends MigrateParent
         wp_defer_comment_counting(false);
 
         $this->updateStatus('all', 'complete');
-        delete_transient(Id::PREFIX . '_migration_running');
-        set_transient(Id::PREFIX . '_flush_rewrite_rules', true);
+        delete_transient('dlssus_migration_running');
+        set_transient('dlssus_flush_rewrite_rules', true);
         $endingMemory = memory_get_usage();
         Id::log('Total memory used for migration: ' . number_format($endingMemory - $startingMemory) . ' ----------', 'migrate');
         Id::log('---------- Sign-up Sheets Migration: Complete ----------', 'migrate');
@@ -159,53 +159,53 @@ class Migrate extends MigrateParent
                     Id::log(' - * Sheet created (NEW ID: ' . ((int)$newSheetId) . ')', 'migrate');
                 }
                 $sheets[$sheetKey]->new_id = (int)$newSheetId;
-                update_post_meta($newSheetId, Id::PREFIX . '_id_v2_0', $sheet->id);
+                update_post_meta($newSheetId, 'dlssus_id_v2_0', $sheet->id);
 
                 // Add remaining meta fields
                 if (!empty($sheet->date) && $sheet->date != '0000-00-00') {
-                    update_post_meta($newSheetId, Id::PREFIX . '_date', date('Ymd', strtotime($sheet->date)));
+                    update_post_meta($newSheetId, 'dlssus_date', date('Ymd', strtotime($sheet->date)));
                 }
                 if (!empty($sheet->use_task_dates)) {
-                    update_post_meta($newSheetId, Id::PREFIX . 'dlssus_use_task_dates', 'true');
+                    update_post_meta($newSheetId, 'dlssusdlssus_use_task_dates', 'true');
                 }
                 if (!empty($sheet->fields['sheet_bcc'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_sheet_bcc', $sheet->fields['sheet_bcc']);
+                    update_post_meta($newSheetId, 'dlssus_sheet_bcc', $sheet->fields['sheet_bcc']);
                 }
                 if (!empty($sheet->fields['optional_phone'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_optional_phone', $sheet->fields['optional_phone']);
+                    update_post_meta($newSheetId, 'dlssus_optional_phone', $sheet->fields['optional_phone']);
                 }
                 if (!empty($sheet->fields['optional_address'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_optional_address', $sheet->fields['optional_address']);
+                    update_post_meta($newSheetId, 'dlssus_optional_address', $sheet->fields['optional_address']);
                 }
                 if (!empty($sheet->fields['hide_email'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_hide_email', $sheet->fields['hide_email']);
+                    update_post_meta($newSheetId, 'dlssus_hide_email', $sheet->fields['hide_email']);
                 }
                 if (!empty($sheet->fields['hide_phone'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_hide_phone', $sheet->fields['hide_phone']);
+                    update_post_meta($newSheetId, 'dlssus_hide_phone', $sheet->fields['hide_phone']);
                 }
                 if (!empty($sheet->fields['hide_address'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_hide_address', $sheet->fields['hide_address']);
+                    update_post_meta($newSheetId, 'dlssus_hide_address', $sheet->fields['hide_address']);
                 }
                 if (!empty($sheet->fields['compact_signups'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_compact_signups', $sheet->fields['compact_signups']);
+                    update_post_meta($newSheetId, 'dlssus_compact_signups', $sheet->fields['compact_signups']);
                 }
                 if (!empty($sheet->fields['use_task_checkboxes'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_use_task_checkboxes', $sheet->fields['use_task_checkboxes']);
+                    update_post_meta($newSheetId, 'dlssus_use_task_checkboxes', $sheet->fields['use_task_checkboxes']);
                 }
                 if (!empty($sheet->fields['task_signup_limit'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_task_signup_limit', $sheet->fields['task_signup_limit']);
+                    update_post_meta($newSheetId, 'dlssus_task_signup_limit', $sheet->fields['task_signup_limit']);
                 }
                 if (!empty($sheet->fields['contiguous_task_signup_limit'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_contiguous_task_signup_limit', $sheet->fields['contiguous_task_signup_limit']);
+                    update_post_meta($newSheetId, 'dlssus_contiguous_task_signup_limit', $sheet->fields['contiguous_task_signup_limit']);
                 }
                 if (!empty($sheet->fields['sheet_reminder_days'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_sheet_reminder_days', $sheet->fields['sheet_reminder_days']);
+                    update_post_meta($newSheetId, 'dlssus_sheet_reminder_days', $sheet->fields['sheet_reminder_days']);
                 }
                 if (!empty($sheet->fields['sheet_email_message'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_sheet_email_message', $sheet->fields['sheet_email_message']);
+                    update_post_meta($newSheetId, 'dlssus_sheet_email_message', $sheet->fields['sheet_email_message']);
                 }
                 if (!empty($sheet->fields['sheet_email_conf_message'])) {
-                    update_post_meta($newSheetId, Id::PREFIX . '_sheet_email_conf_message', $sheet->fields['sheet_email_conf_message']);
+                    update_post_meta($newSheetId, 'dlssus_sheet_email_conf_message', $sheet->fields['sheet_email_conf_message']);
                 }
                 Id::log(' - * Sheet\'s standard meta fields migrated', 'migrate');
 
@@ -297,7 +297,7 @@ class Migrate extends MigrateParent
                         Id::log(' - * Task created (NEW ID: ' . ((int)$newTaskId) . ')', 'migrate');
                     } catch (Exception $e) {
                         Id::log(' - * Task creation failed with error: ' . $e->getMessage(), 'migrate');
-                        return new WP_Error(Id::PREFIX . '_add_task_err', $e->getMessage());
+                        return new WP_Error('dlssus_add_task_err', $e->getMessage());
                     }
                 }
                 $oldTasks[$taskKey]->new_id = (int)$newTaskId;
@@ -375,7 +375,7 @@ class Migrate extends MigrateParent
                     }
                 } catch (Exception $e) {
                     Id::log(' - * Signup creation failed with error: ' . $e->getMessage(), 'migrate');
-                    return new WP_Error(Id::PREFIX . '_add_signup_err', $e->getMessage());
+                    return new WP_Error('dlssus_add_signup_err', $e->getMessage());
                 }
 
                 $this->updateStatus('signups', 'running', 1);
@@ -776,7 +776,7 @@ class Migrate extends MigrateParent
      */
     public function isRunning()
     {
-        return get_transient(Id::PREFIX . '_migration_running') == $this->runningTransientValue;
+        return get_transient('dlssus_migration_running') == $this->runningTransientValue;
     }
 
     /**
@@ -801,14 +801,14 @@ class Migrate extends MigrateParent
             return true;
         }
 
-        $timeoutRerunCount = (int)get_transient(Id::PREFIX . '_migration_timeout_rerun_count');
+        $timeoutRerunCount = (int)get_transient('dlssus_migration_timeout_rerun_count');
         if ($timeoutRerunCount < 30) {
-            set_transient(Id::PREFIX . '_migration_timeout_rerun_count', $timeoutRerunCount + 1);
+            set_transient('dlssus_migration_timeout_rerun_count', $timeoutRerunCount + 1);
             $update = new DbUpdate();
             $update->scheduleAsyncUpdate();
         }
 
-        return new WP_Error(Id::PREFIX . '_migrate_timeout', esc_html__('Sign-up Sheets migration timed out.', 'sign-up-sheets'));
+        return new WP_Error('dlssus_migrate_timeout', esc_html__('Sign-up Sheets migration timed out.', 'sign-up-sheets'));
     }
 
     /**

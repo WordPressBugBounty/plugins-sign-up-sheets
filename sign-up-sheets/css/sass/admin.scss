@@ -111,10 +111,13 @@
     }
 }
 
-.post-type-dlssus_sheet #wpbody-content,
-.post-type-dlssus_task #wpbody-content,
-.post-type-dlssus_signup #wpbody-content {
-    padding-bottom: 7rem;
+@media screen and (min-width: 783px) {
+    .post-type-dlssus_sheet #wpbody-content,
+    .post-type-dlssus_task #wpbody-content,
+    .post-type-dlssus_signup #wpbody-content,
+    .dlssus_sheet_page_dlssus-help #wpbody-content {
+        padding-bottom: 8rem;
+    }
 }
 
 #dashboard_right_now li.dlssus_sheet-count a:before {
