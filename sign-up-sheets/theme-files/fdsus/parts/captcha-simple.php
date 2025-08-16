@@ -10,6 +10,8 @@
  * @since       2.2.11 (plugin version)
  * @version     1.0.0 (template file version)
  */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 ?>
 <p>
     <label for="spam_check" class="spam_check">

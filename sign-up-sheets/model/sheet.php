@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use WP_Post;
 

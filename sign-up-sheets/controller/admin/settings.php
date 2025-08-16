@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller\Admin;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Lib\Dls\Notice;
 use FDSUS\Model\Capabilities;
 use FDSUS\Model\SettingsMetaBoxes;
@@ -114,6 +116,11 @@ class Settings extends PageBase
         }
 
         if (!empty($_GET['migrate']) && $_GET['migrate'] == 'rerun-2.1') {
+            // Verify nonce for CSRF protection
+            if (!isset($_GET['_fdsus-migrate-nonce']) || !wp_verify_nonce($_GET['_fdsus-migrate-nonce'], 'fdsus-migrate-rerun')) {
+                wp_die(esc_html__('Invalid request.', 'sign-up-sheets'));
+            }
+
             if (FDSUS_DISABLE_MIGRATE_2_0_to_2_1) {
                 Notice::add(
                     'warning', esc_html__('Sorry, I cannot rerun migration.  The migration logic is currently disabled with the FDSUS_DISABLE_MIGRATE_2_0_to_2_1 configuration.', 'sign-up-sheets'), false,

@@ -11,6 +11,8 @@
 
 namespace FDSUS\controller\scode;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Controller\Base;
 use FDSUS\Controller\Pro\Scode\TaskModel;
 use FDSUS\Id;

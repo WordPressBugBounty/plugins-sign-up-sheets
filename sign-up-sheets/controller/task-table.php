@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Model\Capabilities;
 use FDSUS\Model\Sheet as SheetModel;
@@ -232,7 +234,7 @@ class TaskTable extends Base
                     <span class="screen-reader-text">' . esc_html__('Select all spots to Clear', 'sign-up-sheets') . '</span>
                     <input type="checkbox" value="" id="select-all-clear">
                 </label>
-                <input name="multi_submit" type="submit" class="button" value="' . esc_html__('Clear Selected', 'sign-up-sheets') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'sign-up-sheets') . '\');">',
+                <input type="submit" class="button" value="' . esc_html__('Clear Selected', 'sign-up-sheets') . '" onclick="return confirm(\'' . esc_html__('This will permanently remove all selected sign-ups for this sheet.', 'sign-up-sheets') . '\');">',
                 'fdsus-col-clear'
             );
         }
@@ -620,12 +622,13 @@ class TaskTable extends Base
 
         // Build Table
         ?>
-        <?php if (!$emailSimplified) : ?><form action="<?php echo esc_url($formUrl); ?>" method="post" id="sus_form" class="fdsus-form"><?php endif; ?>
+        <?php if (!$emailSimplified) : ?><form action="<?php echo esc_url($formUrl); ?>" method="<?php echo is_admin() ? 'post' : 'get' ?>" id="sus_form" class="fdsus-form"><?php endif; ?>
             <table class="dls-sus-tasks <?php echo is_admin() ? 'wp-list-table widefat' : null; ?>" <?php if ($emailSimplified) : ?>cellspacing="0" cellpadding="5" border="1"<?php endif; ?>>
                 <thead><?php echo $header; ?></thead>
                 <?php if (!$emailSimplified) : ?><tfoot><?php echo $header; ?></tfoot><?php endif; ?>
                 <tbody><?php echo $body; ?></tbody>
             </table>
+            <input type="hidden" name="task_id" value="<?php echo esc_attr($this->tasks[key($this->tasks)]->ID) ?>"/>
             <?php
             /**
              * Action that runs after the Task Table <table> is output
@@ -637,7 +640,10 @@ class TaskTable extends Base
              */
             do_action('fdsus_tasktable_after_table', $this->sheet, $this->config);
 
-            wp_nonce_field('clear-multiple-signups', 'manage_signup_nonce', true, false);
+
+            if (is_admin()) {
+                wp_nonce_field('clear-multiple-signups', 'manage_signup_nonce', true, false);
+            }
             ?>
         <?php if (!$emailSimplified) : ?></form><?php endif; ?>
         <?php

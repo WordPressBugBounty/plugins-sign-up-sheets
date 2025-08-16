@@ -11,6 +11,8 @@
  * @version     1.0.1 (template file version)
  */
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 get_header();
 fdsus_output_wrapper('start');
 ?>

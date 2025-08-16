@@ -34,6 +34,8 @@
 
 namespace FDSUS\Lib\ReCaptcha\RequestMethod;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 /**
  * Convenience wrapper around native socket and file functions to allow for
  * mocking.

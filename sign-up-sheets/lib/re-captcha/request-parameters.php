@@ -34,6 +34,8 @@
 
 namespace FDSUS\Lib\ReCaptcha;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 /**
  * Stores and formats the parameters for the request to the reCAPTCHA service.
  */

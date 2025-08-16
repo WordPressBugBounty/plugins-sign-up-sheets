@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id as Id;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Signup as SignupModel;

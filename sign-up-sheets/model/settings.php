@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id as Id;
 use FDSUS\Model\Sheet as SheetModel;
 use DateTime;
@@ -51,6 +53,12 @@ class Settings extends SettingsParent
             . '{signup_details}' . PHP_EOL . PHP_EOL
             . 'To cancel your sign-up '
             . 'contact us at {from_email}' . PHP_EOL . PHP_EOL
+            . 'Thanks,' . PHP_EOL
+            . '{site_name}' . PHP_EOL
+            . '{site_url}';
+
+        self::$defaultMailMessages['reminder'] = 'This is just a reminder that you signed up for...' . PHP_EOL . PHP_EOL
+            . '{signup_details}' . PHP_EOL . PHP_EOL
             . 'Thanks,' . PHP_EOL
             . '{site_name}' . PHP_EOL
             . '{site_url}';

@@ -7,10 +7,13 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Task as TaskModel;
 use FDSUS\Model\Signup as SignupModel;
+use FDSUS\Utils;
 use WP_Error;
 use wpdb;
 use WP_Post;
@@ -107,7 +110,7 @@ class Data extends Base
             // Meta fields
             foreach ($metaFields as $key => $value) {
                 if (strpos($key, Id::PREFIX . '_') === 0) {
-                    $posts[$postKey]->{$key} = maybe_unserialize(current($value));
+                    $posts[$postKey]->{$key} = current($value);
                 }
             }
 
@@ -246,10 +249,15 @@ class Data extends Base
         }
 
         if (isset($metaCache[$metaKey])) {
-            if ($single)
-                return maybe_unserialize($metaCache[$metaKey][0]);
-            else
-                return array_map('maybe_unserialize', $metaCache[$metaKey]);
+            if ($single) {
+                return Utils::safeMaybeUnserialize($metaCache[$metaKey][0]);
+            } else {
+                $values = array();
+                foreach ($metaCache[$metaKey] as $value) {
+                    $values[] = Utils::safeMaybeUnserialize($value);
+                }
+                return $values;
+            }
         }
 
         if ($single)

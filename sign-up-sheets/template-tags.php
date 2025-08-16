@@ -3,15 +3,15 @@
  * Template Tags
  */
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Controller\Base as BaseController;
 use FDSUS\Controller\TaskTable as TaskTableController;
 use FDSUS\Model\Settings;
 use FDSUS\Model\Base as BaseModel;
 use FDSUS\Model\Sheet as SheetModel;
-use FDSUS\Model\SignupFormInitialValues;
 use FDSUS\Model\Task as TaskModel;
-use FDSUS\Model\States as StatesModel;
 
 if (!function_exists('dlssus_get_template_part')) {
     /**

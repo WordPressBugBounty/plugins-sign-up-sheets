@@ -12,6 +12,8 @@
  * @since       2.1 (plugin version)
  * @version     1.1.1 (template file version)
  */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 ?>
 
 <?php echo do_shortcode(

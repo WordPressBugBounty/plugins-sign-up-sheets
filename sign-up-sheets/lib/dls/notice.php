@@ -25,6 +25,8 @@
 
 namespace FDSUS\Lib\Dls;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use WP_Post;
 
 class Notice

@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Model\Capabilities as CapabilitiesModel;
 use FDSUS\Model\Roles;
 use FDSUS\Model\Sheet as SheetModel;

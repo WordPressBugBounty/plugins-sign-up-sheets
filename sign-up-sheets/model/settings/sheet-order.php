@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model\Settings;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class SheetOrder
 {
     /** @var array  */

@@ -5,7 +5,10 @@
 
 namespace FDSUS\Controller\Admin;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Model\Capabilities;
+use FDSUS\Utils;
 use WP_Error;
 use FDSUS\Id;
 use FDSUS\Model\Data;
@@ -105,7 +108,7 @@ class Help
                     case 'dls_sus_roles':
                         $sus_options['multiline'][$key] = $value;
                         $sus_options_display['multiline'] .= "\n# " . str_replace('dls_sus_', '', $key) . PHP_EOL
-                            . print_r(maybe_unserialize($value), true) . PHP_EOL;
+                            . print_r(Utils::safeMaybeUnserialize($value), true) . PHP_EOL;
                         break;
                     // One-line
                     default:

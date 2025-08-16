@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class States
 {
     public function __construct()

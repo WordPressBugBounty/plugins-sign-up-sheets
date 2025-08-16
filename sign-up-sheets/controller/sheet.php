@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Lib\Dls\MetaBoxes\MetaBoxes;
 use FDSUS\Lib\Dls\Notice;
@@ -136,7 +138,10 @@ class Sheet extends PostTypeBase
         $i = 0;
 
         foreach ($metaValue as $key => $data) {
-            $submittedTaskIds[] = $data['id'];
+            if (isset($data['id']) && $data['id'] !== '') {
+                $submittedTaskIds[] = (string) $data['id'];
+            }
+
             $data['sort'] = $i;
             if (empty($data['title'])) {
                 if (!empty($data['id'])) {

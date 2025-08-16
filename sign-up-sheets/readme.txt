@@ -2,7 +2,7 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.8
-Stable tag: 2.3.2
+Stable tag: 2.3.3.1
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -10,7 +10,7 @@ An online sign-up sheet manager where your users can sign up for tasks.
 
 == Description ==
 
-This plugin lets you quickly and easily setup sign-up sheets on your WordPress site.  Use it for volunteer and time slot sign-ups, personnel and resource coordination, and much more.
+This plugin lets you quickly and easily set up sign-up sheets on your WordPress site.  Use it for volunteer and time slot sign-ups, personnel and resource coordination, and much more.
 
 The free version of Sign-Up Sheets includes the following features:
 
@@ -104,6 +104,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.3.1 | 2025-08-15 =
+* Added CSRF protection for legacy re-run migration feature for users upgrading from an old 1.x version of the plugin.
+
+= 2.3.3 | 2025-08-15 =
+* Added support for cache flushing when sign-ups occur for WP Rocket, WP Engine, GoDaddy Managed WordPress MU System Plugin, SiteGround Optimizer, Nginx Helper, Kinsta, Cloudflare plugin, and core object cache.
+* Updated all PHP files to add a missing `ABSPATH` check to prevent direct access.
+* Fixed security issue related to PHP object injection.
+
 = 2.3.2 | 2025-04-24 =
 * Added "Sign-up Sheet Viewer" role and revised the admin grid and Manage Sign-ups to honor that new role.
 * Added option to disable the custom "Sign-up Sheet Manager" and/or "Sign-up Sheet Viewer" roles.
@@ -162,6 +170,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.3.1 | 2025-08-15 =
+* Added CSRF protection for legacy re-run migration feature for users upgrading from an old 1.x version of the plugin.
+
+
+= 2.3.3 | 2025-08-15 =
+* Added support for cache flushing when sign-ups occur for WP Rocket, WP Engine, GoDaddy Managed WordPress MU System Plugin, SiteGround Optimizer, Nginx Helper, Kinsta, Cloudflare plugin, and core object cache.
+* Updated all PHP files to add a missing `ABSPATH` check to prevent direct access.
+* Fixed security issue related to PHP object injection.
 
 = 2.3.2 | 2025-04-24 =
 * Added "Sign-up Sheet Viewer" role and revised the admin grid and Manage Sign-ups to honor that new role.

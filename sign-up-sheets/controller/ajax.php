@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Model\Data;
 use FDSUS\Controller\Migrate as Migrate;

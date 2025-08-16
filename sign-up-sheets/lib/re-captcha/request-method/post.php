@@ -34,6 +34,8 @@
 
 namespace FDSUS\Lib\ReCaptcha\RequestMethod;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Lib\ReCaptcha\ReCaptcha;
 use FDSUS\Lib\ReCaptcha\RequestMethod;
 use FDSUS\Lib\ReCaptcha\RequestParameters;

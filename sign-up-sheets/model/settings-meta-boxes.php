@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id as Id;
 use FDSUS\Model\Settings\SheetOrder;
 use FDSUS\Model\SheetCollection as SheetCollectionModel;
@@ -486,6 +488,13 @@ class SettingsMetaBoxes
                     'pro' => true
                 ),
                 array(
+                    'label' => esc_html__('Enable Reminders on all Auto-Clearing Sheets', 'sign-up-sheets'),
+                    'name'  => 'fdsus_reminder_email_on_auto_clear',
+                    'type'  => 'checkbox',
+                    'note'  => esc_html__('If Auto-Clearing is enabled, reminder emails will be sent based on the dates they will be auto-cleared.  For example, if you have a sheet that auto-clears every Friday and your reminders are set to be sent 1 day prior, those sheets will have a reminder email sent every Thursday.  Without this enabled, reminders will only be sent for sheets with a sheet or task date set.', 'sign-up-sheets'),
+                    'pro' => true
+                ),
+                array(
                     'label' => esc_html__('Reminder Schedule', 'sign-up-sheets'),
                     'name'  => 'dls_sus_reminder_email_days_before',
                     'type'  => 'text',
@@ -602,7 +611,12 @@ class SettingsMetaBoxes
                     'name' => 'dls_sus_rerun_migrate',
                     'type' => 'button',
                     'note' => '<span id="dlssus-rerun-migrate"></span>',
-                    'options' => array('href' => add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()))),
+                    'options' => array('href' => wp_nonce_url(
+                        add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()),
+                        'fdsus-migrate-rerun',
+                        '_fdsus-migrate-nonce'
+                    ))
+                ),
                 array(
                     'label' => esc_html__('Display Detailed Errors', 'sign-up-sheets'),
                     'name' => 'dls_sus_detailed_errors',

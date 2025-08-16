@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Lib\Exception;
 use FDSUS\Model\Sheet as SheetModel;
@@ -447,11 +449,44 @@ class Signup extends SignupParent
 
         // Add meta fields
         foreach ($allowedMetaFields as $k => $v) {
-            if (is_array(maybe_unserialize($v))) {
-                $v = implode(',', maybe_unserialize($v));
+            $v = $this->sanitizeFieldValue($v, $k);
+            if ($v !== false) { // false means the field was blocked for security
+                update_post_meta($signupId, $k, $v);
             }
-            update_post_meta($signupId, $k, $v);
         }
+    }
+
+    /**
+     * Sanitize field value and check for security issues
+     *
+     * @param mixed  $value
+     * @param string $fieldName
+     *
+     * @return string|false false if field should be blocked, sanitized string otherwise
+     */
+    private function sanitizeFieldValue($value, $fieldName)
+    {
+        // Security: Reject any serialized data
+        if (is_string($value) && is_serialized($value)) {
+            Id::log('Security: Blocked attempt to save serialized data in field: ' . $fieldName);
+            return false;
+        }
+
+        // Handle arrays
+        if (is_array($value)) {
+            $cleanArray = array();
+            foreach ($value as $arrayItem) {
+                if (is_string($arrayItem) && is_serialized($arrayItem)) {
+                    Id::log('Security: Blocked attempt to save serialized data in array field: ' . $fieldName);
+                    continue; // Skip this array item
+                }
+                $cleanArray[] = sanitize_text_field($arrayItem);
+            }
+            return implode(',', $cleanArray);
+        }
+
+        // Handle single values
+        return sanitize_text_field($value);
     }
 
     /**
@@ -473,7 +508,7 @@ class Signup extends SignupParent
         // Meta fields
         foreach ($metaFields as $key => $value) {
             if (strpos($key, Id::PREFIX . '_') === 0) {
-                $post->{$key} = maybe_unserialize(current($value));
+                $post->{$key} = current($value);
             }
         }
     }

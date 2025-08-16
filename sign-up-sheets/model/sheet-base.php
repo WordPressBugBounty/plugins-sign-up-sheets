@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Model\Data as Data;
 use FDSUS\Model\Task as TaskModel;
@@ -149,11 +151,11 @@ class SheetBase extends Base
                 switch ($key) {
                     // Arrays
                     case 'fdsus_autoclear':
-                        $post->{$key} = maybe_unserialize($value);
+                        $post->{$key} = $value;
                         break;
                     // Single Values
                     default:
-                        $post->{$key} = maybe_unserialize(current($value));
+                        $post->{$key} = current($value);
                 }
             }
         }

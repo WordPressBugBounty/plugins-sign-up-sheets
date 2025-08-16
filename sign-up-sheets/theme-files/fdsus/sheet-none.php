@@ -10,6 +10,8 @@
  * @since       2.2 (plugin version)
  * @version     1.0.0 (template file version)
  */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 ?>
 
 <p><?php esc_attr_e('Sign-up sheet not found.', 'sign-up-sheets'); ?></p>

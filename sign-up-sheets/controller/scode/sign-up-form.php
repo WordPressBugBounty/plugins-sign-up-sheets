@@ -5,12 +5,13 @@
 
 namespace FDSUS\Controller\Scode;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Controller\Base;
 use FDSUS\Controller\Mail as Mail;
 use FDSUS\Model\Data;
 use FDSUS\Model\Settings;
-use FDSUS\Model\Signup;
 use FDSUS\Model\SignupFormInitialValues;
 use FDSUS\Model\States as StatesModel;
 use FDSUS\Model\Sheet as SheetModel;
@@ -107,9 +108,9 @@ class SignUpForm extends Base
         $signupTaskIdsTag = '';
         $date_display = null;
         $signup_titles = array();
-        if (isset($_POST['signup_task_ids'])) { // If submitted with task IDs
-            if (is_array($_POST['signup_task_ids'])) {
-                $tasks = array_map('intval', $_POST['signup_task_ids']);
+        if (isset($_REQUEST['signup_task_ids'])) { // If submitted with task IDs
+            if (is_array($_REQUEST['signup_task_ids'])) {
+                $tasks = array_map('intval', $_REQUEST['signup_task_ids']);
 
                 foreach ($tasks as $t) {
                     $task = new TaskModel($t);
@@ -219,7 +220,7 @@ class SignUpForm extends Base
      */
     public function maybeProcessSignupForm()
     {
-        $taskIds = isset($_POST['signup_task_ids']) ? $_POST['signup_task_ids'] : array();
+        $taskIds = isset($_REQUEST['signup_task_ids']) ? $_REQUEST['signup_task_ids'] : array();
         if (empty($taskIds) || wp_doing_ajax()
             || empty($_POST['action'])
             || ($_POST['action'] !== 'signup' && $_POST['action'] !== 'signup-confirmed')
@@ -393,7 +394,7 @@ class SignUpForm extends Base
         if (!$err) {
             try {
 
-                $taskIds = $_POST['signup_task_ids'];
+                $taskIds = $_REQUEST['signup_task_ids'];
                 $taskIndex = 0;
                 foreach ($taskIds as $taskId) {
                     $errorMsg = '';
@@ -464,7 +465,7 @@ class SignUpForm extends Base
 
         // If successful, redirect to sheet page
         if (empty($err) && !empty($successTaskIds)) {
-            $currentUrl = remove_query_arg(array('task_id', 'action', 'signups', 'remove_spot_task_id', '_susnonce'));
+            $currentUrl = remove_query_arg(array('task_id', 'action', 'signups', 'remove_spot_task_id', 'signup_task_ids', '_susnonce'));
             $currentUrl = add_query_arg(
                 array('action' => 'signup', 'status' => 'success', 'tasks' => implode(',', $successTaskIds), 'signups' => implode(',', $successSignupIds)),
                 wp_nonce_url($currentUrl, 'signup-success-' . implode(',', $successSignupIds) .'-tasks-' . implode(',', $successTaskIds), '_susnonce')

@@ -5,6 +5,8 @@
 
 namespace FDSUS;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Lib\Dls\Notice;
 use FDSUS\Model\Settings;
 use wpdb;

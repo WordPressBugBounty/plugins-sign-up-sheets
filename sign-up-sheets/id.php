@@ -2,6 +2,8 @@
 
 namespace FDSUS;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use function is_plugin_active;
 
 if (!function_exists('is_plugin_active')) {

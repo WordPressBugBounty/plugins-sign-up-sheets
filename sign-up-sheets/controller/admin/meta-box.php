@@ -42,6 +42,8 @@
 
 namespace FDSUS\Controller\Admin;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class MetaBox
 {
     public $screenId;

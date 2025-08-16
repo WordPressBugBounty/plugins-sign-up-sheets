@@ -12,6 +12,8 @@
  * @since       2.1 (plugin version)
  * @version     1.1.1 (template file version)
  */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 ?>
 
 <div class="<?php echo esc_attr(fdsus_template_classes_sign_up_sheet()) ?>" id="<?php echo get_the_ID() ? 'dls-sus-sheet-' . get_the_ID() : '' ?>">

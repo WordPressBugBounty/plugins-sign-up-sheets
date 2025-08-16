@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
-<phpunit
-	bootstrap="tests/bootstrap.php"
-	backupGlobals="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	>
-	<testsuites>
-		<testsuite name="SUS Test">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
-			<exclude>./tests/test-sample.php</exclude>
-		</testsuite>
-	</testsuites>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true">
+    <php>
+        <env name="WP_PHPUNIT__TESTS_CONFIG" value="/var/www/html/wp-tests-config.php"/>
+    </php>
+    <testsuites>
+        <testsuite name="SUS Test">
+            <directory suffix="Test.php">./tests/</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

@@ -5,10 +5,13 @@
 
 namespace FDSUS\Controller\Admin;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use Exception;
 use FDSUS\Id;
 use FDSUS\Model\Settings;
 use FDSUS\Model\SettingsMetaBoxes;
+use FDSUS\Utils;
 
 class SiteHealth
 {
@@ -142,7 +145,7 @@ class SiteHealth
         foreach ($susOptions['multiline'] as $key => $value) {
             $dataMultiline[$key] = array(
                 'label' => ucwords(str_replace('_', ' ', $key)),
-                'value' => print_r(maybe_unserialize($value), true),
+                'value' => print_r(Utils::safeMaybeUnserialize($value), true),
             );
         }
         ksort($dataMultiline);

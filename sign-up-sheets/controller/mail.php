@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Model\Settings;
 use FDSUS\Model\Sheet as SheetModel;
 use FDSUS\Model\Task as TaskModel;

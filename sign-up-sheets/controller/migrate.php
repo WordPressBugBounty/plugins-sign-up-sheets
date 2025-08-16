@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use WP_Error;
 use FDSUS\Id;
 use FDSUS\Model\Data;
@@ -14,6 +16,7 @@ use FDSUS\Model\Signup as SignupModel;
 use FDSUS\Model\DbUpdate;
 use FDSUS\Lib\Exception as Exception;
 use FDSUS\Lib\TimeoutHandler;
+use FDSUS\Utils;
 
 if (!FDSUS_DISABLE_MIGRATE_2_0_to_2_1) {
     require_once(ABSPATH . DIRECTORY_SEPARATOR . 'wp-load.php');
@@ -721,7 +724,7 @@ class Migrate extends MigrateParent
             )
         );
         foreach ($results as $result) {
-            $fields[$result->slug] = maybe_unserialize($result->value);
+            $fields[$result->slug] = Utils::safeMaybeUnserialize($result->value);
         }
 
         return $fields;

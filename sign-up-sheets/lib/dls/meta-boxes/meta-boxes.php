@@ -19,6 +19,8 @@
 
 namespace FDSUS\Lib\Dls\MetaBoxes;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use WP_Post;
 
 class MetaBoxes
@@ -33,6 +35,20 @@ class MetaBoxes
     public $version = '1.0.0.5';
     private $meta_box;
     public static $addTimeDateJqueryDone = false;
+
+    /**
+     * Safely unserialize WordPress data with no allowed classes
+     *
+     * @param string $data Data that might be unserialized
+     * @return mixed Unserialized data can be any type
+     */
+    private function safeMaybeUnserialize($data)
+    {
+        if (is_serialized($data)) {
+            return @unserialize($data, ['allowed_classes' => false]);
+        }
+        return $data;
+    }
 
     /**
      * Initialize Class
@@ -249,12 +265,12 @@ class MetaBoxes
         $current = ($current ? $current->term_id : 0);
         ?>
 
-        <div id="taxonomy-<?php echo $taxonomy; ?>" class="categorydiv">
+        <div id="taxonomy-<?php echo esc_attr($taxonomy); ?>" class="categorydiv">
 
             <!-- Display tabs-->
-            <ul id="<?php echo $taxonomy; ?>-tabs" class="category-tabs">
+            <ul id="<?php echo esc_attr($taxonomy); ?>-tabs" class="category-tabs">
                 <li class="tabs">
-                    <a href="#<?php echo esc_url($taxonomy); ?>-all" tabindex="3"><?php echo $tax->labels->all_items; ?></a>
+                    <a href="#<?php echo esc_url($taxonomy); ?>-all" tabindex="3"><?php echo esc_html($tax->labels->all_items); ?></a>
                 </li>
                 <li class="hide-if-no-js">
                     <a href="#<?php echo esc_url($taxonomy); ?>-pop" tabindex="3"><?php esc_html_e('Most Used', 'sign-up-sheets'); ?></a>
@@ -262,11 +278,11 @@ class MetaBoxes
             </ul>
 
             <!-- Display taxonomy terms -->
-            <div id="<?php echo $taxonomy; ?>-all" class="tabs-panel">
-                <ul id="<?php echo $taxonomy; ?>checklist"
-                    class="list:<?php echo $taxonomy ?> categorychecklist form-no-clear">
+            <div id="<?php echo esc_attr($taxonomy); ?>-all" class="tabs-panel">
+                <ul id="<?php echo esc_attr($taxonomy); ?>checklist"
+                    class="list:<?php echo esc_attr($taxonomy) ?> categorychecklist form-no-clear">
                     <?php foreach ($terms as $term) {
-                        $id = $taxonomy . '-' . $term->term_id;
+                        $id = esc_attr($taxonomy . '-' . $term->term_id);
                         echo "<li id='$id'><label class='selectit'>";
                         echo "<input type='$input_type' id='in-$id' name='{$name}'"
                             . checked($current, $term->term_id, false)
@@ -788,7 +804,7 @@ class MetaBoxes
                 break;
 
             case 'repeater':
-                $value = (array)maybe_unserialize($value);
+                $value = (array)$this->safeMaybeUnserialize($value);
                 $blank_row = array();
 
                 echo PHP_EOL . PHP_EOL . '<table><thead><tr>' . PHP_EOL;
@@ -919,7 +935,7 @@ class MetaBoxes
                 break;
 
             case 'map':
-                $value = (array)maybe_unserialize($value);
+                $value = (array)$this->safeMaybeUnserialize($value);
                 $value['address'] = isset($value['address']) ? $value['address'] : '';
                 $value['lat'] = isset($value['lat']) ? $value['lat'] : '';
                 $value['long'] = isset($value['long']) ? $value['long'] : '';

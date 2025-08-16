@@ -11,6 +11,8 @@
  * @version     1.3.0 (template file version)
  */
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 /** @var array $args */
 /** @var FDSUS\Model\Sheet $sheet */
 /** @var string $signup_titles_str */

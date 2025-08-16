@@ -5,6 +5,8 @@
 
 namespace FDSUS\Model;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Lib\Exception;
 use FDSUS\Model\Sheet as SheetModel;
@@ -186,7 +188,7 @@ class TaskBase extends Base
         // Add meta fields
         $i = 0;
         foreach ($meta as $k => $v) {
-            if (update_post_meta($taskId, $k, maybe_unserialize($v)) === false) {
+            if (update_post_meta($taskId, $k, $v) === false) {
                 return new WP_Error('add_task_additional_err', esc_html__('Error adding additional fields to task.', 'sign-up-sheets'));
             }
             $i++;
@@ -338,7 +340,7 @@ class TaskBase extends Base
         // Meta fields
         foreach ($metaFields as $key => $value) {
             if (strpos($key, Id::PREFIX . '_') === 0) {
-                $post->{$key} = maybe_unserialize(current($value));
+                $post->{$key} = current($value);
             }
         }
     }

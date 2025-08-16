@@ -5,6 +5,8 @@
 
 namespace FDSUS\Controller\Scode;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use FDSUS\Id;
 use FDSUS\Model\Settings;
 use FDSUS\Model\Sheet as SheetModel;
