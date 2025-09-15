@@ -52,7 +52,11 @@ class Ajax
         $status = $migrate->getStatus();
         $out['status'] = $status['state'];
         $restartButton = sprintf(' <a href="%s" class="button">%s</a>',
-            esc_url(add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl())),
+            esc_url(wp_nonce_url(
+                add_query_arg('migrate', 'rerun-2.1', $this->data->getSettingsUrl()),
+                'fdsus-migrate-rerun',
+                '_fdsus-migrate-nonce'
+            )),
             esc_html__('Restart Upgrade', 'sign-up-sheets')
         );
         if ($status['state'] == 'complete') {

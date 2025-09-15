@@ -2,7 +2,7 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.8
-Stable tag: 2.3.3.1
+Stable tag: 2.3.3.2
 License: GPLv2 or later
 
 An online sign-up sheet manager where your users can sign up for tasks.
@@ -104,6 +104,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.3.2 | 2025-09-14 =
+* Fixed `Uncaught Error: Class "FDSUS\Utils" not found` on Help and Site Health pages.
+
 = 2.3.3.1 | 2025-08-15 =
 * Added CSRF protection for legacy re-run migration feature for users upgrading from an old 1.x version of the plugin.
 
@@ -170,6 +173,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Changelog ==
+
+= 2.3.3.2 | 2025-09-14 =
+* Fixed `Uncaught Error: Class "FDSUS\Utils" not found` on Help and Site Health pages.
 
 = 2.3.3.1 | 2025-08-15 =
 * Added CSRF protection for legacy re-run migration feature for users upgrading from an old 1.x version of the plugin.
