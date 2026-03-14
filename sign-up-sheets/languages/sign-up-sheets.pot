@@ -1,17 +1,17 @@
-# Copyright (C) 2025 Fetch Designs
+# Copyright (C) 2026 Fetch Designs
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sign-up Sheets 2.3.3.2\n"
+"Project-Id-Version: Sign-up Sheets 2.3.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sign-up-sheets\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-14T23:37:30+00:00\n"
+"POT-Creation-Date: 2026-03-14T15:48:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sign-up-sheets\n"
 
 #. Plugin Name of the plugin
@@ -30,7 +30,7 @@ msgstr ""
 
 #. Description of the plugin
 #: sign-up-sheets.php
-msgid "An online sign-up sheet manager where your users/volunteers can sign up for tasks"
+msgid "Create online sign-up sheets for volunteers, events, and group scheduling."
 msgstr ""
 
 #. Author of the plugin
@@ -48,7 +48,7 @@ msgid "Sign-up sheets database upgrade is processing."
 msgstr ""
 
 #: controller/admin.php:104
-#: controller/admin/export.php:272
+#: controller/admin/export.php:324
 msgid "Sheet Date"
 msgstr ""
 
@@ -80,32 +80,32 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: controller/admin.php:302
+#: controller/admin.php:310
 #: controller/admin/manage-signups.php:222
 msgid "Manage Sign-ups"
 msgstr ""
 
-#: controller/admin.php:321
+#: controller/admin.php:329
 msgid "Copy"
 msgstr ""
 
-#: controller/admin.php:328
+#: controller/admin.php:336
 msgid "ID"
 msgstr ""
 
-#: controller/admin.php:378
+#: controller/admin.php:386
 msgid "Made by"
 msgstr ""
 
-#: controller/admin.php:381
+#: controller/admin.php:389
 msgid "Get Pro"
 msgstr ""
 
-#: controller/admin.php:385
+#: controller/admin.php:393
 msgid "Need help? Get Support &raquo;"
 msgstr ""
 
-#: controller/admin.php:404
+#: controller/admin.php:412
 #: controller/admin/settings.php:54
 #: controller/admin/settings.php:75
 msgid "Settings"
@@ -122,7 +122,7 @@ msgstr ""
 
 #: controller/admin/edit-sheet.php:148
 #: controller/admin/edit-signup-page.php:129
-#: controller/admin/export.php:270
+#: controller/admin/export.php:322
 msgid "Sheet ID"
 msgstr ""
 
@@ -211,6 +211,7 @@ msgstr ""
 #: controller/admin/edit-signup-page.php:238
 #: controller/admin/edit-signup-page.php:299
 #: controller/scode/sign-up-form.php:318
+#, php-format
 msgid "Please complete the following required fields: %s"
 msgstr ""
 
@@ -230,53 +231,66 @@ msgstr ""
 msgid "Export All as CSV"
 msgstr ""
 
-#: controller/admin/export.php:85
-#: controller/admin/export.php:99
+#: controller/admin/export.php:117
 msgid "Export as CSV"
 msgstr ""
 
-#: controller/admin/export.php:123
+#: controller/admin/export.php:126
+msgid "Copy Contacts"
+msgstr ""
+
+#: controller/admin/export.php:131
+#: model/settings-meta-boxes.php:469
+msgid "Pro Feature"
+msgstr ""
+
+#: controller/admin/export.php:131
+#: model/settings-meta-boxes.php:469
+msgid "Pro"
+msgstr ""
+
+#: controller/admin/export.php:175
 msgid "You do not have sufficient permissions to export."
 msgstr ""
 
-#: controller/admin/export.php:127
+#: controller/admin/export.php:179
 msgid "Invalid sheet ID."
 msgstr ""
 
-#: controller/admin/export.php:271
+#: controller/admin/export.php:323
 msgid "Sheet Title"
 msgstr ""
 
-#: controller/admin/export.php:285
+#: controller/admin/export.php:337
 msgid "Task ID"
 msgstr ""
 
-#: controller/admin/export.php:286
+#: controller/admin/export.php:338
 msgid "Task Title"
 msgstr ""
 
-#: controller/admin/export.php:299
+#: controller/admin/export.php:351
 #: controller/privacy.php:74
 msgid "Sign-up ID"
 msgstr ""
 
-#: controller/admin/export.php:300
+#: controller/admin/export.php:352
 msgid "Sign-up First Name"
 msgstr ""
 
-#: controller/admin/export.php:301
+#: controller/admin/export.php:353
 msgid "Sign-up Last Name"
 msgstr ""
 
-#: controller/admin/export.php:302
+#: controller/admin/export.php:354
 msgid "Sign-up Phone"
 msgstr ""
 
-#: controller/admin/export.php:303
+#: controller/admin/export.php:355
 msgid "Sign-up Email"
 msgstr ""
 
-#: controller/admin/export.php:304
+#: controller/admin/export.php:356
 #: controller/privacy.php:184
 #: controller/scode/user-sign-ups.php:145
 #: controller/task-table.php:211
@@ -285,28 +299,28 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: controller/admin/export.php:305
+#: controller/admin/export.php:357
 #: controller/privacy.php:185
 #: controller/task-table.php:212
 #: theme-files/fdsus/sign-up-form.php:101
 msgid "City"
 msgstr ""
 
-#: controller/admin/export.php:306
+#: controller/admin/export.php:358
 #: controller/privacy.php:186
 #: controller/task-table.php:213
 #: theme-files/fdsus/sign-up-form.php:113
 msgid "State"
 msgstr ""
 
-#: controller/admin/export.php:307
+#: controller/admin/export.php:359
 #: controller/privacy.php:187
 #: controller/task-table.php:214
 #: theme-files/fdsus/sign-up-form.php:130
 msgid "Zip"
 msgstr ""
 
-#: controller/admin/export.php:308
+#: controller/admin/export.php:360
 msgid "User ID"
 msgstr ""
 
@@ -361,11 +375,13 @@ msgstr ""
 
 #. translators: %s is replaced with a link to an SMTP plugin
 #: controller/admin/help.php:169
+#, php-format
 msgid "Try sending email via SMTP instead by using a plugin like %s."
 msgstr ""
 
 #. translators: %1$s is replaced with a link to Mailgun and %2$s is replaced with a link to the Mailgun WordPress plugin
 #: controller/admin/help.php:174
+#, php-format
 msgid "Try sending email via a 3rd party service like %1$s with the %2$s"
 msgstr ""
 
@@ -505,7 +521,7 @@ msgstr ""
 msgid "DB Version"
 msgstr ""
 
-#: controller/ajax.php:60
+#: controller/ajax.php:65
 msgid "Restart Upgrade"
 msgstr ""
 
@@ -523,6 +539,7 @@ msgstr ""
 
 #. translators: %s is replaced with the users response to the simple captcha
 #: controller/captcha.php:117
+#, php-format
 msgid "Oh dear, 7 + 1 does not equal %s. Please try again."
 msgstr ""
 
@@ -532,6 +549,7 @@ msgstr ""
 
 #. translators: %1$s is replaced with the URL to retry
 #: controller/migrate.php:84
+#, php-format
 msgid "Migration has already been completed. <a href=\"%1$s\" class=\"button\">Run Migration Again</a>"
 msgstr ""
 
@@ -632,16 +650,19 @@ msgstr ""
 
 #. translators: %s is replaced with the plural post type name
 #: controller/post-type-base.php:107
+#, php-format
 msgid "No %s found"
 msgstr ""
 
 #. translators: %s is replaced with the plural post type name
 #: controller/post-type-base.php:109
+#, php-format
 msgid "No %s found in Trash"
 msgstr ""
 
 #. translators: %s is replaced with the singluar post type name
 #: controller/post-type-base.php:111
+#, php-format
 msgid "Parent %s Record:"
 msgstr ""
 
@@ -754,16 +775,19 @@ msgstr ""
 
 #. translators: %1$s is replaced with task name, %2$d is replaced with the current number of signups on that task, %3$s is replaced with "person" or "people" depending on the number of signups
 #: controller/sheet.php:167
+#, php-format
 msgid "The number of spots for task \"%1$s\" cannot be set below %2$d because it currently has %2$d %3$s signed up. Please clear some spots first before updating this task."
 msgstr ""
 
 #. translators: %1$s is replaced with task name, %2$d is replaced with the current number of signups on that task, %3$s is replaced with "person" or "people" depending on the number of signups
 #: controller/sheet.php:194
+#, php-format
 msgid "The task \"%1$s\" cannot be removed because it has %2$d %3$s signed up.  Please clear all spots first before removing this task."
 msgstr ""
 
 #. translators: %s is replaced with the task title
 #: controller/sheet.php:445
+#, php-format
 msgid "You have been signed up for %s!"
 msgstr ""
 
@@ -791,11 +815,13 @@ msgstr ""
 
 #. translators: %d is replaced with the spot number
 #: controller/task-table.php:382
+#, php-format
 msgid "#%d:"
 msgstr ""
 
 #. translators: %s is replaced with the index of the spot within the current task
 #: controller/task-table.php:439
+#, php-format
 msgid "Select spot #%s to clear"
 msgstr ""
 
@@ -860,31 +886,31 @@ msgstr ""
 msgid "Delete Row"
 msgstr ""
 
-#: model/base.php:305
+#: model/base.php:310
 msgid "Sunday"
 msgstr ""
 
-#: model/base.php:306
+#: model/base.php:311
 msgid "Monday"
 msgstr ""
 
-#: model/base.php:307
+#: model/base.php:312
 msgid "Tuesday"
 msgstr ""
 
-#: model/base.php:308
+#: model/base.php:313
 msgid "Wednesday"
 msgstr ""
 
-#: model/base.php:309
+#: model/base.php:314
 msgid "Thursday"
 msgstr ""
 
-#: model/base.php:310
+#: model/base.php:315
 msgid "Friday"
 msgstr ""
 
-#: model/base.php:311
+#: model/base.php:316
 msgid "Saturday"
 msgstr ""
 
@@ -1136,6 +1162,7 @@ msgstr ""
 #. translators: %s is replaced with the timestamp of the next cron scheduled
 #: model/settings-meta-boxes.php:236
 #: model/settings-meta-boxes.php:478
+#, php-format
 msgid "Next scheduled check: %s"
 msgstr ""
 
@@ -1277,6 +1304,7 @@ msgstr ""
 #: model/settings-meta-boxes.php:410
 #: model/settings-meta-boxes.php:509
 #: model/settings-meta-boxes.php:553
+#, php-format
 msgid "If blank, defaults to... \"%s\""
 msgstr ""
 
@@ -1312,14 +1340,6 @@ msgstr ""
 
 #: model/settings-meta-boxes.php:469
 msgid "Reminder E-mail"
-msgstr ""
-
-#: model/settings-meta-boxes.php:469
-msgid "Pro Feature"
-msgstr ""
-
-#: model/settings-meta-boxes.php:469
-msgid "Pro"
 msgstr ""
 
 #: model/settings-meta-boxes.php:473
@@ -1461,6 +1481,7 @@ msgstr ""
 
 #. translators: %1$s is replaced with task title and %2$s is replaced with optional detailed errors if enabled
 #: model/signup.php:151
+#, php-format
 msgid "Error adding signup for %1$s.  All spots are filled. %2$s"
 msgstr ""
 
@@ -1479,6 +1500,7 @@ msgstr ""
 #. translators: %s is replaced with the sign-up email
 #: model/signup.php:239
 #: model/signup.php:362
+#, php-format
 msgid "Error adding the sign-up for \"%s\""
 msgstr ""
 
@@ -1492,6 +1514,7 @@ msgstr ""
 
 #. translators: %s is replaced with the task title
 #: model/task-base.php:157
+#, php-format
 msgid "Error adding the task \"%s\""
 msgstr ""
 
@@ -1501,6 +1524,7 @@ msgstr ""
 
 #. translators: %s is replaced with the task title
 #: model/task-base.php:241
+#, php-format
 msgid "Error updating the task \"%s\""
 msgstr ""
 
@@ -1510,6 +1534,10 @@ msgstr ""
 
 #: model/task-base.php:497
 msgid "Sign up &raquo;"
+msgstr ""
+
+#: templates/export-dropdown.php:13
+msgid "Export Sheet"
 msgstr ""
 
 #: theme-files/archive-dlssus_sheet.php:36
@@ -1542,6 +1570,7 @@ msgstr ""
 
 #. translators: %s is replaced with the sheet title
 #: theme-files/fdsus/sheet-list.php:67
+#, php-format
 msgid "for %s"
 msgstr ""
 

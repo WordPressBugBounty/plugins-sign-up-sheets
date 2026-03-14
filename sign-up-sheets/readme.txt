@@ -2,42 +2,42 @@
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
 Tested up to: 6.9
-Stable tag: 2.3.3.2
+Stable tag: 2.3.4
 License: GPLv2 or later
 
-An online sign-up sheet manager where your users can sign up for tasks.
+Create online sign-up sheets for volunteers, events, and group scheduling.
 
 
 == Description ==
 
-This plugin lets you quickly and easily set up sign-up sheets on your WordPress site.  Use it for volunteer and time slot sign-ups, personnel and resource coordination, and much more.
+Sign-up Sheets helps you organize sign-ups, events, shifts, and other scheduled tasks directly in WordPress. It offers a flexible way to coordinate people, time slots, and responsibilities without relying on a third-party service.
 
-The free version of Sign-Up Sheets includes the following features:
+The free version of Sign-up Sheets includes core tools for building and managing sign-up sheets on your site:
 
-* Administrator can add, edit and clear sign-up spots as needed - add/edit is NEW as of version 2.2.9
-* Copy a sheet or a task to a new one
-* Confirmation emails on sign-up
-* Allow logged-in users to see all the tasks they've signed up for on one page using the [`[user_sign_ups]` shortcode](https://www.fetchdesigns.com/doc/user_sign_ups-shortcode/).
-* No limit on the number of sign-up sheets and sign-up spots
-* reCAPTCHA (optional) - NEW as of version 2.2
-* Export sign-up information for a single sheet or all sheets to a CSV
-* Supports WordPress [GDPR privacy features for your sign-up sheets]((https://www.fetchdesigns.com/doc/gdpr-sign-up-sheets-wordpress-plugin/))
-* Developed with accessibility in mind based on [WCAG Guidelines](https://www.w3.org/WAI/standards-guidelines/).  If you run into any accessibility issues, [please report them](https://www.fetchdesigns.com/contact) to help make the plugin more inclusive for all users.
-* And much more... [full list of Sign-up Sheets features](https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/)
+* Add, edit, and clear sign-up spots as needed
+* Copy a sheet or task to speed up setup
+* Send confirmation emails after sign-up
+* Let logged-in users view all of their sign-ups on one page with the [`[user_sign_ups]` shortcode](https://www.fetchdesigns.com/doc/user_sign_ups-shortcode/)
+* Create an unlimited number of sign-up sheets and spots
+* Enable optional reCAPTCHA protection
+* Export sign-up data for one sheet or all sheets to CSV
+* Support WordPress [GDPR privacy features for your sign-up sheets](https://www.fetchdesigns.com/doc/gdpr-sign-up-sheets-wordpress-plugin/)
+* Built with accessibility in mind based on [WCAG Guidelines](https://www.w3.org/WAI/standards-guidelines/). If you run into any accessibility issues, [please report them](https://www.fetchdesigns.com/contact) to help make the plugin more inclusive for all users.
+* See the [full list of Sign-up Sheets features](https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/)
 
-The Pro version of Sign-Up Sheets includes the following features:
+The Pro version of Sign-up Sheets adds advanced tools for more complex scheduling and form needs:
 
-* Ability to create [Custom Task fields and Custom Sign-up form fields](https://www.fetchdesigns.com/doc/custom-fields/)
-* Automatically sends reminder emails before an event (optional)
-* Allows customization of the confirmation and reminder emails per sheet
-* Assign [categories to sign-up sheets](https://www.fetchdesigns.com/doc/sheet-categories/) and display a list of current sheets for a specific category.
-* Logged-in user can edit their own sign-ups
-* Spot Locking - Locks and holds a spot for 3 minutes when a user accesses the sign-up form (optional)
-* [Compact and Semi-Compact display modes](https://www.fetchdesigns.com/doc/compact-semi-compact-standard-display-modes/) to condense tasks with a large number of spots into a single line (optional)
-* Enable sign-up limits per task
-* And much more... [full list of Sign-up Sheets features](https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/)
+* Create [custom task fields and custom sign-up form fields](https://www.fetchdesigns.com/doc/custom-fields/)
+* Send optional reminder emails before an event
+* Customize confirmation and reminder emails per sheet
+* Assign [categories to sign-up sheets](https://www.fetchdesigns.com/doc/sheet-categories/) and display current sheets for a specific category
+* Let logged-in users edit their own sign-ups
+* Enable Spot Locking to hold a spot for 3 minutes while a user completes the sign-up form
+* Use [Compact and Semi-Compact display modes](https://www.fetchdesigns.com/doc/compact-semi-compact-standard-display-modes/) to condense tasks with many spots into a single line
+* Set sign-up limits per task
+* See the [full list of Sign-up Sheets features](https://www.fetchdesigns.com/sign-up-sheets-wordpress-plugin/)
 
-Sign-up Sheets is currently being used by organizations and businesses for non-profit and church volunteer opportunities, schools and PTO/PTA volunteering, club sign-ups, photographer and meeting room timeslot sign-ups, and more.  It's a great alternative to monthly paid services like SignUpGenius and allows you to control your own sign-ups right on your WordPress site.
+Sign-up Sheets is used for church and nonprofit volunteer opportunities, school and PTO/PTA events, club sign-ups, meeting room reservations, photographer time slots, peronal gatherings, and more. It is a practical alternative to monthly paid services like SignUpGenius while keeping your sign-ups on your own WordPress site.
 
 
 == Installation ==
@@ -104,6 +104,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Upgrade Notice ==
 
+= 2.3.4 | 2026-03-14 =
+* Added security checks to AJAX migration status endpoint.
+* Fixed output escaping of admin notice CSS class names.
+* Removed duplicate function definition `fdsus_scode_user_sign_ups_actions()`.
+
 = 2.3.3.2 | 2025-09-14 =
 * Fixed `Uncaught Error: Class "FDSUS\Utils" not found` on Help and Site Health pages.
 
@@ -147,32 +152,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fixed WP 6.7 notice being thrown of "Function _load_textdomain_just_in_time was called incorrectly."
 * Fixed bug preventing editing of new tasks on mobile devices.
 
-= 2.2.14 | 2024-10-07 =
-* Added setting to clear cache on specific post IDs when a sign-up occurs.
-* Added [sign_up_spot_count] shortcode.
-* Fixed bug with Divi theme's Smooth Scroll feature conflicting with the Auto-Scroll sign-up link hash feature.
-* Fixed error on Manage Sign-ups edit form in admin due to sign-up-link auto-scrolling feature missing variable.
-
-= 2.2.13 | 2024-07-19 =
-* Added Sign-up link auto-scrolling with a hash so that when clicking the sign-up links/buttons the user is taking right to the form no matter how much content you put before the sign-up sheet.  This can be disabled in the admin under Sign-up Sheets > Settings > Sign-up Form > Disable sign-up link auto-scroll to sheet.
-* Fixed issue where non-logged-in user could submit a sign-up and assign it to another user's account. [CVE-2024-39654]
-* Fixed XSS issue in admin on Help page email test form and added some additional URL sanitization throughout the plugin. [CVE-2024-6020]
-* Fixed missing rel="noreferrer" on target="_blank" instances and removed some instances that were not needed to improve accessibility/usability.
-* Fixed PHP deprecated error when non-string or empty string is passed to strpos.
-* Fixed PHP syntax error with unexpected ')' for PHP versions prior to 7.3.
-
-= 2.2.12 | 2024-03-03 =
-* Added support for reCAPTCHA v3.
-* Added support for the Breeze caching plugin.
-* Added classes "wp-block-button__link wp-element-button" on buttons.
-* Added workaround to support GoodLayers theme content not displaying on automatically-generated sheet pages.
-* Fixed copy sheet action to include nonce for security. [CVE-2024-31303]
-* Fixed postboxes on Settings page to retain sorting and open/close status per user.
-* Fixed custom sign-up field bug where field that included "signup_" in the slug wouldn't allow saving the value properly.
-* Fixed FDSUS_DISABLE_MIGRATE_2_0_to_2_1 to prevent more unnecessary migration logic from running.
-
 
 == Changelog ==
+
+= 2.3.4 | 2026-03-14 =
+* Added security checks to AJAX migration status endpoint.
+* Fixed output escaping of admin notice CSS class names.
+* Removed duplicate function definition `fdsus_scode_user_sign_ups_actions()`.
 
 = 2.3.3.2 | 2025-09-14 =
 * Fixed `Uncaught Error: Class "FDSUS\Utils" not found` on Help and Site Health pages.

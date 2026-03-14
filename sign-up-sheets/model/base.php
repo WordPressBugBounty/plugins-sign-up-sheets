@@ -150,8 +150,13 @@ class Base
                     }
                 }
 
-                $cleanedFields[$cleanedKey] = ($prefix == 'signup_' && !is_array($v))
-                    ? sanitize_text_field($v) : $v;
+                if ($prefix == 'signup_') {
+                    $cleanedFields[$cleanedKey] = is_array($v)
+                        ? array_map('sanitize_text_field', $v)
+                        : sanitize_text_field($v);
+                } else {
+                    $cleanedFields[$cleanedKey] = $v;
+                }
             }
         }
 

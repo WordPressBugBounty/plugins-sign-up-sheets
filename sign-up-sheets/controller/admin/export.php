@@ -79,11 +79,9 @@ class Export
      */
     public function addExportSheetLink($post)
     {
-        echo sprintf(
-            '<a href="%s" id="dls-sus-export-sheet" class="quick-info-item">%s</a>',
-            esc_url($this->getExportUrl($post)),
-            esc_html__('Export as CSV', 'sign-up-sheets')
-        );
+
+        $html = $this->getExportDropdownHtml($post);
+        echo apply_filters('fdsus_export_sheet_link_html', $html, $post);
     }
 
     /**
@@ -93,11 +91,65 @@ class Export
      */
     public function addExportSheetLinkOnManageSignups($sheet)
     {
-        echo sprintf(
-            '<a href="%s" class="add-new-h2 page-title-action"><span class="dashicons dashicons-download"></span> %s</a>',
-            esc_url($this->getExportUrl($sheet)),
-            esc_html__('Export as CSV', 'sign-up-sheets')
+
+        $html = $this->getExportDropdownHtml($sheet);
+        echo apply_filters('fdsus_manage_signups_export_link_html', $html, $sheet);
+    }
+
+    /**
+     * Generate HTML for the export dropdown menu.
+     *
+     * Creates a dropdown menu with export options that can be filtered by other plugins.
+     * The menu includes "Export as CSV" and conditionally "Copy Contacts" (Pro feature).
+     *
+     * @since 2.3.0
+     *
+     * @param WP_Post|SheetModel|int $sheet Sheet object, post object, or sheet ID.
+     * @return string HTML markup for the export dropdown.
+     */
+    protected function getExportDropdownHtml($sheet)
+    {
+        $exportUrl = $this->getExportUrl($sheet);
+        
+        // Define base menu items
+        $menu_items = array(
+            'export_csv' => array(
+                'label' => esc_html__('Export as CSV', 'sign-up-sheets'),
+                'url' => $exportUrl,
+                'icon' => 'dashicons-media-spreadsheet',
+                'class' => '',
+                'disabled' => false,
+                'badge' => '',
+                'data' => array(),
+            ),
+            'copy_contacts' => array(
+                'label' => esc_html__('Copy Contacts', 'sign-up-sheets'),
+                'url' => '',
+                'icon' => 'dashicons-admin-users',
+                'class' => 'fdsus-disabled-item fdsus-pro-setting',
+                'disabled' => true,
+                'badge' => '<span class="dls-sus-pro" title="' . esc_attr__('Pro Feature', 'sign-up-sheets') . '">' . esc_html__('Pro', 'sign-up-sheets') . '</span>',
+                'data' => array(),
+            ),
         );
+        
+        /**
+         * Filters the export dropdown menu items.
+         *
+         * Allows plugins to modify, add, or remove items from the export dropdown menu.
+         * Pro version uses this filter to enable the "Copy Contacts" functionality.
+         *
+         * @since 2.3.0
+         *
+         * @param array                $menu_items Array of menu item configurations.
+         * @param WP_Post|SheetModel|int $sheet      Sheet object, post object, or sheet ID.
+         */
+        $menu_items = apply_filters('fdsus_export_dropdown_menu_items', $menu_items, $sheet);
+        
+        // Load template
+        ob_start();
+        include FDSUS_FREE_PLUGIN_DIR_PATH . 'templates/export-dropdown.php';
+        return ob_get_clean();
     }
 
     /**

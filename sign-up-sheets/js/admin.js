@@ -20,6 +20,48 @@
     // Get most recent row id
     var row_key = dlsmb_sus_get_last_css_id();
 
+    // Export Dropdown Toggle
+    $(document).on('click', '.fdsus-export-dropdown .fdsus-dropdown-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var $toggle = $(this);
+        var $dropdown = $toggle.closest('.fdsus-export-dropdown');
+        var $menu = $dropdown.find('.fdsus-dropdown-menu');
+        var isExpanded = $toggle.attr('aria-expanded') === 'true';
+        
+        // Close all other dropdowns
+        $('.fdsus-export-dropdown .fdsus-dropdown-menu').hide();
+        $('.fdsus-export-dropdown .fdsus-dropdown-toggle').attr('aria-expanded', 'false');
+        
+        if (!isExpanded) {
+            $menu.show();
+            $toggle.attr('aria-expanded', 'true');
+        }
+    });
+
+    // Close dropdown when clicking menu items
+    $(document).on('click', '.fdsus-export-dropdown .fdsus-dropdown-menu [role="menuitem"]', function(e) {
+        $('.fdsus-export-dropdown .fdsus-dropdown-menu').hide();
+        $('.fdsus-export-dropdown .fdsus-dropdown-toggle').attr('aria-expanded', 'false');
+    });
+
+    // Close dropdown when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.fdsus-export-dropdown').length) {
+            $('.fdsus-export-dropdown .fdsus-dropdown-menu').hide();
+            $('.fdsus-export-dropdown .fdsus-dropdown-toggle').attr('aria-expanded', 'false');
+        }
+    });
+
+    // Close dropdown when pressing ESC
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            $('.fdsus-export-dropdown .fdsus-dropdown-menu').hide();
+            $('.fdsus-export-dropdown .fdsus-dropdown-toggle').attr('aria-expanded', 'false');
+        }
+    });
+
     function fdsusShowHideTaskDates() {
         if ($('#dlsmb-field-checkbox--0-dlssus_use_task_dates').prop('checked')) {
             $('.dlsmb-field-key-datepicker-dlssus_date').hide();

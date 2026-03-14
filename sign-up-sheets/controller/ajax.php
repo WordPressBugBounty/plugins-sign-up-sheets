@@ -30,6 +30,11 @@ class Ajax
      */
     public function getMigrateStatus()
     {
+        check_ajax_referer('fdsus-migrate-rerun', '_fdsus-migrate-nonce');
+        if (!current_user_can('manage_options')) {
+            wp_die(-1);
+        }
+
         $out = array(
             'output' => null,
             'status' => null,

@@ -135,6 +135,9 @@ if (
             register_deactivation_hook(Id::getPluginBasename('free'), array(&$this, 'deactivate'));
 
             add_action('wp_enqueue_scripts', array(&$this, 'add_css_and_js_to_frontend'));
+            if (is_admin()) {
+                add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminScripts'), 10);
+            }
             add_action('init', array(&$this, 'setDefaultOptions'), 0);
             add_action('init', array(&$this, 'flushIfNeeded'), 0);
 
@@ -308,6 +311,22 @@ if (
              * Action that runs on plugin deactivation
              */
             do_action('fdsus_deactivate');
+        }
+
+        /**
+         * Enqueue admin scripts and styles
+         */
+        public function enqueueAdminScripts(): void
+        {
+            $stylePath = plugins_url('css/admin.css', __FILE__);
+
+            // Register stylesheet
+            wp_register_style(
+                'fdsus-admin',
+                $stylePath,
+                array(),
+                Id::version('free')
+            );
         }
 
     }

@@ -3,6 +3,7 @@
 @import "admin/sheet-edit";
 @import "admin/manage";
 @import "admin/settings-page";
+@import "admin/export";
 @import "admin/signup-edit";
 
 .dls-sus-pro {
@@ -10,8 +11,8 @@
     color: #fff;
     font-size: .4em;
     font-weight: bold;
+    line-height: 1.4;
     padding: .2em .6em;
-    -webkit-border-radius: 1em;
     border-radius: 1em;
 }
 

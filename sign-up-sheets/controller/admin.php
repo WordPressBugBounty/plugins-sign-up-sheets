@@ -260,7 +260,7 @@ class Admin
     }
 
     /**
-     * Enqueue admin scripts
+     * Enqueue admin scripts and conditionally enqueue styles
      */
     function add_scripts()
     {
@@ -275,11 +275,19 @@ class Admin
             wp_dequeue_style('dlsmb-jquery-ui');
         }
 
-        // Enqueue only on SUS pages
-        if (get_post_type() == SheetModel::POST_TYPE) {
+        // Enqueue on SUS admin pages
+        $current_screen = get_current_screen();
+        $is_sus_page = (
+            (isset($_GET['post_type']) && $_GET['post_type'] == SheetModel::POST_TYPE) ||
+            ($current_screen && $current_screen->post_type == SheetModel::POST_TYPE) ||
+            get_post_type() == SheetModel::POST_TYPE
+        );
+        
+        if ($is_sus_page) {
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('jquery-ui-sortable');
             wp_enqueue_style('dlsmb-jquery-ui');
+            wp_enqueue_style('fdsus-admin');
         }
     }
 
@@ -456,7 +464,7 @@ class Admin
         foreach ($notices as $type => $messages) {
             foreach ($messages as $message) {
                 ?>
-                <div class="<?php echo $type; ?>">
+                <div class="<?php echo esc_attr($type); ?>">
                     <p><?php echo $message; ?></p>
                 </div>
                 <?php

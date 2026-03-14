@@ -1,15 +1,15 @@
 .post-type-dlssus_sheet {
   .fdsus-edit-quick-info {
+    align-items: center;
+    display:flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    justify-content: center;
     margin-bottom: 1em;
     text-align: center;
 
-    .quick-info-item {
-      display: inline-block;
-      margin: 0 .6em .6em;
-    }
-
     .quick-info-id {
-      display: block;
+      width: 100%;
     }
   }
 
