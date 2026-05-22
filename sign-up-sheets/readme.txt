@@ -1,7 +1,7 @@
 === Sign-up Sheets ===
 Contributors: fetchdesigns
 Tags: sign up, volunteer, non-profit, signup, sign-up
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 2.3.4
 License: GPLv2 or later
 
